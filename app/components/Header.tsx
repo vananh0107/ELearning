@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { FC, useState } from 'react';
 import NavItems from '../utils/NavItems';
 import ThemeSwitcher from '../utils/ThemeSwitcher';
-import { HiOutlineMenuAlt2, HiOutlineUserCircle } from 'react-icons/hi';
+import { HiOutlineMenuAlt3, HiOutlineUserCircle } from 'react-icons/hi';
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -50,7 +50,7 @@ const Header: FC<Props> = ({ activeItem, setOpen }) => {
               <ThemeSwitcher />
               {/* for mobile*/}
               <div className="800px:hidden">
-                <HiOutlineMenuAlt2
+                <HiOutlineMenuAlt3
                   size={25}
                   className="cursor-pointer dark:text-white text-black"
                   onClick={() => setOpenSidebar(true)}
