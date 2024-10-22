@@ -4,6 +4,7 @@ import { VscWorkspaceTrusted } from 'react-icons/vsc';
 import { boolean } from 'yup';
 import { styles } from '../../styles/style';
 import { useActivationMutation } from '@/redux/features/auth/authApi';
+import { useSelector } from 'react-redux';
 type Props = {
   setRoute: (route: string) => void;
 };
@@ -18,7 +19,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
   const [activation,{isSuccess,error}]=useActivationMutation();
   const [invalidError, setInvalidError] = useState<boolean>(false);
   useEffect(()=>{
-    if(isScuccess){
+    if(isSuccess){
       toast.success('Your account has been activated successfully. You can now login.');
       setRoute('Login');
     }

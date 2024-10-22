@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -9,8 +9,11 @@ import {
 } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { styles } from '../../styles/style';
+import { useLoginMutation } from '@/redux/features/auth/authApi';
+import toast from 'react-hot-toast';
 type Props = {
   setRoute: (route: string) => void;
+  setOpen: (open: boolean) => void;
 };
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -20,8 +23,9 @@ const schema = Yup.object().shape({
     .min(6, 'Password must be at least 6 characters long')
     .required('Please enter your password'),
 });
-const Login: FC<Props> = ({ setRoute }) => {
+const Login: FC<Props> = ({ setRoute, setOpen }) => {
   const [show, setShow] = useState(false);
+  const [login, { isSuccess, error }] = useLoginMutation();
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -29,9 +33,21 @@ const Login: FC<Props> = ({ setRoute }) => {
     },
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
-      console.log(email, password);
+      await login({ email, password });
     },
   });
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Login successful');
+      setOpen(false);
+    }
+    if (error) {
+      if ('data' in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [isSuccess, error]);
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
     <div className="w-full">
@@ -95,7 +111,10 @@ const Login: FC<Props> = ({ setRoute }) => {
         </h5>
         <div className="flex items-center justify-center my-3">
           <FcGoogle size={30} className="cursor-pointer mr-2" />
-          <AiFillGithub size={30} className="cursor-pointer ml-2 dark:text-white" />
+          <AiFillGithub
+            size={30}
+            className="cursor-pointer ml-2 dark:text-white"
+          />
         </div>
         <h5 className="text-center pt-4 font-Poppins text-[14px] dark:text-white">
           Not have any account?{' '}
