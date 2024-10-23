@@ -12,7 +12,11 @@ import { useSelector } from 'react-redux';
 import avatar from '../../public/assets/avatar.jpg';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { useSocialAuthMutation } from '@/redux/features/auth/authApi';
+import {
+  useLogOutQuery,
+  useSocialAuthMutation,
+} from '@/redux/features/auth/authApi';
+import toast from 'react-hot-toast';
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -26,6 +30,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+  const [logout, setLogout] = useState(false);
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
   useEffect(() => {
     if (!user) {
       if (data) {
@@ -36,8 +44,13 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         });
       }
     }
-    if(isSuccess){
-      toast.success('Login successful');
+    if (data === null) {
+      if (isSuccess) {
+        toast.success('Login successful');
+      }
+    }
+    if (data === null) {
+      setLogout(true);
     }
   }, [user, data]);
   if (typeof window !== 'undefined') {
@@ -87,9 +100,14 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               {user ? (
                 <Link href="/profile">
                   <Image
-                    src={user.avatar ? user.avatar : avatar}
+                    src={user.avatar ? user.avatar.url : avatar}
                     alt=""
+                    width={30}
+                    height={30}
                     className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    style={{
+                      border: activeItem === 5 ? '2px solid #ffc107' : 'none',
+                    }}
                   />
                 </Link>
               ) : (
