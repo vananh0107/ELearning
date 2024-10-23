@@ -16,7 +16,7 @@ const page: FC<Props> = (props: Props) => {
     <div className="dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
       {/* <Protected> */}
       <Heading
-        title={`${user?.name} profile`}
+        title={`${user?.name} profile - ELearning`}
         description="Elearning is a platform for student to learn and get help from teachers"
         keywords="Programming, React, Next.js, TypeScript, ELearning"
       />
