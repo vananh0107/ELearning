@@ -2,12 +2,11 @@
 import React from 'react';
 import AdminSideBar from '@/app/components/Admin/sideBar/AdminSideBar';
 import Heading from '@/app/utils/Heading';
+import CourseAnalytics from '../../components/Admin/Analytics/CourseAnalytics';
 import DashboardHeader from '@/app/components/Admin/DashboardHeader';
-import EditCourse from '../../../components/Admin/Course/EditCourse';
 type Props = {};
 
-const page = ({ params }: any) => {
-  const id = params?.id;
+const page = (props: Props) => {
   return (
     <div>
       <Heading
@@ -15,13 +14,13 @@ const page = ({ params }: any) => {
         description="Elearning is a platform for student to learn and get help from teachers"
         keywords="Programming, React, Next.js, TypeScript, ELearning"
       />
-      <div className="flex">
+      <div className="flex dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
         <div className="1500px:w-[16%] w-1/5">
-          <AdminSideBar />
+          <AdminSideBar/>
         </div>
         <div className="w-[85%]">
           <DashboardHeader />
-          <EditCourse id={id} />
+          <CourseAnalytics />
         </div>
       </div>
     </div>

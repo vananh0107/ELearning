@@ -4,10 +4,12 @@ import { ThemeProvider } from '@/app/utils/theme-provider';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import ThemeSwitcher from '@/app/utils/ThemeSwitcher';
 
-type Props = {};
+type Props = {
+  open?: boolean;
+  setOpen?: any;
+};
 
-const DashboardHeader = (props: Props) => {
-  const [open, setOpen] = useState(false);
+const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
   return (
     <div className="w-full flex items-center justify-end p-6 fixed top-5 right-0">
       <ThemeSwitcher />

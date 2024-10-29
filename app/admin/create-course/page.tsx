@@ -15,7 +15,7 @@ const page = (props: Props) => {
         keywords="Programming, React, Next.js, TypeScript, ELearning"
       />
       <div className="flex">
-        <div className="1200px:w-[16%] w-1/5">
+        <div className="1500px:w-[16%] w-1/5">
           <AdminSideBar/>
         </div>
         <div className="w-[85%]">

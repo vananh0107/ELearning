@@ -268,14 +268,14 @@ const AdminSideBar = () => {
             />
             <Item
               title="Orders Analytics"
-              to="/admin/order-analytics"
+              to="/admin/orders-analytics"
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Users Analytics"
-              to="/admin/courses-analytics"
+              to="/admin/users-analytics"
               icon={<ManageHistoryIcon />}
               selected={selected}
               setSelected={setSelected}
