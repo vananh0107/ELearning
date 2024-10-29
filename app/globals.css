@@ -27,6 +27,11 @@ input[type='number']::-webkit-inner-spin-button {
 body {
   color: var(--foreground);
 }
+.text-gradient{
+  background: linear-gradient(90deg, #4b5fd0, #a46dd3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 .hero_animation {
   background-image: linear-gradient(
     147.92deg,
