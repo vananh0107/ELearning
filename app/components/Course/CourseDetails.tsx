@@ -4,11 +4,11 @@ import Ratings from '@/app/utils/Ratings';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { IoCheckmarkDoneOutline, IoCloseOutline } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
 import { format } from 'timeago.js';
 import CourseContentList from '../Course/CourseContentList';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOutForm from '../../components/Payment/CheckOutForm';
+import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
 
 type Props = {
   data: any;
@@ -17,7 +17,8 @@ type Props = {
 };
 
 const CourseDetails = ({ data, clientSecret, stripePromise }: Props) => {
-  const { user } = useSelector((state) => state.auth);
+  const { data: userData } = useLoadUserQuery(undefined, {});
+  const user = userData?.user;
   const [open, setOpen] = useState(false);
   const discountPercentage =
     ((data?.estimatedPrice - data?.price) / data?.estimatedPrice) * 100;

@@ -3,7 +3,7 @@ import CourseDetailsPage from '../../components/Course/CourseDetailsPage'
 const Page=({params}:any)=>{
   return(
     <div>
-      <CourseDetailsPage id={params.id/>
+      <CourseDetailsPage id={params.id}/>
     </div>
   )
 }
