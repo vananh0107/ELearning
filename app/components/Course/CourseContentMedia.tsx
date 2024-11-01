@@ -315,6 +315,7 @@ const CourseContentMedia = ({
                 handleAnswerSubmit={handleAnswerSubmit}
                 answerCreationLoading={answerCreationLoading}
                 user={user}
+                quesionId={questionId}
                 setQuestionId={setQuestionId}
               />
             </div>
@@ -418,18 +419,19 @@ const CourseContentMedia = ({
                           </small>
                         </div>
                       </div>
-                      {user.role === 'admin' && (
-                        <span
-                          className={`${styles.label} !ml-12 cursor-pointer`}
-                          onClick={() => {
-                            setIsReviewReply(true);
-                            setReviewId(item._id);
-                          }}
-                        >
-                          Add Reply{' '}
-                        </span>
-                      )}
-                      {isReviewReply && (
+                      {user.role === 'admin' &&
+                        item.commentReplies.length === 0 && (
+                          <span
+                            className={`${styles.label} !ml-12 cursor-pointer`}
+                            onClick={() => {
+                              setIsReviewReply(true);
+                              setReviewId(item._id);
+                            }}
+                          >
+                            Add Reply{' '}
+                          </span>
+                        )}
+                      {isReviewReply && reviewId === item._id && (
                         <div className="w-full flex relative">
                           <input
                             type="text"
@@ -501,7 +503,7 @@ const CommentReply = ({
   answer,
   setAnswer,
   handleAnswerSubmit,
-  user,
+  questionId,
   setQuestionId,
   answerCreationLoading,
 }: any) => {
@@ -518,6 +520,7 @@ const CommentReply = ({
             index={index}
             answer={answer}
             setQuestionId={setQuestionId}
+            questionId={questionId}
             handleAnswerSubmit={handleAnswerSubmit}
             answerCreationLoading={answerCreationLoading}
           />
@@ -533,6 +536,7 @@ const CommentItem = ({
   setAnswer,
   handleAnswerSubmit,
   answerCreationLoading,
+  questionId,
 }: any) => {
   const [replyActive, setReplyActive] = useState(false);
   return (
@@ -579,7 +583,7 @@ const CommentItem = ({
             {item.questionReplies.length}
           </span>
         </div>
-        {replyActive && (
+        {replyActive && questionId === item._id && (
           <>
             <>
               {item.questionReplies.map((reply: any, index: number) => (

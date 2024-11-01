@@ -73,40 +73,40 @@ const AllInvoices = ({ isDashboard }: Props) => {
         ]),
   ];
   //mock data to test
-  const rows: any = [
-    {
-      id: '1',
-      userName: 'John Doe',
-      userEmail: 'johndoe@example.com',
-      title: 'Course 1',
-      price: '$100',
-      created_at: '1 days ago',
-    },
-    {
-      id: '2',
-      userName: 'Jane Doe',
-      userEmail: 'janedoe@example.com',
-      title: 'Course 2',
-      price: '$200',
-      created_at: '2 days ago',
-    },
-    {
-      id: '3',
-      userName: 'Mike Doe',
-      userEmail: 'mikedoe@example.com',
-      title: 'Course 3',
-      price: '$1500',
-      created_at: '3 days ago',
-    },
-    {
-      id: '4',
-      userName: 'Sarah Doe',
-      userEmail: 'sarahdoe@example.com',
-      title: 'Course 4',
-      price: '$300',
-      created_at: '1 days ago',
-    },
-  ];
+  // const rows: any = [
+  //   {
+  //     id: '1',
+  //     userName: 'John Doe',
+  //     userEmail: 'johndoe@example.com',
+  //     title: 'Course 1',
+  //     price: '$100',
+  //     created_at: '1 days ago',
+  //   },
+  //   {
+  //     id: '2',
+  //     userName: 'Jane Doe',
+  //     userEmail: 'janedoe@example.com',
+  //     title: 'Course 2',
+  //     price: '$200',
+  //     created_at: '2 days ago',
+  //   },
+  //   {
+  //     id: '3',
+  //     userName: 'Mike Doe',
+  //     userEmail: 'mikedoe@example.com',
+  //     title: 'Course 3',
+  //     price: '$1500',
+  //     created_at: '3 days ago',
+  //   },
+  //   {
+  //     id: '4',
+  //     userName: 'Sarah Doe',
+  //     userEmail: 'sarahdoe@example.com',
+  //     title: 'Course 4',
+  //     price: '$300',
+  //     created_at: '1 days ago',
+  //   },
+  // ];
   orderData &&
     orderData.forEach((item: any) => {
       rows.push({
@@ -182,7 +182,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
           >
             <DataGrid
               checkboxSelection={isDashboard ? false : true}
-              rows={rows}
+              rows={orderData}
               columns={columns}
               components={isDashboard ? {} : { Toolbar: GridToolbar }}
             />
