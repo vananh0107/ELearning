@@ -41,7 +41,7 @@ const Profile: FC<Props> = ({ user }) => {
       const fillteredCourses = user.courses.map((userCourse: any) =>
         data.courses
           .find((course: any) => course._id === userCourse._id)
-          .filter((course: any) => course !== undefined)
+          ?.filter((course: any) => course !== undefined)
       );
       setCourses(fillteredCourses);
     }

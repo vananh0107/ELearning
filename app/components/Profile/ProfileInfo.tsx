@@ -33,13 +33,21 @@ const ProfileInfo: FC<Prop> = ({ avatar, user }) => {
     fileReader.readAsDataURL(e.target.files[0]);
   };
   useEffect(() => {
+    console.log(
+      'avatar, ',user.avatar 
+    );
+    console.log(
+      'image, ',user.image 
+    );
+    console.log(isSuccess,error);
     if (isSuccess || success) {
       setLoadUser(true);
     }
     if (error || updateError) {
       console.log(error);
     }
-    if(success){
+    if (success) {
+      console.log('success');
       toast.success('Profile updated successfully');
     }
   }, [isSuccess, error, success, updateError]);
