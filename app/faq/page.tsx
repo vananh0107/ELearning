@@ -11,7 +11,7 @@ const Page = (props: Props) => {
   const [activeItem, setActiveItem] = useState(3);
   const [route, setRoute] = useState('Login');
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
       <Heading
         title="FAQ page - Elearning"
         description="Elearning is a learning management system for helping programmers."

@@ -39,7 +39,7 @@ const Page = (props: Props) => {
   }, [data, category, search]);
   const categories = categoriesData?.layout.categories;
   return (
-    <div>
+    <div className='dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black'>
       {isLoading ? (
         <Loader />
       ) : (
