@@ -19,7 +19,7 @@ export const navItemsData = [
     url: '/policy',
   },
   {
-    name: 'FQA',
+    name: 'FAQ',
     url: '/faq',
   },
 ];

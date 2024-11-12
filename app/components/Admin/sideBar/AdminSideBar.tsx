@@ -137,17 +137,19 @@ const AdminSideBar = () => {
               <Box display="flex" justifyContent="center" alignItems="center">
                 <Image
                   alt=""
-                  width={100}
-                  height={100}
+                  width={70}
+                  height={70}
                   src={user.avatar ? user.avatar.url : avatarDefault}
                   style={{
                     cursor: 'pointer',
                     borderRadius: '50%',
                     border: '3px solid #5b6fe6',
+                    height: '70px',
+                    width: '70px',
                   }}
                 />
               </Box>
-              <Box textAlign="center">
+              <Box textAlign="center" mt="20px">
                 <Typography
                   variant="h4"
                   className="!text-[20px] text-black dark:text-[#ffffffc1]"
@@ -159,7 +161,7 @@ const AdminSideBar = () => {
                   sx={{ m: '10px 0 0 0' }}
                   className="!text-[20px] text-black dark:text-[#ffffffc1] capitalize"
                 >
-                  - {user?.role}
+                  {user?.role}
                 </Typography>
               </Box>
             </Box>
@@ -172,7 +174,11 @@ const AdminSideBar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Typography variant="h5" sx={{ m: '15px 0 5px 25px' }}>
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: '15px 0 5px 25px' }}
+            >
               {!isCollapsed && 'Data'}
             </Typography>
             <Item
@@ -226,7 +232,7 @@ const AdminSideBar = () => {
             />
             <Item
               title="FAQ"
-              to="/faq"
+              to="/admin/faq"
               icon={<QuizIcon />}
               selected={selected}
               setSelected={setSelected}

@@ -18,7 +18,7 @@ const ChangePassword: FC<Props> = (props: Props) => {
 
   const passwordChangeHandler = async (e: any) => {
     e.preventDefault();
-    if (oldPassword !== newPassword) {
+    if (confirmPassword !== newPassword) {
       toast.error('Passwords do not match');
     } else {
       await updatePassword({ oldPassword, newPassword });

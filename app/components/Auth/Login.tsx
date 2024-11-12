@@ -60,7 +60,7 @@ const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
           Emter your Email
         </label>
         <input
-          type="emmail"
+          type="email"
           name=""
           value={values.email}
           onChange={handleChange}

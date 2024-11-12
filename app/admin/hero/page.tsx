@@ -9,8 +9,8 @@ type Props = {};
 
 const page = (props: Props) => {
   return (
-    <div>
-      {/* <AdminProtected> */}
+    <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
+      <AdminProtected>
       <Heading
         title="Elearning - Admin"
         description="Elearning is a platform for students to learn and get help from teachers"
@@ -25,7 +25,7 @@ const page = (props: Props) => {
           <EditHero />
         </div>
       </div>
-      {/* </AdminProtected> */}
+      </AdminProtected>
     </div>
   );
 };

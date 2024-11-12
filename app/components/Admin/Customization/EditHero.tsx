@@ -57,7 +57,8 @@ const EditHero: FC<Props> = (props: Props) => {
   return (
     <>
       <div className="w-full 1000px:flex items-center">
-        <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[500px] 1100px:w-[500px] h-[50vh] w-[50vh] hero_animation rounded-[50%] 1100:left-[18rem] 1500:left-[21rem]">
+        <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[500px] 1100px:w-[500px] h-[50vh] w-[50vh] hero_animation rounded-[50%] 1100:left-[18rem] 1500:left-[21rem]"></div>
+        <div className="1000px:w-[50%] flex 1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt-[0] z-10">
           <div className="relative flex items-center justify-end">
             <img
               src={image}
@@ -77,9 +78,9 @@ const EditHero: FC<Props> = (props: Props) => {
             </label>
           </div>
         </div>
-        <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px]">
+        <div className="1000px:w-[70%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[100px]">
           <textarea
-            className="dark:text-white resize-none text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[60px] 1500px:text-[70px] font-Josefin"
+            className="dark:text-[#edfff4] resize-none text-[#000000ac] text-[24px] px-3 w-[66%] 1000px:text-[60px] 1500px:text-[70px] font-Josefin"
             placeholder="Improve Your Online Learning Experience Better Instantly"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -90,7 +91,7 @@ const EditHero: FC<Props> = (props: Props) => {
             value={subTitle}
             onChange={(e) => setSubTitle(e.target.value)}
             placeholder="We have 40+ Online courses & 500K+ Online registered student. Find your desired Courses from them"
-            className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent"
+            className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent ml-4"
           />
           <br />
           <br />
@@ -105,7 +106,7 @@ const EditHero: FC<Props> = (props: Props) => {
                 ? '!cursor-pointer !bg-[#42d383]'
                 : '!cursor-not-allowed'
             }
-              !rounded absolute bottom-12 right-12`}
+                !rounded absolute bottom-12 right-12`}
             onClick={
               data?.layout?.banner?.title !== title ||
               data?.layout?.banner?.subTitle !== subTitle ||

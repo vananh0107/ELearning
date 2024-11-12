@@ -15,6 +15,7 @@ type Props = {
 };
 
 const SidebarProfile = ({ user, active, avatar, setActive, logOutHandle }) => {
+  console.log(user)
   return (
     <div className="w-full">
       <div

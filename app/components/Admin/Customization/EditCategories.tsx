@@ -73,14 +73,14 @@ const EditCategories = (props: Props) => {
         <Loader />
       ) : (
         <div className="mt-[120p] text-center">
-          <h1 className={`${styles.title}`}>All Categories</h1>
+          <h1 className={`${styles.title}  mb-5`}>All Categories</h1>
           {categories &&
             categories.map((item: any, index: number) => {
               return (
                 <div className="p-3" key={index}>
                   <div className="flex items-center w-full justify-center">
                     <input
-                      type={`${styles.input} !w-[unset] !border-none !text-[20px]`}
+                      type={`${styles.input} !w-[unset] !border-none !text-[20px] text-xl`}
                       value={item.title}
                       onChange={(e) =>
                         handleCategoriesAdd(item._id, e.target.value)

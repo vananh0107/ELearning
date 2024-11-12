@@ -9,7 +9,7 @@ type Props = {};
 const page = (props: Props) => {
   return (
     <div className=" dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black ">
-      {/* <AdminProtected> */}
+      <AdminProtected>
       <Heading
         title="ELearning - Admin"
         description="Elearning is a platform for student to learn and get help from teachers"
@@ -24,7 +24,7 @@ const page = (props: Props) => {
           <OrdersAnalytics isDashboard={false}/>
         </div>
       </div>
-      {/* </AdminProtected> */}
+      </AdminProtected>
     </div>
   );
 };

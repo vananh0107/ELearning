@@ -15,7 +15,7 @@ const page: FC<Props> = (props: Props) => {
   const { user } = useSelector((state: any) => state.auth);
   return (
     <div className=" min-h-screen dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
-      {/* <Protected> */}
+      <Protected>
       <Heading
         title={`${user?.name} profile - ELearning`}
         description="Elearning is a platform for student to learn and get help from teachers"
@@ -30,7 +30,7 @@ const page: FC<Props> = (props: Props) => {
       />
       <Profile user={user} />
       <Footer />
-      {/* </Protected> */}
+      </Protected>
     </div>
   );
 };

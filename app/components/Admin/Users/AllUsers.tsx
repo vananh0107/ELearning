@@ -5,7 +5,11 @@ import { AiOutlineDelete, AiOutlineMail } from 'react-icons/ai';
 import { Box, Button, Modal } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'timeago.js';
-import { useGetAllUsersQuery } from '@/redux/features/user/userApi';
+import {
+  useDeleteUserMutation,
+  useGetAllUsersQuery,
+  useUpdateUserRoleMutation,
+} from '@/redux/features/user/userApi';
 import Loader from '../../Loader/Loader';
 import { styles } from '@/app/styles/style';
 import toast from 'react-hot-toast';
@@ -15,8 +19,7 @@ type Props = {
 
 const AllUsers: FC<Props> = ({ isTeam }) => {
   const { theme, setTheme } = useTheme();
-  const [active, setActive] = useState(false);
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [role, setRole] = useState('admin');
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState('');
@@ -38,7 +41,6 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     if (isSuccess) {
       refetch();
       toast.success('User role updated successfully');
-      setActive(false);
     }
     if (deleteSuccess) {
       refetch();
@@ -54,11 +56,11 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   }, [updateError, isSuccess, deleteError, deleteError]);
   const columns = [
     { field: 'id', headerName: 'ID', flex: 0.5 },
-    { field: 'name', headerName: 'Name', flex: 0.5 },
-    { field: 'email', headerName: 'Email', flex: 0.5 },
+    { field: 'name', headerName: 'Name', flex: 0.4 },
+    { field: 'email', headerName: 'Email', flex: 0.6 },
     { field: 'role', headerName: 'Role', flex: 0.3 },
-    { field: 'courses', headerName: 'Purchased Courses', flex: 0.3 },
-    { field: 'created_at', headerName: 'Joined At', flex: 0.5 },
+    { field: 'courses', headerName: 'Purchased Courses', flex: 0.4 },
+    { field: 'created_at', headerName: 'Joined At', flex: 0.4 },
     {
       field: ' ',
       headerName: 'Delete',
@@ -88,7 +90,10 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       renderCell: (params: any) => {
         return (
           <>
-            <a href={`mailto:${params.row.email}`}>
+            <a
+              href={`mailto:${params.row.email}`}
+              className="inline-block mt-4 ml-4"
+            >
               <AiOutlineMail className="dark:text-white text-black" size={20} />
             </a>
           </>
@@ -108,7 +113,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
           id: item._id,
           name: item.name,
           email: item.email,
-          role: item.purchased,
+          role: item.role,
           courses: item.courses.length,
           created_at: format(item.createdAt),
         });
@@ -120,32 +125,28 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
           id: item._id,
           name: item.name,
           email: item.email,
-          role: item.purchased,
+          role: item.role,
           courses: item.courses.length,
           created_at: format(item.createdAt),
         });
       });
   }
   const handleSubmit = async () => {
-    await updateUserRole({ email, role });
+    await updateUserRole({ id, role });
   };
   const handleDelete = async () => {
     const id = userId;
     await deleteUser(id);
+    setOpen(false);
+    refetch();
   };
   return (
-    <div className="mt-[120px]">
+    <div className="mt-[80px]">
       {isLoading ? (
         <Loader />
       ) : (
         <Box m="20px">
           <div className="w-full flex justify-end">
-            <div
-              className={`${styles.button} !w-[200px] dark:bg-[#57c7a3] !h-[35px] dark:border dark:border-[#ffffff6c] dark:text-white`}
-              onClick={() => setActive(!active)}
-            >
-              Add New Member
-            </div>
           </div>
           <Box
             m="40px 0 0 0"
@@ -204,7 +205,6 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
-          {active}
           {open && (
             <Modal
               open={open}
@@ -216,18 +216,20 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                 <h1 className={`${styles.title}`}>
                   Are you sure you want to delete this user?
                 </h1>
-                <div className="flex w-full items-center justify-center mb-6  mt-6">
+                <div className="flex w-full items-center justify-around mb-6  mt-6">
                   <div
                     className={`${styles.button} !w-[120px] h-[30px] bg-[#57c7a3]`}
                     onClick={() => setOpen(!open)}
                   >
                     Cancel
                   </div>
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d62929]`}
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </div>
                 </div>
-                <div
-                  className={`${styles.button} !w-[120px] h-[30px] bg-[#d62929]`}
-                  onClick={handleDelete}
-                ></div>
               </Box>
             </Modal>
           )}

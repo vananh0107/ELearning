@@ -5,7 +5,7 @@ import { PiUsersFourLight } from 'react-icons/pi';
 import { Box, CircularProgress } from '@mui/material';
 import OrdersAnalytics from '../Analytics/OrdersAnalytics';
 import AllInvoices from '../Order/AllInvoices';
-import { useGetOrdersAnalyticsQuery } from '@/redux/features/analytics/analyticsApi';
+import { useGetOrdersAnalyticsQuery, useGetUsersAnalyticsQuery } from '@/redux/features/analytics/analyticsApi';
 type Props = {
   open?: boolean;
   value?: number;
@@ -46,11 +46,11 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
     if (isLoading && ordersLoading) {
       return;
     } else {
-      const userslastTwoMonths = data.users.last12Months.slice(-2);
-      const orderslastTwoMonths = orderData.orders.last12Months.slice(-2);
+      const userslastTwoMonths = data?.users.last12Months.slice(-2);
+      const orderslastTwoMonths = orderData?.orders.last12Months.slice(-2);
       if (
-        orderslastTwoMonths.length === 2 &&
-        orderslastTwoMonths.length === 2
+        orderslastTwoMonths?.length === 2 &&
+        orderslastTwoMonths?.length === 2
       ) {
         const usersCurrentMonth = userslastTwoMonths[1].count;
         const usersPreviousMonth = userslastTwoMonths[0].count;

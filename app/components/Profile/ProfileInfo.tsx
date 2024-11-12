@@ -8,49 +8,42 @@ import {
   useUpdateAvatarMutation,
 } from '@/redux/features/user/userApi';
 import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
-import { log } from 'console';
 import toast from 'react-hot-toast';
+
 type Props = {
   avatar: string | null;
   user: any;
 };
 
-const ProfileInfo: FC<Prop> = ({ avatar, user }) => {
+const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
   const [editProfile, { isSuccess: success, error: updateError }] =
     useEditProfileMutation();
-  const [loadUser, setLoadUser] = useState(false);
-  const {} = useLoadUserQuery(undefined, { skip: loadUser ? false : true });
+
+  const { data, refetch, isLoading } = useLoadUserQuery(undefined);
+
   const imageHandler = async (e: any) => {
     const fileReader = new FileReader();
-    fileReader.onload = () => {
+    fileReader.onload = async () => {
       if (fileReader.readyState === 2) {
         const avatar = fileReader.result;
-        updateAvatar(avatar);
+        await updateAvatar(avatar);
       }
     };
     fileReader.readAsDataURL(e.target.files[0]);
   };
+
   useEffect(() => {
-    console.log(
-      'avatar, ',user.avatar 
-    );
-    console.log(
-      'image, ',user.image 
-    );
-    console.log(isSuccess,error);
     if (isSuccess || success) {
-      setLoadUser(true);
+      refetch();
+      toast.success('Profile updated successfully');
     }
     if (error || updateError) {
       console.log(error);
     }
-    if (success) {
-      console.log('success');
-      toast.success('Profile updated successfully');
-    }
-  }, [isSuccess, error, success, updateError]);
+  }, [isSuccess, error, success, updateError, refetch]);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (name !== '') {
@@ -68,12 +61,11 @@ const ProfileInfo: FC<Prop> = ({ avatar, user }) => {
             }
             width={120}
             height={120}
-            alt=""
+            alt="Profile Avatar"
             className="w-[120px] h-[120px] cursor-pointer border-[3px] border-[#37a39a] rounded-full"
           />
           <input
             type="file"
-            name=""
             id="avatar"
             className="hidden"
             onChange={imageHandler}
@@ -81,12 +73,11 @@ const ProfileInfo: FC<Prop> = ({ avatar, user }) => {
           />
           <label htmlFor="avatar">
             <div className="w-[30px] h-[30px] bg-slate-900 rounded-full absolute bottom-2 right-2 flex items-center justify-center cursor-pointer">
-              <AiOutlineCamera size={20} className="z-1" fill="#fff" />
+              <AiOutlineCamera size={20} fill="#fff" />
             </div>
           </label>
         </div>
       </div>
-      <br />
       <br />
       <div className="w-full pl-6 800px:pl-10">
         <form onSubmit={handleSubmit}>
