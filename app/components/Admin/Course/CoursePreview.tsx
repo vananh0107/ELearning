@@ -94,7 +94,7 @@ const CoursePreview: FC<Props> = ({
         {courseData?.benefits?.map((item: any, index: number) => (
           <div className="w-full flex 800px:items-center py-2" key={index}>
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} />
+              <IoCheckmarkDoneOutline size={20} className='dark:text-white'/>
             </div>
             <p className="pl-2 dark:text-white">{item.title}</p>
           </div>
@@ -107,7 +107,7 @@ const CoursePreview: FC<Props> = ({
         {courseData?.prerequisites?.map((item: any, index: number) => (
           <div className="w-full flex 800px:items-center py-2" key={index}>
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} />
+              <IoCheckmarkDoneOutline size={20} className='dark:text-white'/>
             </div>
             <p className="pl-2 dark:text-white">{item.title}</p>
           </div>

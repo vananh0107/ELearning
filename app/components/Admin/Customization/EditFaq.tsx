@@ -3,7 +3,7 @@ import {
   useEditLayoutMutation,
   useGetHeroDataQuery,
 } from '@/redux/features/layout/layoutApi';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { HiMinus, HiPlus } from 'react-icons/hi';
@@ -13,18 +13,21 @@ import Loader from '../../Loader/Loader';
 type Props = {};
 
 const EditFaq = (props: Props) => {
-  const { data, isLoading } = useGetHeroDataQuery('FAQ', {
+  const { data, isLoading, refetch } = useGetHeroDataQuery('FAQ', {
     refetchOnMountOrArgChange: true,
   });
   const [editLayout, { isSuccess: layoutSuccess, error }] =
     useEditLayoutMutation();
   const [questions, setQuestions] = useState<any[]>([]);
+  const layoutSuccessRef = useRef(false)
   useEffect(() => {
     if (data) {
       setQuestions(data.layout.faq);
     }
-    if (layoutSuccess) {
-      toast.success('Hero updated successfully!');
+    if (layoutSuccess && !layoutSuccessRef.current) {
+      refetch();
+      toast.success('FAQ updated successfully!');
+      layoutSuccessRef.current = true;
     }
     if (error) {
       if ('data' in error) {
@@ -33,6 +36,11 @@ const EditFaq = (props: Props) => {
       }
     }
   }, [data, layoutSuccess, error]);
+
+  useEffect(() => {
+    if (!layoutSuccess) layoutSuccessRef.current = false;
+  }, [layoutSuccess])
+
   const toggleQuestion = (id: any) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((question: any) =>
@@ -143,7 +151,6 @@ const EditFaq = (props: Props) => {
               ))}
             </dl>
             <br />
-            <br />
             <IoMdAddCircleOutline
               className="dark:text-white text-black text-[25px] cursor-pointer"
               onClick={newFaqHandler}
@@ -157,7 +164,7 @@ const EditFaq = (props: Props) => {
               isAnyQuestionEmpty(questions)
                 ? '!cursor-not-allowed'
                 : '!cursor-pointer !bg-[#42d383]'
-            }`}
+            } mt-6`}
             onClick={
               areQuestionsUnchanged(data.layout.faq, questions) ||
               isAnyQuestionEmpty(questions)

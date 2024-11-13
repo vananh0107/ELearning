@@ -18,7 +18,7 @@ type Props = {};
 
 const AllCourses = (props: Props) => {
   const { theme, setTheme } = useTheme();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState('');
   const { isLoading, data, refetch } = useGetAllCoursesQuery(
     {},
@@ -100,7 +100,7 @@ const AllCourses = (props: Props) => {
   useEffect(() => {
     if (isSuccess) {
       refetch();
-      setOpen(falses);
+      setOpen(false);
       toast.success('Course deleted successfully');
     }
     if (error) {

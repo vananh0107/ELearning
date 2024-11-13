@@ -6,8 +6,8 @@ import DashboardHeader from '@/app/components/Admin/DashboardHeader';
 import EditCourse from '../../../components/Admin/Course/EditCourse';
 type Props = {};
 
-const page = ({ params }: any) => {
-  const id = params?.id;
+const page = ({ params }) => {
+  const { id } = params;
   return (
     <div>
       <Heading

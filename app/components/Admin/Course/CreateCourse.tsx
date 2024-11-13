@@ -16,7 +16,7 @@ const CreateCourse = (props: Props) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success('Course created successfully!');
-      redirect('/admin/all-courses');
+      redirect('/admin/courses');
     }
     if (error) {
       if ('data' in error) {
@@ -35,6 +35,7 @@ const CreateCourse = (props: Props) => {
     level: '',
     demoUrl: '',
     thumbnail: '',
+    categories:''
   });
   const [benefits, setBenefits] = useState([{ title: '' }]);
   const [prerequisites, setPrerequisites] = useState([{ title: '' }]);
@@ -89,17 +90,19 @@ const CreateCourse = (props: Props) => {
       benefits: formattedBenefits,
       prerequisites: formattedPrerequisites,
       courseContent: formattedCourseContentData,
+      categories: courseInfo.categories,
     };
     setCourseData(data);
   };
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
     if (!isLoading) {
+      console.log(data)
       await createCourse(data);
     }
   };
   return (
-    <div className="w-full flex min-h-screen dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
+    <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
         {active === 0 && (
           <CourseInformation
@@ -137,7 +140,7 @@ const CreateCourse = (props: Props) => {
           />
         )}
       </div>
-      <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
+      <div className="w-[20%] mt-[100px] h-screen fixed top-18 right-0">
         <CourseOptions active={active} setActive={setActive} />
       </div>
     </div>

@@ -3,7 +3,7 @@ import {
   useEditLayoutMutation,
   useGetHeroDataQuery,
 } from '@/redux/features/layout/layoutApi';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineCamera } from 'react-icons/ai';
 
@@ -13,6 +13,7 @@ const EditHero: FC<Props> = (props: Props) => {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
+  const layoutSuccessRef = useRef(false)
   const { data, refetch } = useGetHeroDataQuery('Banner', {
     refetchOnMountOrArgChange: true,
   });
@@ -23,9 +24,10 @@ const EditHero: FC<Props> = (props: Props) => {
       setSubTitle(data?.layout?.banner.subTitle);
       setImage(data?.layout?.banner?.image?.url);
     }
-    if (isSuccess) {
+    if (isSuccess && !layoutSuccessRef.current) {
       toast.success('Hero updated successfully!');
       refetch();
+      layoutSuccessRef.current = true;
     }
     if (error) {
       if ('data' in error) {
@@ -34,6 +36,11 @@ const EditHero: FC<Props> = (props: Props) => {
       }
     }
   }, [data, isSuccess, error]);
+
+  useEffect(() => {
+    if (!isSuccess) layoutSuccessRef.current = false;
+  }, [isSuccess])
+
   const handleUpdate = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -56,7 +63,7 @@ const EditHero: FC<Props> = (props: Props) => {
   };
   return (
     <>
-      <div className="w-full 1000px:flex items-center">
+      <div className="w-full 1000px:flex items-center pl-5">
         <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[500px] 1100px:w-[500px] h-[50vh] w-[50vh] hero_animation rounded-[50%] 1100:left-[18rem] 1500:left-[21rem]"></div>
         <div className="1000px:w-[50%] flex 1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt-[0] z-10">
           <div className="relative flex items-center justify-end">

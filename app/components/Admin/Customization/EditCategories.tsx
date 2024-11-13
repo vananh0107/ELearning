@@ -3,7 +3,7 @@ import {
   useEditLayoutMutation,
   useGetHeroDataQuery,
 } from '@/redux/features/layout/layoutApi';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoMdAddCircleOutline } from 'react-icons/io';
@@ -12,19 +12,26 @@ import Loader from '../../Loader/Loader';
 type Props = {};
 
 const EditCategories = (props: Props) => {
+
   const { data, isLoading, refetch } = useGetHeroDataQuery('Categories', {
     refetchOnMountOrArgChange: true,
   });
+
   const [editLayout, { isSuccess: layoutSuccess, error }] =
     useEditLayoutMutation();
+
   const [categories, setCategories] = useState<any[]>([]);
+
+  const layoutSuccessRef = useRef(false);
+  
   useEffect(() => {
     if (data) {
       setCategories(data.layout.categories);
     }
-    if (layoutSuccess) {
+    if (layoutSuccess && !layoutSuccessRef.current) {
       refetch();
       toast.success('Categories updated successfully!');
+      layoutSuccessRef.current = true;
     }
     if (error) {
       if ('data' in error) {
@@ -33,6 +40,11 @@ const EditCategories = (props: Props) => {
       }
     }
   }, [data, layoutSuccess, error]);
+
+  useEffect(() => {
+    if (!layoutSuccess) layoutSuccessRef.current = false;
+  }, [layoutSuccess])
+
   const handleCategoriesAdd = (id: any, value: string) => {
     setCategories((prevCategories: any) =>
       prevCategories.map((i: any) =>
@@ -53,9 +65,11 @@ const EditCategories = (props: Props) => {
   ) => {
     return JSON.stringify(originalCategories) === JSON.stringify(newCategories);
   };
+
   const isAnyCategoryTitleEmpty = (categories: any[]) => {
     return categories.some((category: any) => category.title === '');
   };
+
   const editCategoriesHandler = async () => {
     if (
       !areCategoriesUnchanged(data.layout.categories, categories) &&
@@ -67,6 +81,7 @@ const EditCategories = (props: Props) => {
       });
     }
   };
+
   return (
     <>
       {isLoading ? (
@@ -80,7 +95,8 @@ const EditCategories = (props: Props) => {
                 <div className="p-3" key={index}>
                   <div className="flex items-center w-full justify-center">
                     <input
-                      type={`${styles.input} !w-[unset] !border-none !text-[20px] text-xl`}
+                      className={`${styles.input} !w-[unset] !border-none !text-[20px] text-xl dark:text-white`}
+                      type="text"
                       value={item.title}
                       onChange={(e) =>
                         handleCategoriesAdd(item._id, e.target.value)
@@ -123,7 +139,9 @@ const EditCategories = (props: Props) => {
                 ? () => null
                 : editCategoriesHandler
             }
-          ></div>
+          >
+            Save
+          </div>
         </div>
       )}
     </>

@@ -21,7 +21,7 @@ const CourseInformation: FC<Props> = ({
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     if (data) {
-      setCategories(data.categories);
+      setCategories(data?.layout.categories);
     }
   }, [data]);
   const handleSubmit = (e: any) => {
@@ -60,6 +60,7 @@ const CourseInformation: FC<Props> = ({
       reader.readAsDataURL(file);
     }
   };
+  console.log(courseInfo.thumbnail);
   return (
     <div className="w-[80%] m-auto mt-24">
       <form onSubmit={handleSubmit}>
@@ -159,14 +160,14 @@ const CourseInformation: FC<Props> = ({
             <select
               name=""
               id=""
-              className={`${styles.input}`}
-              value={courseInfo.category}
+              className={`${styles.input} dark:bg-black`}
+              value={courseInfo.categories}
               onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, category: e.target.value })
+                setCourseInfo({ ...courseInfo, categories: e.target.value })
               }
             >
               <option value="">Select Category</option>
-              {categories.map((item: any) => (
+              {categories?.map((item: any) => (
                 <option value={item._id} key={item._id}>
                   {item.title}
                 </option>
@@ -221,7 +222,7 @@ const CourseInformation: FC<Props> = ({
           />
           <label
             htmlFor="file"
-            className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${
+            className={`w-full min-h-[10vh] dark:border-white text-black dark:text-white border-[#00000026] p-3 border flex items-center justify-center ${
               dragging ? 'bg-blue-500' : 'bg-transparent'
             }`}
             onDragOver={handleDragOver}
@@ -230,7 +231,11 @@ const CourseInformation: FC<Props> = ({
           >
             {courseInfo.thumbnail ? (
               <img
-                src={courseInfo.thumbnail}
+                src={
+                  courseInfo.thumbnail.url
+                    ? courseInfo.thumbnail.url
+                    : courseInfo.thumbnail
+                }
                 alt=""
                 className="max-h-full w-full object-cover"
               />

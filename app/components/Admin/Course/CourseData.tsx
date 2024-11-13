@@ -70,6 +70,7 @@ const CourseData: FC<Props> = ({
         <AddCircleIcon
           style={{ margin: '10px 0px', cursor: 'pointer', width: '30px' }}
           onClick={handleAddBenefit}
+          className='dark:text-white'
         />
       </div>
 
@@ -93,6 +94,7 @@ const CourseData: FC<Props> = ({
         <AddCircleIcon
           style={{ margin: '10px 0px', cursor: 'pointer', width: '30px' }}
           onClick={handleAddPrerequisite}
+          className='dark:text-white'
         />
       </div>
       <div className="w-full flex items-center justify-between">

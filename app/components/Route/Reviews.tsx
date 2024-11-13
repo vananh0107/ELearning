@@ -51,14 +51,16 @@ export const reviews = [
 const Reviews = (props: Props) => {
   return (
     <div className="w-[90%] 800px:w-[85%] m-auto">
-      <div className="w-full 800px:flex items-center">
+      <div className="w-full 800px:flex items-center  my-[60px]">
         <div className="800px-[50%] w-full">
           <Image src={banner_2} alt="" width={700} height={700} />
         </div>
-        <div className="800px:w-[50%] w-full">
+        <div className="800px:w-[67%] w-full">
           <h3 className={`${styles.title} 800px:!text-[40px]`}>
-            Our Students Are <span className="text-gradient">Our Strength</span>{' '}
-            <br /> See What They Say About Us
+            Our Students Are
+            <br /> <span className="text-gradient">
+              Our Strength
+            </span> <br /> See What They Say About Us
           </h3>
           <br />
           <p className={styles.label}>

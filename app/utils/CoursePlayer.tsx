@@ -16,13 +16,15 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
         setVideoData(res.data);
       });
   }, [videoUrl]);
+  console.log(videoData);
   return (
     <div
       style={{ paddingTop: '56.25%', overflow: 'hidden', position: 'relative' }}
     >
       {videoData.otp && videoData.playbackInfo !== '' && (
         <iframe
-          src={`https://player.vdocipher.com/v2?otp=${videoData?.otp}&playbackInfo=${videoData.playbackInfo}&player=2t4J8zUn839edFbp`}
+          src="https://player.vdocipher.com/v2/?otp=20160313versASE323AE7VpitalKLh4RCXtG2Jng39ZljRsLnyMrdVbju7dft1yZ&playbackInfo=eyJ2aWRlb0lkIjoiOTQzN2ViNWY2ZjljNTU5Njc1MjcwNjRjMTNiNzUwMjkifQ=="
+          // src={`https://player.vdocipher.com/v2?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=2t4J8zUn839edFbp`}
           style={{
             border: 0,
             width: '100%',

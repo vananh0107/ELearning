@@ -23,6 +23,7 @@ const EditCourse: FC<Props> = ({ id }) => {
   );
   const editCourseData =
     data && data.courses.find((course: any) => course._id === id);
+    console.log(editCourseData)
   useEffect(() => {
     if (isSuccess) {
       toast.success('Course updated successfully!');
@@ -162,7 +163,7 @@ const EditCourse: FC<Props> = ({ id }) => {
           />
         )}
       </div>
-      <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
+      <div className="w-[20%] mt-[100px] h-screen fixed  top-18 right-0">
         <CourseOptions active={active} setActive={setActive} />
       </div>
     </div>

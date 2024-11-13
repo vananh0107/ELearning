@@ -2,16 +2,16 @@ import { apiSlice } from '../api/apiSlice';
 export const courseApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createCourse: builder.mutation({
-      query: ({ data }) => ({
+      query: ( data ) => ({
         url: 'create-course',
         method: 'POST',
-        body: { data },
+        body:  data ,
         credentials: 'include' as const,
       }),
     }),
     getAllCourses: builder.query({
       query: () => ({
-        url: 'get-admin-courses',
+        url: 'get-all-courses-admin',
         method: 'GET',
         credentials: 'include' as const,
       }),
