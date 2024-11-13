@@ -72,11 +72,11 @@ const CourseContent: FC<Props> = ({
   };
   const addNewSection = () => {
     if (
-      courseContentData[courseContentData.length - 1].title === '' ||
-      courseContentData[courseContentData.length - 1].videoUrl === '' ||
-      courseContentData[courseContentData.length - 1].description === '' ||
-      courseContentData[courseContentData.length - 1].links[0].title === '' ||
-      courseContentData[courseContentData.length - 1].links[0].url === ''
+      courseContentData[courseContentData.length - 1]?.title === '' ||
+      courseContentData[courseContentData.length - 1]?.videoUrl === '' ||
+      courseContentData[courseContentData.length - 1]?.description === '' ||
+      courseContentData[courseContentData.length - 1]?.links[0].title === '' ||
+      courseContentData[courseContentData.length - 1]?.links[0].url === ''
     ) {
       toast.error('Please fill all required fields');
     } else {

@@ -27,7 +27,7 @@ const EditCourse: FC<Props> = ({ id }) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success('Course updated successfully!');
-      redirect('/admin/all-courses');
+      redirect('/admin/courses');
     }
     if (error) {
       if ('data' in error) {
