@@ -106,3 +106,8 @@ input::-webkit-inner-spin-button {
 ::-webkit-scrollbar-thumb:hover {
   background: #32ae7e;
 }
+
+.chart-style{
+  width:90% !important;
+  height:80% !important;
+}

@@ -52,7 +52,6 @@ const Verification: FC<Props> = ({ setRoute }) => {
       setInvalidError(true);
       return;
     }
-    console.log(token, verificationNumber);
     await activation({
       activation_token: token,
       activation_code: verificationNumber,

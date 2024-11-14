@@ -1,7 +1,7 @@
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
 import React, { useEffect, useState } from 'react';
-import { AiFillStar, AiOutlineArrowLeft, AiOutlineStar } from 'react-icons/ai';
+import { AiFillStar, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineStar } from 'react-icons/ai';
 import avatarDefault from '../../../public/assets/avatar.jpg';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -89,7 +89,7 @@ const CourseContentMedia = ({
       addNewQuestion({
         question,
         courseId: id,
-        contentId: data[activeVideo]._id,
+        contentId: data?.[activeVideo]._id,
       });
     }
   };
@@ -100,7 +100,7 @@ const CourseContentMedia = ({
       toast.success('Question submitted successfully');
       socketId.emit('notification', {
         title: 'New Question Received',
-        message: `You have a new question in ${data[activeVideo].title}`,
+        message: `You have a new question in ${data?.[activeVideo].title}`,
         userId: user._id,
       });
     }
@@ -111,7 +111,7 @@ const CourseContentMedia = ({
       if (user.role !== 'admin') {
         socketId.emit('notification', {
           title: 'New Reply Received',
-          message: `You have a new questions reply in ${data[activeVideo].title}`,
+          message: `You have a new questions reply in ${data?.[activeVideo].title}`,
           userId: user._id,
         });
       }
@@ -135,7 +135,7 @@ const CourseContentMedia = ({
       toast.success('Review submitted successfully');
       socketId.emit('notification', {
         title: 'New Question Received',
-        message: `You have a new question in ${data[activeVideo].title}`,
+        message: `You have a new question in ${data?.[activeVideo].title}`,
         userId: user._id,
       });
     }
@@ -170,7 +170,7 @@ const CourseContentMedia = ({
     addAnswerInQuestion({
       answer,
       courseId: id,
-      contentId: data[activeVideo]._id,
+      contentId: data?.[activeVideo]._id,
       questionId: questionId,
     });
   };
@@ -193,8 +193,8 @@ const CourseContentMedia = ({
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
-        title={data[activeVideo]?.title}
-        videoUrl={data[activeVideo]?.videoUrl}
+        title={data?.[activeVideo]?.title}
+        videoUrl={data?.[activeVideo]?.videoUrl}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -214,22 +214,22 @@ const CourseContentMedia = ({
           className={`${
             styles.button
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
-            data.length - 1 === activeVideo && '!cursor-no-drop opacity-[.8]'
+            data?.length - 1 === activeVideo && '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() =>
             setActiveVideo(
-              data && data.length - 1 === activeVideo
+              data && data?.length - 1 === activeVideo
                 ? activeVideo
                 : activeVideo + 1
             )
           }
         >
           Next Lesson
-          <AiOutlineArrowLeft className="ml-2" />
+          <AiOutlineArrowRight className="ml-2" />
         </div>
       </div>
       <h1 className="pt-2 text-[25px] font-[600] dark:text-white text-black ">
-        {data[activeVideo].title}
+        {data?.[activeVideo].title}
       </h1>
       <br />
       <div className="w-full p-4 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
@@ -250,12 +250,12 @@ const CourseContentMedia = ({
       <br />
       {activeBar === 0 && (
         <p className="text-[18px] whitespace-pre-line mb-3 dark:text-white text-black">
-          {data[activeVideo]?.description}
+          {data?.[activeVideo]?.description}
         </p>
       )}
       {activeBar === 1 && (
         <div>
-          {data[activeVideo]?.links.map((item: any, index: number) => (
+          {data?.[activeVideo]?.links.map((item: any, index: number) => (
             <div className="mb-5" key={index}>
               <h2 className="800px:text-[20px] 800px:inline-block dark:text-white">
                 {item.title && item.title + ' :'}
@@ -288,7 +288,7 @@ const CourseContentMedia = ({
               cols={40}
               rows={5}
               placeholder="Write your question"
-              className="outline-none bg-transparent ml-3 border border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
+              className="outline-none bg-transparent ml-3 border text-black dark:text-white border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
             ></textarea>
           </div>
           <div className="w-full flex justify-end">
@@ -390,7 +390,7 @@ const CourseContentMedia = ({
             <br />
             <div className="w-full h-[1px] bg-[#ffffff3b]">
               <div className="w-full">
-                {(course?.reviews && [...course.reviews].reverse()).map(
+                {(course?.reviews && [...course.reviews].reverse())?.map(
                   (item: any, index: number) => (
                     <div
                       className="w-full my-5 dark:text-white text-black"
@@ -510,7 +510,7 @@ const CommentReply = ({
   return (
     <>
       <div className="w-full my-3">
-        {data[activeVideo].questions.map((item: any, index: number) => (
+        {data?.[activeVideo].questions.map((item: any, index: number) => (
           <CommentItem
             key={index}
             data={data}

@@ -15,7 +15,6 @@ type Props = {
 };
 
 const SidebarProfile = ({ user, active, avatar, setActive, logOutHandle }) => {
-  console.log(user)
   return (
     <div className="w-full">
       <div
@@ -26,7 +25,7 @@ const SidebarProfile = ({ user, active, avatar, setActive, logOutHandle }) => {
       >
         <Image
           src={
-            user.avatar || avatar ? user.avatar.url || avatar : avatarDefault
+            user?.avatar || avatar ? user?.avatar.url || avatar : avatarDefault
           }
           alt=""
           width={20}

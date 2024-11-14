@@ -17,7 +17,6 @@ const Hero: FC<Props> = (props) => {
       router.push(`/course?title=${search}`);
     }
   };
-  console.log("data",data)
   return (
     <>
       {isLoading ? (

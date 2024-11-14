@@ -45,8 +45,8 @@ const CourseAnalytics = (props: Props) => {
             </p>
           </div>
           <div className="w-full h-[90%] flex items-center justify-center">
-            <ResponsiveContainer width="90%" height="50%">
-              <BarChart width={150} height={300} data={analyticsData}>
+            <ResponsiveContainer width="90%" height="80%">
+              <BarChart width={800} height={400} data={analyticsData}>
                 <XAxis dataKey="name">
                   <Label offset={0} position="insideBottom" />
                 </XAxis>

@@ -34,8 +34,8 @@ const UserAnalytics = ({ isDashboard }: Props) => {
     data.users.last12Months.forEach((item: any) => {
       analyticsData.push({ name: item.month, uv: item.count });
     });
+  console.log(analyticsData)
   return (
-
     <>
       {isLoading ? (
         <Loader />
@@ -81,7 +81,8 @@ const UserAnalytics = ({ isDashboard }: Props) => {
                   type="monotone"
                   dataKey="count"
                   stroke="#4d62d9"
-                  fill="#4d62d9"/>
+                  fill="#4d62d9"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>

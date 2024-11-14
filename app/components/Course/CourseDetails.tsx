@@ -37,7 +37,7 @@ const CourseDetails = ({
     ((data?.estimatedPrice - data?.price) / data?.estimatedPrice) * 100;
   const discountPercentengePrice = discountPercentage.toFixed(0);
   const isPurchased =
-    user && user?.courses?.find((item: any) => item._id === data._id);
+    user && user?.courses?.find((item: any) => item.courseId === data._id);
   const handleOrder = (e: any) => {
     if (user) {
       setOpen(true);
@@ -46,6 +46,7 @@ const CourseDetails = ({
       openAuthModal(true);
     }
   };
+  console.log(isPurchased)
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -113,7 +114,7 @@ const CourseDetails = ({
                 <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
                   Course Overview
                 </h1>
-                <CourseContentList data={data?.courseData} isDemo={true} />
+                <CourseContentList data={data?.courseContent} isDemo={true} />
               </div>
               <br />
               <br />
@@ -135,7 +136,7 @@ const CourseDetails = ({
                     {Number.isInteger(data?.ratings)
                       ? data?.ratings.toFixed(1)
                       : data?.ratings.toFixed(2)}{' '}
-                    Course Rating * {data?.reviews?.length} Reviews
+                    Course Rating • {data?.reviews?.length} Reviews
                   </h5>
                 </div>
                 <br />
@@ -242,22 +243,22 @@ const CourseDetails = ({
                     className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
-                    Buy Now {data.price}
+                    Buy Now {data.price}$
                   </div>
                 )}
               </div>
               <br />
               <p className="pb-1 text-black dark:text-white">
-                * Source code included
+                • Source code included
               </p>
               <p className="pb-1 text-black dark:text-white">
-                * Full lifetime access
+                • Full lifetime access
               </p>
               <p className="pb-1 text-black dark:text-white">
-                * Certificate of completion
+                • Certificate of completion
               </p>
               <p className="pb-1 800px:pb-1 text-black dark:text-white">
-                * Premium Support
+                • Premium Support
               </p>
             </div>
           </div>
@@ -277,7 +278,7 @@ const CourseDetails = ({
               <div className="w-full">
                 {stripePromise && clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CheckOutForm setOpen={setOpen} data={data} user={user}/>
+                    <CheckOutForm setOpen={setOpen} data={data} user={user} />
                   </Elements>
                 )}
               </div>

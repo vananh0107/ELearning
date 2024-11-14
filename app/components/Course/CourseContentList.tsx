@@ -28,59 +28,54 @@ const CourseContentList: FC<Props> = (props) => {
   };
   return (
     <div
-      className={`mt-[15px] w-full ${
+      className={`mt-[30px] w-full ${
         !props.isDemo && 'ml-[-30px] sticky top-24 left-0 z-30'
       }`}
     >
       {videoSections.map((section: string, sectionIndex: number) => {
         const isSectionVisible = visibleSections.has(section);
-        // Filter videos by section
         const sectionVideos: any[] = props.data.filter(
           (item: any) => item.videoSection === section
         );
-        const sectionVideoCount: number = sectionVideos.length; // Number of videos in the current section
+        const sectionVideoCount: number = sectionVideos.length;
         const sectionVideoLength: number = sectionVideos.reduce(
           (totalLength: number, item: any) => totalLength + item.videoLength,
           0
         );
-        const sectionStartIndex: number = totalCount; // Start index of videos within the current section
-        totalCount += sectionVideoCount; // Update the total count of videos
+        const sectionStartIndex: number = totalCount; 
+        totalCount += sectionVideoCount; 
         const sectionContentHours: number = sectionVideoLength / 60;
         return (
           <div
-            className={`${!props.isDemo && 'border-b border-[#ffffff8e] pb-2'}`}
+            className={`${props.isDemo && 'border-b border-[#ffffff8e] pb-2'}`}
             key={sectionIndex}
           >
-            <div className="w-full flex">
-              <div className="w-full flex justify-center items-center">
-                <h2 className="text-[22px] text-black dark:text-white">
-                  {section}
-                </h2>
-                <button
-                  className="mr-4 cursor-pointer text-black dark:text-white"
-                  onClick={() => toggleSection(section)}
-                >
-                  {isSectionVisible ? (
-                    <BsChevronUp size={20} />
-                  ) : (
-                    <BsChevronDown size={20} />
-                  )}
-                </button>
-              </div>
+            <div className="w-full flex justify-between items-center">
+              <h2 className="text-[22px] text-black dark:text-white">
+                {section}
+              </h2>
+              <button
+                className="cursor-pointer text-black dark:text-white"
+                onClick={() => toggleSection(section)}
+              >
+                {isSectionVisible ? (
+                  <BsChevronUp size={20} />
+                ) : (
+                  <BsChevronDown size={20} />
+                )}
+              </button>
             </div>
             <h5 className="text-black dark:text-white">
-              {sectionVideoCount} Lessons{' '}
-              {sectionVideoLength < 60
-                ? sectionVideoLength
-                : sectionContentHours.toFixed(2)}{' '}
-              {sectionVideoLength > 60 ? 'hour' : 'minutes'}
+              {sectionVideoCount} Lessons •{' '}
+              {sectionContentHours < 1
+                ? `${sectionVideoLength} minutes`
+                : `${sectionContentHours.toFixed(2)} hours`}
             </h5>
             <br />
             {isSectionVisible && (
               <div className="w-full">
-                {sectionVideos.map((item: any, index: number) => {
-                  const videoIndex: number = sectionStartIndex + index;
-                  const contentLegth: number = item.videoLength / 60;
+                {sectionVideos.map((item, index) => {
+                  const videoIndex = sectionStartIndex + index;
                   return (
                     <div
                       className={`w-full ${
@@ -92,22 +87,19 @@ const CourseContentList: FC<Props> = (props) => {
                       }
                     >
                       <div className="flex items-start">
-                        <div>
-                          <MdOutlineOndemandVideo
-                            size={25}
-                            className="mr-2"
-                            color="#1cdada"
-                          />
-                        </div>
+                        <MdOutlineOndemandVideo
+                          size={25}
+                          className="mr-2"
+                          color="#1cdada"
+                        />
                         <h1 className="text-[18px] inline-block break-words text-black dark:text-white">
                           {item.title}
                         </h1>
                       </div>
                       <h5 className="pl-8 text-black dark:text-white">
                         {item.videoLength < 60
-                          ? contentLegth.toFixed(2)
-                          : item.videoLength}{' '}
-                        {item.videoLength > 60 ? 'hour' : 'minutes'}
+                          ? `${item.videoLength} minutes`
+                          : `${(item.videoLength / 60).toFixed(2)} hours`}
                       </h5>
                     </div>
                   );

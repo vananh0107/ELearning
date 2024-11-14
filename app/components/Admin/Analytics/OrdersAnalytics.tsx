@@ -69,8 +69,8 @@ const OrdersAnalytics = ({ isDashboard }: Props) => {
           </div>
           <div
             className={`w-full ${
-              !isDashboard ? 'h-[90%]' : 'h-full'
-            } flex items-center justify-center`}
+              !isDashboard ? 'h-[80%]' : 'h-full'
+            } flex items-center justify-center mt-6 pl-6`}
           >
             <ResponsiveContainer width={isDashboard ? '100%' : '90%'}>
               <LineChart
@@ -78,6 +78,7 @@ const OrdersAnalytics = ({ isDashboard }: Props) => {
                 height={300}
                 data={analyticsData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                className='chart-style'
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />

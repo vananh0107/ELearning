@@ -60,7 +60,6 @@ const CourseInformation: FC<Props> = ({
       reader.readAsDataURL(file);
     }
   };
-  console.log(courseInfo.thumbnail);
   return (
     <div className="w-[80%] m-auto mt-24">
       <form onSubmit={handleSubmit}>

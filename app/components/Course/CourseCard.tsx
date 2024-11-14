@@ -16,11 +16,11 @@ const CourseCard: FC<Props> = ({ item, isProfile }) => {
     >
       <div className="w-full min-h-[35vh] dark:bg-slate-500 dark:bg-opacity-20 backdrop-blur border dark:border-[#ffffff1d] border-[#00000015] dark:shadow-[bg-slate-700]rounded-lg p-3 shadow-sm dark:shadow-inner">
         <Image
-          src={item?.thumnail?.url}
-          width={500}
+          src={item?.thumbnail?.url}
+          width={400}
           height={300}
           objectFit="contain"
-          className="rounded w-full"
+          className="rounded w-full max-h-[300px] min-h-[300px]"
           alt=""
         />
         <br />
@@ -49,7 +49,7 @@ const CourseCard: FC<Props> = ({ item, isProfile }) => {
           <div className="flex items-center pb-3">
             <AiOutlineUnorderedList size={20} fill="#fff" />
             <h5 className="pl-2 text-black dark:text-[#fff]">
-              {item?.courseData?.length} Lectures
+              {item?.courseContent?.length} Lectures
             </h5>
           </div>
         </div>
