@@ -1,7 +1,17 @@
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
 import React, { useEffect, useState } from 'react';
-import { AiFillStar, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineStar } from 'react-icons/ai';
+import {
+  AiFillStar,
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight,
+  AiOutlineStar,
+} from 'react-icons/ai';
+import { useTheme } from 'next-themes';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { darcula } from '@uiw/codemirror-theme-darcula';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import avatarDefault from '../../../public/assets/avatar.jpg';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -45,6 +55,12 @@ const CourseContentMedia = ({
   const [isReviewReply, setIsReviewReply] = useState(false);
   const [reply, setReply] = useState('');
   const [reviewId, setReviewId] = useState('');
+  const [code, setCode] = useState('');
+
+  const handleSubmit = () => {
+    console.log('Code submitted:', code);
+    alert('Code submitted!');
+  };
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
@@ -190,11 +206,14 @@ const CourseContentMedia = ({
       }
     }
   };
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
         title={data?.[activeVideo]?.title}
         videoUrl={data?.[activeVideo]?.videoUrl}
+        isPreview={false}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -233,7 +252,7 @@ const CourseContentMedia = ({
       </h1>
       <br />
       <div className="w-full p-4 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
-        {['Overview', 'Resources', 'Q&A', 'Review'].map((text, index) => (
+        {['Overview', 'Resources', 'Q&A', 'Submit Code'].map((text, index) => (
           <h5
             key={index}
             className={`800px:text-[20px]  cursor-pointer ${
@@ -322,7 +341,7 @@ const CourseContentMedia = ({
           </div>
         </>
       )}
-      {activeBar === 3 && (
+      {/* {activeBar === 3 && (
         <div className="w-full">
           <>
             {!isReviewExists && (
@@ -492,6 +511,24 @@ const CourseContentMedia = ({
             </div>
             <br />
           </>
+        </div>
+      )} */}
+      {activeBar === 3 && (
+        <div className="w-full">
+          <CodeMirror
+            value={code}
+            height="400px"
+            extensions={[javascript()]}
+            onChange={(value) => setCode(value)}
+            theme={isDarkMode ? darcula : quietlight}
+            className="  border-gray-300 rounded-lg dark:text-white text-black"
+          />
+          <button
+            onClick={handleSubmit}
+            className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+          >
+            Submit Code
+          </button>
         </div>
       )}
     </div>

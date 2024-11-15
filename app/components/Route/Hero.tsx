@@ -8,13 +8,13 @@ import { useRouter } from 'next/navigation';
 type Props = {};
 const Hero: FC<Props> = (props) => {
   const { data, isLoading } = useGetHeroDataQuery('Banner', {});
-  const { search, setSearch } = useState('');
+  const [ search, setSearch ] = useState('');
   const router = useRouter();
   const handleSearch = () => {
-    if (search.trim()=== '') {
+    if (search?.trim()=== '') {
       return
     }else{
-      router.push(`/course?title=${search}`);
+      router.push(`/courses?title=${search}`);
     }
   };
   return (

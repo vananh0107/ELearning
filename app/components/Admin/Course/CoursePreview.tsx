@@ -35,6 +35,7 @@ const CoursePreview: FC<Props> = ({
           <CoursePlayer
             videoUrl={courseData?.demoUrl}
             title={courseData.title}
+            isPreview={true}
           />
         </div>
         <div className="flex items-center">

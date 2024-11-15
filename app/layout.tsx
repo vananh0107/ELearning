@@ -30,6 +30,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <script
+        src="https://player.vdocipher.com/v2/api.js"
+        async
+        onLoad={() => console.log('Vdo.js script loaded!')}
+      ></script>
       <body
         className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:form-gray-900 dark:to-black duration-300`}
       >
@@ -48,7 +53,7 @@ export default function RootLayout({
 const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isLoading } = useLoadUserQuery({});
   useEffect(() => {
-    socketId.on('connection',()=>{})
-  },[])
+    socketId.on('connection', () => {});
+  }, []);
   return <>{isLoading ? <Loader /> : <>{children}</>}</>;
 };

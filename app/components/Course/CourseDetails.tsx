@@ -46,7 +46,6 @@ const CourseDetails = ({
       openAuthModal(true);
     }
   };
-  console.log(isPurchased)
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -218,7 +217,7 @@ const CourseDetails = ({
           </div>
           <div className="w-full 800px:w-[33%] relative">
             <div className="sticky top-[100px] left-[0] z-[50] w-full">
-              <CoursePlayer videoUrl={data?.demoUrl} title={data?.title} />
+              <CoursePlayer videoUrl={data?.demoUrl} title={data?.title} isPreview={true}/>
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
                   {data.price === 0 ? 'Free' : data.price}
