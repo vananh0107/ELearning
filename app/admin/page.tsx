@@ -16,10 +16,10 @@ const Page = (props: Props) => {
           keywords="Programming, React, Next.js, TypeScript, ELearning"
         />
         <div className="flex h-[200vh] dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black ">
-          <div className="1500px:w-[16%] w-1/5">
+          <div className="1500px:w-[12%] w-1/6">
             <AdminSideBar />
           </div>
-          <div className="w-[85%]">
+          <div className="w-[88%]">
             <DashboardHero isDashboard={true}/>
           </div>
         </div>

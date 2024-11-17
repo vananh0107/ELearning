@@ -25,7 +25,7 @@ const CourseContent = ({ id, user }: Props) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div className="dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
           <Header
             activeItem={1}
             open={open}
@@ -57,7 +57,7 @@ const CourseContent = ({ id, user }: Props) => {
               />
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

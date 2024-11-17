@@ -22,7 +22,7 @@ const Page = () => {
     }
   }, [data, error]);
   return (
-    <div className="dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
+    <div>
       {isLoading ? (
         <Loader />
       ) : (

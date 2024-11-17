@@ -59,7 +59,7 @@ const CourseContentMedia = ({
 
   const handleSubmit = () => {
     console.log('Code submitted:', code);
-    alert('Code submitted!');
+    // alert('Code submitted!');
   };
   const [
     addNewQuestion,

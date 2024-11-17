@@ -52,10 +52,10 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
         orderslastTwoMonths?.length === 2 &&
         orderslastTwoMonths?.length === 2
       ) {
-        const usersCurrentMonth = userslastTwoMonths[1].count;
-        const usersPreviousMonth = userslastTwoMonths[0].count;
-        const ordersCurrentMonth = orderslastTwoMonths[1].count;
-        const ordersPreviousMonth = orderslastTwoMonths[0].count;
+        const usersCurrentMonth = userslastTwoMonths?.[1].count;
+        const usersPreviousMonth = userslastTwoMonths?.[0].count;
+        const ordersCurrentMonth = orderslastTwoMonths?.[1].count;
+        const ordersPreviousMonth = orderslastTwoMonths?.[0].count;
         const usersPercentChange =
           usersPreviousMonth !== 0
             ? ((usersCurrentMonth - usersPreviousMonth) / usersPreviousMonth) *
