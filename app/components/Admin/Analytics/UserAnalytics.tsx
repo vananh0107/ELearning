@@ -30,9 +30,10 @@ type Props = {
 const UserAnalytics = ({ isDashboard }: Props) => {
   const { data, isLoading } = useGetUsersAnalyticsQuery({});
   const analyticsData: any = [];
+  console.log(data)
   data &&
     data.users.last12Months.forEach((item: any) => {
-      analyticsData.push({ name: item.month, uv: item.count });
+      analyticsData.push({ name: item.month, count: item.count });
     });
   console.log(analyticsData)
   return (
@@ -68,7 +69,7 @@ const UserAnalytics = ({ isDashboard }: Props) => {
           >
             <ResponsiveContainer
               width={isDashboard ? '100%' : '90%'}
-              height={!isDashboard ? '50%' : '100%'}
+              height={!isDashboard ? '50%' : '80%'}
             >
               <AreaChart
                 data={analyticsData}

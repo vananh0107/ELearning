@@ -53,7 +53,11 @@ const CreateCourse = (props: Props) => {
         },
       ],
       suggestion: '',
+      quiz: [
+        { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
+      ],
     },
+
   ]);
   const [courseData, setCourseData] = useState({});
   const handleSubmit = async () => {
@@ -75,6 +79,12 @@ const CreateCourse = (props: Props) => {
           url: link.url,
         })),
         suggestion: courseContent.suggestion,
+        quiz:courseContent.quiz.map((item) => ({
+          time: item.time,
+          question: item.question,
+          correctAnswer: item.correctAnswer,
+          options: item.options,
+        })),
       })
     );
     const data = {

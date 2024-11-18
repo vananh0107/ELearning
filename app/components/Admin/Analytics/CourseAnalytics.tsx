@@ -35,7 +35,7 @@ const CourseAnalytics = (props: Props) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="h-screen">
+        <div className="h-screen overflow-hidden">
           <div className="mt-[50px]">
             <h1 className={`${styles.title} px-5 !text-start`}>
               Courses Analytics
@@ -44,7 +44,7 @@ const CourseAnalytics = (props: Props) => {
               Last 12 months analytics data{''}
             </p>
           </div>
-          <div className="w-full h-[90%] flex items-center justify-center">
+          <div className="w-full h-[80%] flex items-center justify-center">
             <ResponsiveContainer width="90%" height="80%">
               <BarChart width={800} height={400} data={analyticsData}>
                 <XAxis dataKey="name">

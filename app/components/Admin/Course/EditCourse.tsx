@@ -23,7 +23,6 @@ const EditCourse: FC<Props> = ({ id }) => {
   );
   const editCourseData =
     data && data.courses.find((course: any) => course._id === id);
-    console.log(editCourseData)
   useEffect(() => {
     if (isSuccess) {
       toast.success('Course updated successfully!');
@@ -82,6 +81,9 @@ const EditCourse: FC<Props> = ({ id }) => {
         },
       ],
       suggestion: '',
+      quiz: [
+        { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
+      ],
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -103,6 +105,12 @@ const EditCourse: FC<Props> = ({ id }) => {
           url: link.url,
         })),
         suggestion: courseContent.suggestion,
+        quiz:courseContent.quiz.map((item) => ({
+          time: item.time,
+          question: item.question,
+          correctAnswer: item.correctAnswer,
+          options: item.options,
+        })),
       })
     );
     const data = {

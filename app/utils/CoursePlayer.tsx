@@ -6,19 +6,18 @@ type Props = {
   title: string;
 };
 
-// Dữ liệu quiz
 const quizQuestions = [
   {
-    time: 2, // Giây
+    time: 2,
     question: 'Câu hỏi ở phút thứ 1?',
     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-    correctAnswer: 1, // Đáp án đúng là B
+    correctAnswer: 1,
   },
   {
-    time: 4, // Giây
+    time: 10,
     question: 'Câu hỏi khi hết video?',
     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-    correctAnswer: 2, // Đáp án đúng là C
+    correctAnswer: 2,
   },
 ];
 
@@ -29,8 +28,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
   const [iframeRef, setIframeRef] = useState<HTMLIFrameElement | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [quizStatus, setQuizStatus] = useState<string | null>(null);
-
-  // Lấy OTP và Playback info cho video
+  const [quizAnswered, setQuizAnswered] = useState(false);
   useEffect(() => {
     axios
       .post(`${process.env.NEXT_PUBLIC_SERVER_URI}getVdoCipherOTP`, {
@@ -41,7 +39,6 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
       });
   }, [videoUrl]);
 
-  // Kiểm tra thời gian video để trigger quiz
   useEffect(() => {
     if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
       const player = window.VdoPlayer.getInstance(iframeRef);
@@ -52,7 +49,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
         if (quiz && !isQuizActive) {
           setIsQuizActive(true);
           setCurrentQuiz(currentTime);
-          player.video.pause();  // Tạm dừng video khi đến thời gian quiz
+          player.video.pause();
         }
       };
 
@@ -64,126 +61,120 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
     }
   }, [iframeRef, isQuizActive]);
 
-  // Xử lý khi quiz hoàn thành
-  const handleQuizCompletion = () => {
-    console.log("vo")
-    if (
-      selectedAnswer ===
-      quizQuestions.find((q) => q.time === currentQuiz)?.correctAnswer
-    ) {
-      setQuizStatus('Correct! Well done.');
-    } else {
-      setQuizStatus('Sorry, that was incorrect. Better luck next time!');
-    }
+  const handleAnswerSelection = (index: number) => {
+    setSelectedAnswer(index);
+    const correctAnswer = quizQuestions.find(
+      (q) => q.time === currentQuiz
+    )?.correctAnswer;
+    setQuizStatus(index === correctAnswer ? 'correct' : 'incorrect');
+    setQuizAnswered(true);
 
     setTimeout(() => {
       setIsQuizActive(false);
+      setQuizAnswered(false);
       setSelectedAnswer(null);
       setQuizStatus(null);
-      setCurrentQuiz(null);
-      console.log("vo setimeout")
-      if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
-        console.log("vo if")
-        const player = window.VdoPlayer.getInstance(iframeRef);
-        
-        // Nhảy đến thời gian tiếp theo sau khi quiz hoàn thành
-        const nextQuiz = quizQuestions.find(
-          (q) => q.time > (currentQuiz || 0)
-        );
-        const seekToTime = nextQuiz ? nextQuiz.time : currentQuiz;
-        console.log(seekToTime)
-        if (seekToTime !== undefined) {
-          // Sử dụng currentTime để nhảy đến đoạn video mong muốn
-          player.video.currentTime = seekToTime; 
 
-          // Đảm bảo video sẽ phát lại tự động sau khi nhảy đến thời gian
-          player.video.play(); 
+      if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
+        const player = window.VdoPlayer.getInstance(iframeRef);
+        if (currentQuiz !== null) {
+          player.video.currentTime = currentQuiz + 1;
+          player.video.play();
         }
       }
-    }, 2000); 
-  };
-
-  const handleAnswerSelection = (index: number) => {
-    setSelectedAnswer(index);
-    setIsQuizActive(false);
+    }, 1000);
   };
 
   return (
-    <>
-      {isQuizActive
-        ? currentQuiz !== null && (
-            <div
-              className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto w-full my-6"
-            >
-              <h2 className="text-xl font-bold mb-4">
-                {quizQuestions.find((q) => q.time === currentQuiz)?.question}
-              </h2>
-              <div className="options space-y-2">
-                {quizQuestions
-                  .find((q) => q.time === currentQuiz)
-                  ?.options.map((option, index) => {
-                    const isCorrect =
-                      index ===
-                      quizQuestions.find((q) => q.time === currentQuiz)
-                        ?.correctAnswer;
-                    const isSelected = selectedAnswer === index;
-                    const optionClass = isSelected
-                      ? isCorrect
-                        ? 'bg-green-500 text-white' 
-                        : 'bg-red-500 text-white' 
-                      : 'bg-gray-100 text-gray-900';
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        paddingTop: '56.25%',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: isQuizActive ? 'none' : 'block',
+        }}
+      >
+        {videoData.otp && videoData.playbackInfo && (
+          <iframe
+            ref={(ref) => setIframeRef(ref)}
+            src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=2t4J8zUn839edFbp`}
+            style={{
+              border: 0,
+              width: '100%',
+              height: '100%',
+            }}
+            allowFullScreen={true}
+            allow="encrypted-media"
+          ></iframe>
+        )}
+      </div>
 
-                    return (
-                      <button
-                        key={index}
-                        className={`w-full p-3 rounded-lg text-left ${optionClass}`}
-                        onClick={() => handleAnswerSelection(index)}
-                        disabled={selectedAnswer !== null} 
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-              </div>
-              <div className="status mt-4">
-                {selectedAnswer !== null && (
-                  <button
-                    className="btn-submit bg-blue-500 text-white py-2 px-4 rounded"
-                    onClick={handleQuizCompletion}
-                  >
-                    Submit Answer
-                  </button>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: isQuizActive ? 'block' : 'none',
+          backgroundColor: 'white',
+          zIndex: 10,
+        }}
+      >
+        {currentQuiz !== null && (
+          <div className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto w-full my-6">
+            <h2 className="text-xl font-bold mb-4">
+              {quizQuestions.find((q) => q.time === currentQuiz)?.question}
+            </h2>
+            <div className="options space-y-2">
+              {quizQuestions
+                .find((q) => q.time === currentQuiz)
+                ?.options.map((option, index) => {
+                  const isCorrect =
+                    index ===
+                    quizQuestions.find((q) => q.time === currentQuiz)
+                      ?.correctAnswer;
+                  const isSelected = selectedAnswer === index;
+                  const optionClass = isSelected
+                    ? isCorrect
+                      ? 'bg-green-500 text-white'
+                      : 'bg-red-500 text-white'
+                    : 'bg-gray-100 text-gray-900';
+
+                  return (
+                    <button
+                      key={index}
+                      className={`w-full p-3 rounded-lg text-left ${optionClass}`}
+                      onClick={() => handleAnswerSelection(index)}
+                      disabled={quizAnswered}
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+            </div>
+            {quizStatus && (
+              <div className="mt-4 text-center">
+                {quizStatus === 'correct' ? (
+                  <span className="text-green-600">Correct answer!</span>
+                ) : (
+                  <span className="text-red-600">Wrong answer!</span>
                 )}
-                {quizStatus && <p className="mt-2 text-center">{quizStatus}</p>}
               </div>
-            </div>
-          )
-        : videoData.otp &&
-          videoData.playbackInfo && (
-            <div
-              style={{
-                paddingTop: '56.25%',
-                overflow: 'hidden',
-                position: 'relative',
-              }}
-            >
-              <iframe
-                ref={(ref) => setIframeRef(ref)}
-                src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=2t4J8zUn839edFbp`}
-                style={{
-                  border: 0,
-                  width: '100%',
-                  height: '100%',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                }}
-                allowFullScreen={true}
-                allow="encrypted-media"
-              ></iframe>
-            </div>
-          )}
-    </>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

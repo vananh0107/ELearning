@@ -1,7 +1,11 @@
 import { styles } from '@/app/styles/style';
 import React, { FC, useState } from 'react';
 import toast from 'react-hot-toast';
-import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
+import {
+  AiOutlineDelete,
+  AiOutlinePlusCircle,
+  AiOutlineQuestionCircle,
+} from 'react-icons/ai';
 import { BsLink45Deg, BsPencil } from 'react-icons/bs';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
@@ -42,13 +46,114 @@ const CourseContent: FC<Props> = ({
     updatedData[index].links.push({ title: '', url: '' });
     setCourseContentData(updatedData);
   };
+  const handleRemoveQuestion = (index: number, questionIndex: number) => {
+    const updatedData = [...courseContentData];
+    updatedData[index].quiz.splice(questionIndex, 1);
+    setCourseContentData(updatedData);
+  };
+  const handleAddQuestion = (index: number) => {
+    const updatedData = [...courseContentData]; 
+    const updatedQuiz = [...(updatedData[index]?.quiz || [])]; 
+    updatedQuiz.push({
+      time: 0,
+      question: '',
+      correctAnswer: 0,
+      options: ['', '', '', ''],
+    });
+  
+    updatedData[index] = {
+      ...updatedData[index],
+      quiz: updatedQuiz,
+    };
+  
+    setCourseContentData(updatedData); 
+  };
+  const handleUpdateQuestion = (
+    index: number,
+    questionIndex: number,
+    key: string,
+    value: any
+  ) => {
+    const updatedData = [...courseContentData];
+
+    updatedData[index] = {
+      ...updatedData[index],
+      quiz: updatedData[index].quiz.map((question, idx) => {
+        if (idx === questionIndex) {
+          return { ...question, [key]: value };
+        }
+        return question;
+      }),
+    };
+
+    setCourseContentData(updatedData);
+  };
+  const handleUpdateTime = (
+    index: number,
+    questionIndex: number,
+    key: string,
+    value: any
+  ) => {
+    const updatedData = [...courseContentData]; 
+  
+    updatedData[index] = {
+      ...updatedData[index],
+      quiz: updatedData[index].quiz.map((question, qIndex) => {
+        if (qIndex === questionIndex) {
+          return {
+            ...question,
+            [key]: value, 
+          };
+        }
+        return question;
+      }),
+    };
+    setCourseContentData(updatedData);
+  };
+  const handleUpdateOption = (
+    index: number,
+    questionIndex: number,
+    optionIndex: number,
+    value: string
+  ) => {
+    const updatedData = [...courseContentData];
+    updatedData[index] = {
+      ...updatedData[index],
+      quiz: updatedData[index].quiz.map((question, qIndex) => {
+        if (qIndex === questionIndex) {
+          return {
+            ...question,
+            options: [...question.options],
+          };
+        }
+        return question;
+      }),
+    };
+    updatedData[index].quiz[questionIndex].options[optionIndex] = value;
+    setCourseContentData(updatedData);
+  };
+
+  const handleSetCorrectAnswer = (
+    index: number,
+    questionIndex: number,
+    answerIndex: number
+  ) => {
+    const updatedData = [...courseContentData];
+    updatedData[index].quiz[questionIndex].correctAnswer = answerIndex;
+    setCourseContentData(updatedData);
+  };
   const newContentHandler = (item: any) => {
     if (
       item.title === '' ||
       item.description === '' ||
       item.videoUrl === '' ||
       item.links[0].title === '' ||
-      item.links[0].url === ''
+      item.links[0].url === '' ||
+      item.quiz[0]?.question === '' ||
+      item.quiz[0]?.options[0] === '' ||
+      item.quiz[0]?.options[1] === '' ||
+      item.quiz[0]?.options[2] === '' ||
+      item.quiz[0]?.options[3] === ''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -66,6 +171,14 @@ const CourseContent: FC<Props> = ({
         description: '',
         videoSection: newVideoSection,
         links: [{ title: '', url: '' }],
+        quiz: [
+          {
+            time: 0,
+            question: '',
+            correctAnswer: 0,
+            options: ['', '', '', ''],
+          },
+        ],
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -76,7 +189,16 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1]?.videoUrl === '' ||
       courseContentData[courseContentData.length - 1]?.description === '' ||
       courseContentData[courseContentData.length - 1]?.links[0].title === '' ||
-      courseContentData[courseContentData.length - 1]?.links[0].url === ''
+      courseContentData[courseContentData.length - 1]?.links[0].url === '' ||
+      courseContentData[courseContentData.length - 1]?.quiz[0].question ===
+        '' ||
+      courseContentData[courseContentData.length - 1]?.quiz[0].options[0] ===
+        '' ||
+      courseContentData[courseContentData.length - 1]?.quiz[0].options[1] ===
+        '' ||
+      courseContentData[courseContentData.length - 1]?.quiz[0].options[2] ===
+        '' ||
+      courseContentData[courseContentData.length - 1]?.quiz[0].options[3] === ''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -87,6 +209,14 @@ const CourseContent: FC<Props> = ({
         description: '',
         videoSection: `Untitled Section ${activeSection}`,
         links: [{ title: '', url: '' }],
+        quiz: [
+          {
+            time: 0,
+            question: '',
+            correctAnswer: 0,
+            options: ['', '', '', ''],
+          },
+        ],
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -100,12 +230,14 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].videoUrl === '' ||
       courseContentData[courseContentData.length - 1].description === ''
     ) {
-      toast.error("section can't be empty!");
+      toast.error("Section can't be empty!");
     } else {
       setActive(active + 1);
       handlleCourseSubmit();
     }
   };
+
+  console.log(courseContentData);
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -119,6 +251,7 @@ const CourseContent: FC<Props> = ({
                 className={`w-full bg-[#cdc8c817] p-4 ${
                   showSectionInput ? 'mt-10' : 'mb-0'
                 }`}
+                key={index}
               >
                 {showSectionInput && (
                   <>
@@ -289,7 +422,6 @@ const CourseContent: FC<Props> = ({
                         />
                       </div>
                     ))}
-                    <br />
                     <div className="inline-block mb-6">
                       <p
                         className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
@@ -298,19 +430,117 @@ const CourseContent: FC<Props> = ({
                         <BsLink45Deg className="mr-2" /> Add Link
                       </p>
                     </div>
+                    <br />
+                    {item?.quiz?.map((question: any, questionIndex: number) => (
+                      <div className="mb-3 block" key={questionIndex}>
+                        <div className="w-full flex items-center justify-between">
+                          <label className={styles.label}>
+                            Question {questionIndex + 1}
+                          </label>
+                          <AiOutlineDelete
+                            className="text-[20px] text-black dark:text-white cursor-pointer mt-3"
+                            onClick={() =>
+                              handleRemoveQuestion(index, questionIndex)
+                            }
+                          />
+                        </div>
+                        <input
+                          placeholder="Enter question here..."
+                          className={`${styles.input}`}
+                          value={question.question}
+                          onChange={(e) =>
+                            handleUpdateQuestion(
+                              index,
+                              questionIndex,
+                              'question',
+                              e.target.value
+                            )
+                          }
+                        />
+                        <div className="mt-3">
+                          <label className={styles.label}>Options</label>
+                          {question?.options?.map(
+                            (answer: string, answerIndex: number) => (
+                              <div
+                                key={answerIndex}
+                                className="flex items-center"
+                              >
+                                <input
+                                  type="text"
+                                  placeholder={`Answer ${answerIndex + 1}`}
+                                  className={`${styles.input} mr-3`}
+                                  value={answer}
+                                  onChange={(e) =>
+                                    handleUpdateOption(
+                                      index,
+                                      questionIndex,
+                                      answerIndex,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <input
+                                  type="radio"
+                                  name={`correctAnswer-${index}-${questionIndex}`}
+                                  checked={
+                                    question.correctAnswer === answerIndex
+                                  }
+                                  onChange={() =>
+                                    handleSetCorrectAnswer(
+                                      index,
+                                      questionIndex,
+                                      answerIndex
+                                    )
+                                  }
+                                />
+                                <label className="ml-2">Correct</label>
+                              </div>
+                            )
+                          )}
+                        </div>
+                        <div className="mt-3">
+                          <label className={styles.label}>Time(s)</label>
+                          <input
+                            type="number"
+                            placeholder="Enter time"
+                            className={`${styles.input}`}
+                            value={question.time}
+                            onChange={(e) =>
+                              handleUpdateTime(
+                                index,
+                                questionIndex,
+                                'time',
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="inline-block mb-6">
+                      <p
+                        className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                        onClick={() => handleAddQuestion(index)}
+                      >
+                        <AiOutlineQuestionCircle className="mr-2" /> Add
+                        Question
+                      </p>
+                    </div>
+
+                    <br />
+                    <br />
                   </>
                 )}
-                <br />
-                {index === courseContentData.length - 1 && (
-                  <div>
-                    <p
-                      className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
-                      onClick={(e: any) => newContentHandler(item)}
-                    >
-                      <AiOutlinePlusCircle className="mr-2" /> Add New Content
-                    </p>
-                  </div>
-                )}
+                {/* {index === courseContentData.length - 1 && ( */}
+                <div>
+                  <p
+                    className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                    onClick={(e: any) => newContentHandler(item)}
+                  >
+                    <AiOutlinePlusCircle className="mr-2" /> Add New Content
+                  </p>
+                </div>
+                {/* )} */}
               </div>
             </>
           );
