@@ -13,29 +13,13 @@ import Loader from '../../Loader/Loader';
 type Props = {
   isDashboard: boolean;
 };
-// const analyticsData = [
-//   { name: 'January 2024', count: 440 },
-//   { name: 'February 2024', count: 500 },
-//   { name: 'March 2024', count: 4300 },
-//   { name: 'April 2024', count: 4200 },
-//   { name: 'May 2024', count: 5200 },
-//   { name: 'June 2024', count: 4500 },
-//   { name: 'July 2024', count: 4800 },
-//   { name: 'August 2024', count: 5000 },
-//   { name: 'September 2024', count: 4900 },
-//   { name: 'October 2024', count: 5100 },
-//   { name: 'November 2024', count: 5300 },
-//   { name: 'December 2024', count: 5200 },
-// ];
 const UserAnalytics = ({ isDashboard }: Props) => {
   const { data, isLoading } = useGetUsersAnalyticsQuery({});
   const analyticsData: any = [];
-  console.log(data)
   data &&
     data.users.last12Months.forEach((item: any) => {
       analyticsData.push({ name: item.month, count: item.count });
     });
-  console.log(analyticsData)
   return (
     <>
       {isLoading ? (
@@ -45,7 +29,7 @@ const UserAnalytics = ({ isDashboard }: Props) => {
           className={`${
             !isDashboard
               ? 'mt-[50px]'
-              : 'mt-[50px] dark:bg-[#111C43] shadow-sm pb-5 rounded-sm'
+              : 'mt-[50px] dark:bg-[#111C43] shadow pb-5 rounded-sm'
           } `}
         >
           <div className={`${isDashboard ? '!ml-8 mb-5' : ''}`}>

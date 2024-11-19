@@ -42,12 +42,15 @@ const CourseContentList: FC<Props> = (props) => {
           (totalLength: number, item: any) => totalLength + item.videoLength,
           0
         );
-        const sectionStartIndex: number = totalCount; 
-        totalCount += sectionVideoCount; 
+        const sectionStartIndex: number = totalCount;
+        totalCount += sectionVideoCount;
         const sectionContentHours: number = sectionVideoLength / 60;
         return (
           <div
-            className={`${props.isDemo && 'border-b border-[#ffffff8e] pb-2'}`}
+            className={`${
+              // props.isDemo &&
+              'border-b dark:border-[#ffffff8e] pb-2 border-[#0e0d0dab]'
+            }`}
             key={sectionIndex}
           >
             <div className="w-full flex justify-between items-center">
@@ -79,7 +82,9 @@ const CourseContentList: FC<Props> = (props) => {
                   return (
                     <div
                       className={`w-full ${
-                        videoIndex === props.activeVideo ? 'bg-slate-200 dark:bg-slate-800' : ''
+                        videoIndex === props.activeVideo
+                          ? 'bg-slate-200 dark:bg-slate-800'
+                          : ''
                       } cursor-pointer transition-all p-2`}
                       key={item._id}
                       onClick={() =>

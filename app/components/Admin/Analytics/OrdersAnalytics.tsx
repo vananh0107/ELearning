@@ -19,29 +19,11 @@ type Props = {
 const OrdersAnalytics = ({ isDashboard }: Props) => {
   const { data, isLoading } = useGetOrdersAnalyticsQuery({});
   useEffect(() => {}, []);
-  // const analyticsData = [
-  //   {
-  //     name: 'Page A',
-  //     Count: 4000,
-  //   },
-  //   {
-  //     name: 'Page B',
-  //     Count: 3000,
-  //   },
-  //   {
-  //     name: 'Page C',
-  //     Count: 2000,
-  //   },
-  //   { name: 'Page D', Count: 1000 },
-  //   { name: 'Page E', Count: 500 },
-  //   { name: 'Page F', Count: 200 },
-  //   { name: 'Page G', Count: 100 },
-  // ];
   const analyticsData: any = [];
   data &&
     data.orders.last12Months.forEach((item: any) => {
       analyticsData.push({
-        name: item.name,
+        name: item.month,
         Count: item.count,
       });
     });

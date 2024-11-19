@@ -74,6 +74,7 @@ const EditCourse: FC<Props> = ({ id }) => {
       title: '',
       description: '',
       videoSection: 'Untitled Section',
+      videoLength:'',
       links: [
         {
           title: '',
@@ -84,6 +85,7 @@ const EditCourse: FC<Props> = ({ id }) => {
       quiz: [
         { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
       ],
+      questionCode:{question:'', answer:''}
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -100,6 +102,7 @@ const EditCourse: FC<Props> = ({ id }) => {
         title: courseContent.title,
         description: courseContent.description,
         videoSection: courseContent.videoSection,
+        videoLength: courseContent.videoLength,
         links: courseContent.links.map((link) => ({
           title: link.title,
           url: link.url,
@@ -111,6 +114,7 @@ const EditCourse: FC<Props> = ({ id }) => {
           correctAnswer: item.correctAnswer,
           options: item.options,
         })),
+        questionCode:courseContent.questionCode
       })
     );
     const data = {

@@ -48,44 +48,21 @@ const CourseContentMedia = ({
 }: Props) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState('');
-  const [review, setReview] = useState('');
-  const [rating, setRating] = useState(3);
   const [answer, setAnswer] = useState('');
   const [questionId, setQuestionId] = useState('');
-  const [isReviewReply, setIsReviewReply] = useState(false);
-  const [reply, setReply] = useState('');
-  const [reviewId, setReviewId] = useState('');
   const [code, setCode] = useState('');
 
   const handleSubmit = () => {
     console.log('Code submitted:', code);
-    // alert('Code submitted!');
   };
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
-  const [
-    addReviewInCourse,
-    {
-      isSuccess: reviewSuccess,
-      error: reviewError,
-      isLoading: reviewCreationLoading,
-    },
-  ] = useAddReviewInCourseMutation();
   const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
     id,
     { refetchOnMountOrArgChange: true }
   );
-  const [
-    addReplyInReview,
-    {
-      isSuccess: replySuccess,
-      error: replyError,
-      isLoading: replyCreationLoading,
-    },
-  ] = useAddReplyInReviewMutation();
-  const course = courseData?.course;
   const [
     addAnswerInQuestion,
     {
@@ -94,9 +71,6 @@ const CourseContentMedia = ({
       isLoading: answerCreationLoading,
     },
   ] = useAddAnswerInQuestionMutation();
-  const isReviewExists = course?.reviews?.find(
-    (item: any) => item.user._id === user._id
-  );
   const handleQuestion = () => {
     if (question.trim().length === 0) {
       toast.error("Question can't be empty");
@@ -144,44 +118,7 @@ const CourseContentMedia = ({
         toast.error(errorMessage.data.message);
       }
     }
-    if (reviewSuccess) {
-      setReview('');
-      setRating(3);
-      courseRefetch();
-      toast.success('Review submitted successfully');
-      socketId.emit('notification', {
-        title: 'New Question Received',
-        message: `You have a new question in ${data?.[activeVideo].title}`,
-        userId: user._id,
-      });
-    }
-    if (reviewError) {
-      if ('data' in reviewError) {
-        const errorMessage = error as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-    if (replySuccess) {
-      setReply('');
-      courseRefetch();
-      toast.success('Reply submitted successfully');
-    }
-    if (replyError) {
-      if ('data' in replyError) {
-        const errorMessage = error as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-  }, [
-    isSuccess,
-    answerSuccess,
-    error,
-    answerError,
-    reviewSuccess,
-    reviewError,
-    replySuccess,
-    replyError,
-  ]);
+  }, [isSuccess, answerSuccess, error, answerError]);
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
       answer,
@@ -189,22 +126,6 @@ const CourseContentMedia = ({
       contentId: data?.[activeVideo]._id,
       questionId: questionId,
     });
-  };
-  const handleReviewSubmit = async () => {
-    if (review.trim().length === 0) {
-      toast.error("Review can't be empty");
-    } else {
-      addReviewInCourse({ review, rating, courseId: id });
-    }
-  };
-  const handleReviewReplySubmit = async () => {
-    if (!replyCreationLoading) {
-      if (reply.trim().length === 0) {
-        toast.error("Reply can't be empty");
-      } else {
-        addReplyInReview({ comment: reply, courseId: id, reviewId });
-      }
-    }
   };
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
@@ -341,180 +262,14 @@ const CourseContentMedia = ({
           </div>
         </>
       )}
-      {/* {activeBar === 3 && (
-        <div className="w-full">
-          <>
-            {!isReviewExists && (
-              <>
-                <div className="flex w-full">
-                  <Image
-                    src={user.avatar ? user.avatar.url : avatarDefault}
-                    width={50}
-                    height={50}
-                    alt=""
-                    className="w-[50px] h-[50px] rounded-full object-cover"
-                  />
-                  <div className="w-full">
-                    <h5 className="pl-3 text-[20px] font-[500] dark:text-white text-black">
-                      Give a Rating <span className="text-red-500">*</span>
-                    </h5>
-                    <div className="flex w-full ml-2 p-3">
-                      {[1, 2, 3, 4, 5].map((i) =>
-                        rating >= i ? (
-                          <AiFillStar
-                            key={i}
-                            className="mr-1 cursor-pointer"
-                            color="rgb(246,286,0)"
-                            size={25}
-                            onClick={() => setRating(i)}
-                          />
-                        ) : (
-                          <AiOutlineStar
-                            key={i}
-                            className="mr-1 cursor-pointer"
-                            size={25}
-                            onClick={() => setRating(i)}
-                          />
-                        )
-                      )}
-                    </div>
-                    <textarea
-                      name=""
-                      value={review}
-                      onChange={(e) => setReview(e.target.value)}
-                      id=""
-                      cols={40}
-                      rows={5}
-                      placeholder="Write your comment..."
-                      className="outline-none bg-transparent 800px:ml-3 border border-[#ffffff57] w-[95%] 800px:w-full p-2 rounded text-[18px] font-Poppins"
-                    ></textarea>
-                  </div>
-                </div>
-                <div className="w-full flex justify-end">
-                  <div
-                    className={`${
-                      styles.button
-                    } !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2 ${
-                      reviewCreationLoading && 'cursor-no-drop'
-                    }`}
-                    onClick={
-                      reviewCreationLoading ? () => {} : handleReviewSubmit
-                    }
-                  >
-                    Submit
-                  </div>
-                </div>
-              </>
-            )}
-            <br />
-            <div className="w-full h-[1px] bg-[#ffffff3b]">
-              <div className="w-full">
-                {(course?.reviews && [...course.reviews].reverse())?.map(
-                  (item: any, index: number) => (
-                    <div
-                      className="w-full my-5 dark:text-white text-black"
-                      key={index}
-                    >
-                      <div className="w-full flex">
-                        <div>
-                          <Image
-                            src={
-                              item?.user.avatar
-                                ? item?.user.avatar.url
-                                : avatarDefault
-                            }
-                            width={50}
-                            height={50}
-                            alt=""
-                            className="w-[50px] h-[50px] rounded-full object-cover"
-                          />
-                        </div>
-                        <div className="ml-2">
-                          <div className="text-[18px]">{item?.user.name}</div>
-                          <Ratings rating={item.rating} />
-                          <p>{item.comment}</p>
-                          <small className="text-[#0000009e] dark:text-[#ffffff83]">
-                            {format(item.createdAt)}
-                          </small>
-                        </div>
-                      </div>
-                      {user.role === 'admin' &&
-                        item.commentReplies.length === 0 && (
-                          <span
-                            className={`${styles.label} !ml-12 cursor-pointer`}
-                            onClick={() => {
-                              setIsReviewReply(true);
-                              setReviewId(item._id);
-                            }}
-                          >
-                            Add Reply{' '}
-                          </span>
-                        )}
-                      {isReviewReply && reviewId === item._id && (
-                        <div className="w-full flex relative">
-                          <input
-                            type="text"
-                            name=""
-                            id=""
-                            placeholder="Enter your reply..."
-                            value={reply}
-                            onChange={(e: any) => setReply(e.target.value)}
-                            className={
-                              'block 800px:ml-12 mt-2 outline-none bg-transparent border-b border-[#000] dark:border-[#fff] p-[5px] w-[95%]'
-                            }
-                          />
-                          <button
-                            type="submit"
-                            className="absolute right-0 bottom-1"
-                            onClick={handleReviewReplySubmit}
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      )}
-                      {item.commentReplies.map((i: any, index: number) => (
-                        <div
-                          className="w-full flex 800px:ml-16 my-5"
-                          key={index}
-                        >
-                          <div className="w-[50px] h-[50px]">
-                            <Image
-                              src={
-                                i.user.avatar
-                                  ? i.user.avatar.url
-                                  : avatarDefault
-                              }
-                              width={50}
-                              height={50}
-                              alt=""
-                              className="w-[50px] h-[50px] rounded-full object-cover"
-                            />
-                          </div>
-                          <div className="pl-2">
-                            <div className="flex items-center">
-                              <h5 className="text-[20px]">{item.user.name}</h5>
-                              {item.user.role === 'admin' && (
-                                <VscVerifiedFilled className="text-[#0a6ad1] ml-2 text-[20px]" />
-                              )}
-                            </div>{' '}
-                            <p>{i.comment}</p>
-                            <small className="text-[#ffffff83]">
-                              {format(i.createdAt)}
-                            </small>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-            <br />
-          </>
-        </div>
-      )} */}
       {activeBar === 3 && (
         <div className="w-full">
+          <div className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 p-4 rounded-lg shadow-md mb-6">
+            <p className="text-slate-800 dark:text-white text-sm">
+              Đề bài: Nhập vào một số để kiểm tra xem đó có phải là số nguyên tố
+              hay không.
+            </p>
+          </div>
           <CodeMirror
             value={code}
             height="400px"
@@ -523,6 +278,11 @@ const CourseContentMedia = ({
             theme={isDarkMode ? darcula : quietlight}
             className="  border-gray-300 rounded-lg dark:text-white text-black"
           />
+          {/* {message && ( */}
+          <div className="mt-4 p-4 rounded-l shadow-md bg-gray-200 text-black dark:bg-gray-700 dark:text-white">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          </div>
+          {/* )} */}
           <button
             onClick={handleSubmit}
             className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"

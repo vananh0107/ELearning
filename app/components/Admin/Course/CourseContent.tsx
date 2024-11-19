@@ -37,13 +37,25 @@ const CourseContent: FC<Props> = ({
     setIsCollapsed(updateCollapsed);
   };
   const handleRemoveLink = (index: number, linkIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].links.splice(linkIndex, 1);
+    const updatedData = courseContentData.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            links: item.links.filter((_, idx) => idx !== linkIndex),
+          }
+        : item
+    );
     setCourseContentData(updatedData);
   };
   const handleAddLink = (index: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].links.push({ title: '', url: '' });
+    const updatedData = courseContentData.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            links: [...item.links, { title: '', url: '' }],
+          }
+        : item
+    );
     setCourseContentData(updatedData);
   };
   const handleRemoveQuestion = (index: number, questionIndex: number) => {
@@ -52,21 +64,21 @@ const CourseContent: FC<Props> = ({
     setCourseContentData(updatedData);
   };
   const handleAddQuestion = (index: number) => {
-    const updatedData = [...courseContentData]; 
-    const updatedQuiz = [...(updatedData[index]?.quiz || [])]; 
+    const updatedData = [...courseContentData];
+    const updatedQuiz = [...(updatedData[index]?.quiz || [])];
     updatedQuiz.push({
       time: 0,
       question: '',
       correctAnswer: 0,
       options: ['', '', '', ''],
     });
-  
+
     updatedData[index] = {
       ...updatedData[index],
       quiz: updatedQuiz,
     };
-  
-    setCourseContentData(updatedData); 
+
+    setCourseContentData(updatedData);
   };
   const handleUpdateQuestion = (
     index: number,
@@ -94,15 +106,15 @@ const CourseContent: FC<Props> = ({
     key: string,
     value: any
   ) => {
-    const updatedData = [...courseContentData]; 
-  
+    const updatedData = [...courseContentData];
+
     updatedData[index] = {
       ...updatedData[index],
       quiz: updatedData[index].quiz.map((question, qIndex) => {
         if (qIndex === questionIndex) {
           return {
             ...question,
-            [key]: value, 
+            [key]: value,
           };
         }
         return question;
@@ -138,8 +150,21 @@ const CourseContent: FC<Props> = ({
     questionIndex: number,
     answerIndex: number
   ) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[questionIndex].correctAnswer = answerIndex;
+    const updatedData = courseContentData.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            quiz: item.quiz.map((question, qIndex) =>
+              qIndex === questionIndex
+                ? {
+                    ...question,
+                    correctAnswer: answerIndex,
+                  }
+                : question
+            ),
+          }
+        : item
+    );
     setCourseContentData(updatedData);
   };
   const newContentHandler = (item: any) => {
@@ -153,7 +178,9 @@ const CourseContent: FC<Props> = ({
       item.quiz[0]?.options[0] === '' ||
       item.quiz[0]?.options[1] === '' ||
       item.quiz[0]?.options[2] === '' ||
-      item.quiz[0]?.options[3] === ''
+      item.quiz[0]?.options[3] === ''||
+      item.questionCode.question===''||
+      item.questionCode.answer===''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -179,6 +206,8 @@ const CourseContent: FC<Props> = ({
             options: ['', '', '', ''],
           },
         ],
+        questionCode:{question:'', answer:''},
+        videoLength: 0,
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -236,8 +265,6 @@ const CourseContent: FC<Props> = ({
       handlleCourseSubmit();
     }
   };
-
-  console.log(courseContentData);
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -265,8 +292,11 @@ const CourseContent: FC<Props> = ({
                         } font-Poppins cursor-pointer dark:text-white text-black bg-transparent outline-none`}
                         value={item.videoSection}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].videoSection = e.target.value;
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? { ...item, videoSection: e.target.value }
+                              : item
+                          );
                           setCourseContentData(updatedData);
                         }}
                       />
@@ -325,8 +355,14 @@ const CourseContent: FC<Props> = ({
                         className={`${styles.input}`}
                         value={item.title}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].title = e.target.value;
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  title: e.target.value,
+                                }
+                              : item
+                          );
                           setCourseContentData(updatedData);
                         }}
                       />
@@ -339,8 +375,14 @@ const CourseContent: FC<Props> = ({
                         className={`${styles.input}`}
                         value={item.videoUrl}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].videoUrl = e.target.value;
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  videoUrl: e.target.value,
+                                }
+                              : item
+                          );
                           setCourseContentData(updatedData);
                         }}
                       />
@@ -355,8 +397,14 @@ const CourseContent: FC<Props> = ({
                         className={`${styles.input}`}
                         value={item.videoLength}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].videoLength = e.target.value;
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  videoLength: e.target.value,
+                                }
+                              : item
+                          );
                           setCourseContentData(updatedData);
                         }}
                       />
@@ -370,8 +418,14 @@ const CourseContent: FC<Props> = ({
                         className={`${styles.input} !h-min`}
                         value={item.description}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].description = e.target.value;
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  description: e.target.value,
+                                }
+                              : item
+                          );
                           setCourseContentData(updatedData);
                         }}
                       />
@@ -402,9 +456,22 @@ const CourseContent: FC<Props> = ({
                           className={`${styles.input}`}
                           value={link.title}
                           onChange={(e) => {
-                            const updatedData = [...courseContentData];
-                            updatedData[index].links[linkIndex].title =
-                              e.target.value;
+                            const updatedData = courseContentData.map(
+                              (item, i) =>
+                                i === index
+                                  ? {
+                                      ...item,
+                                      links: item.links.map((link, lIndex) =>
+                                        lIndex === linkIndex
+                                          ? {
+                                              ...link,
+                                              title: e.target.value,
+                                            }
+                                          : link
+                                      ),
+                                    }
+                                  : item
+                            );
                             setCourseContentData(updatedData);
                           }}
                         />
@@ -414,9 +481,22 @@ const CourseContent: FC<Props> = ({
                           className={`${styles.input} mt-6`}
                           value={link.url}
                           onChange={(e) => {
-                            const updatedData = [...courseContentData];
-                            updatedData[index].links[linkIndex].url =
-                              e.target.value;
+                            const updatedData = courseContentData.map(
+                              (item, i) =>
+                                i === index
+                                  ? {
+                                      ...item,
+                                      links: item.links.map((link, lIndex) =>
+                                        lIndex === linkIndex
+                                          ? {
+                                              ...link,
+                                              url: e.target.value,
+                                            }
+                                          : link
+                                      ),
+                                    }
+                                  : item
+                            );
                             setCourseContentData(updatedData);
                           }}
                         />
@@ -429,6 +509,54 @@ const CourseContent: FC<Props> = ({
                       >
                         <BsLink45Deg className="mr-2" /> Add Link
                       </p>
+                    </div>
+                    <br />
+                    <div className="my-3">
+                      <label className={styles.label}>Question Code</label>
+                      <textarea
+                        rows={6}
+                        cols={20}
+                        placeholder="Print Hello world"
+                        className={`${styles.input} !h-min`}
+                        value={item.questionCode.question}
+                        onChange={(e) => {
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  questionCode: {
+                                    ...item.questionCode,
+                                    question: e.target.value,
+                                  },
+                                }
+                              : item
+                          );
+                          setCourseContentData(updatedData);
+                        }}
+                      />
+                    </div>
+                    <div className="my-3">
+                      <label className={styles.label}>Expected Answer Code</label>
+                      <input
+                        type="text"
+                        placeholder="Hello world"
+                        className={`${styles.input}`}
+                        value={item.questionCode.answer}
+                        onChange={(e) => {
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  questionCode: {
+                                    ...item.questionCode,
+                                    answer: e.target.value,
+                                  },
+                                }
+                              : item
+                          );
+                          setCourseContentData(updatedData);
+                        }}
+                      />
                     </div>
                     <br />
                     {item?.quiz?.map((question: any, questionIndex: number) => (

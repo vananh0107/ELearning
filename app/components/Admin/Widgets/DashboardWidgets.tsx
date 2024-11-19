@@ -140,7 +140,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
         </div>
       </div>
       <div className="grid grid-cols-[65%,35%] mt-[-20px]">
-        <div className="dark:bg-[#111c43] w-[94%] mt-[30px] h-[40vh] shadow-sm m-auto">
+        <div className="dark:bg-[#111c43] w-[94%] mt-[30px] h-[40vh] rounded-md shadow m-auto">
           <OrdersAnalytics isDashboard={true} />
         </div>
         <div className="p-5">

@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 type Props = {};
 const Hero: FC<Props> = (props) => {
   const { data, isLoading } = useGetHeroDataQuery('Banner', {});
-  console.log(data)
   const [ search, setSearch ] = useState('');
   const router = useRouter();
   const handleSearch = () => {
