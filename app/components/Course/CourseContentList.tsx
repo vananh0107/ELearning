@@ -53,7 +53,7 @@ const CourseContentList: FC<Props> = (props) => {
             }`}
             key={sectionIndex}
           >
-            <div className="w-full flex justify-between items-center">
+            <div className="w-full flex justify-between items-center mt-4">
               <h2 className="text-[22px] text-black dark:text-white">
                 {section}
               </h2>

@@ -245,7 +245,7 @@ const CourseContentMedia = ({
           </div>
           <br />
           <br />
-          <div className="w-full h-[1px] bg-[#ffffff3b]">
+          <div className="w-full">
             <div>
               <CommentReply
                 data={data}
@@ -338,7 +338,7 @@ const CommentItem = ({
   const [replyActive, setReplyActive] = useState(false);
   return (
     <>
-      <div className="my-4">
+      <div className="my-6">
         <div className="flex mb-2">
           <div>
             <Image

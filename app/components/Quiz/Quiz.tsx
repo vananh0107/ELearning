@@ -4,7 +4,7 @@ const Quiz = () => {
   const [timeLeft, setTimeLeft] = useState(3620);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false); 
+  const [showResult, setShowResult] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
 
   const questions = [
@@ -66,7 +66,9 @@ const Quiz = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${hours > 0 ? `${hours}:` : ''}${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
+    return `${hours > 0 ? `${hours}:` : ''}${
+      minutes < 10 ? `0${minutes}` : minutes
+    }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
   };
 
   return (
@@ -78,7 +80,7 @@ const Quiz = () => {
       }`}
     >
       <div
-        className={`bg-white p-8 rounded-lg  max-w-2xl w-full dark:bg-gray-800 dark:text-gray-200 ${
+        className={` text-black bg-white p-8 rounded-lg  max-w-2xl w-full dark:bg-gray-800 dark:text-gray-200 ${
           !showResult && 'shadow-xl'
         }`}
       >
@@ -127,7 +129,7 @@ const Quiz = () => {
                           optionClass = isCorrect
                             ? 'bg-green-300 text-green-800 dark:bg-green-600 dark:text-green-200'
                             : 'bg-red-300 text-red-800 dark:bg-red-600 dark:text-red-200';
-                        } else if (isCorrect&&isUserSelected) {
+                        } else if (isCorrect && isUserSelected) {
                           optionClass =
                             'bg-green-300 text-green-800 dark:bg-green-600 dark:text-green-200';
                         }
