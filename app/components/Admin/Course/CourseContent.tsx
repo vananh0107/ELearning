@@ -178,16 +178,16 @@ const CourseContent: FC<Props> = ({
       item.quiz[0]?.options[0] === '' ||
       item.quiz[0]?.options[1] === '' ||
       item.quiz[0]?.options[2] === '' ||
-      item.quiz[0]?.options[3] === ''||
-      item.questionCode.question===''||
-      item.questionCode.answer===''
+      item.quiz[0]?.options[3] === '' ||
+      item.questionCode.question === '' ||
+      item.questionCode.answer === ''
     ) {
       toast.error('Please fill all required fields');
     } else {
+      console.log(item);
       let newVideoSection = '';
       if (courseContentData.length > 0) {
-        const lastVideoSection =
-          courseContentData[courseContentData.length - 1].videoSection;
+        const lastVideoSection = item.videoSection;
         if (lastVideoSection) {
           newVideoSection = lastVideoSection;
         }
@@ -206,10 +206,22 @@ const CourseContent: FC<Props> = ({
             options: ['', '', '', ''],
           },
         ],
-        questionCode:{question:'', answer:''},
+        questionCode: { question: '', answer: '' },
         videoLength: 0,
       };
-      setCourseContentData([...courseContentData, newContent]);
+      const updatedData = [...courseContentData, newContent];
+      const grouped = updatedData.reduce((acc, item) => {
+        if (!acc[item.videoSection]) {
+          acc[item.videoSection] = [];
+        }
+        acc[item.videoSection].push(item);
+        return acc;
+      }, {});
+      const uniqueSections = Array.from(
+        new Set(updatedData.map((item) => item.videoSection))
+      );
+      const sortedData = uniqueSections.flatMap((section) => grouped[section]);
+      setCourseContentData(sortedData);
     }
   };
   const addNewSection = () => {
@@ -219,15 +231,16 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1]?.description === '' ||
       courseContentData[courseContentData.length - 1]?.links[0].title === '' ||
       courseContentData[courseContentData.length - 1]?.links[0].url === '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0].question ===
+      courseContentData[courseContentData.length - 1]?.quiz[0]?.question ===
         '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0].options[0] ===
+      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[0] ===
         '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0].options[1] ===
+      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[1] ===
         '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0].options[2] ===
+      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[2] ===
         '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0].options[3] === ''
+      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[3] ===
+        ''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -265,6 +278,7 @@ const CourseContent: FC<Props> = ({
       handlleCourseSubmit();
     }
   };
+  console.log(courseContentData);
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -518,7 +532,7 @@ const CourseContent: FC<Props> = ({
                         cols={20}
                         placeholder="Print Hello world"
                         className={`${styles.input} !h-min`}
-                        value={item.questionCode.question}
+                        value={item.questionCode?.question}
                         onChange={(e) => {
                           const updatedData = courseContentData.map((item, i) =>
                             i === index
@@ -536,12 +550,14 @@ const CourseContent: FC<Props> = ({
                       />
                     </div>
                     <div className="my-3">
-                      <label className={styles.label}>Expected Answer Code</label>
+                      <label className={styles.label}>
+                        Expected Answer Code
+                      </label>
                       <input
                         type="text"
                         placeholder="Hello world"
                         className={`${styles.input}`}
-                        value={item.questionCode.answer}
+                        value={item.questionCode?.answer}
                         onChange={(e) => {
                           const updatedData = courseContentData.map((item, i) =>
                             i === index

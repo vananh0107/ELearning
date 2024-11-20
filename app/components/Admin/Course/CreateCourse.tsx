@@ -58,7 +58,6 @@ const CreateCourse = (props: Props) => {
       ],
       questionCode:{question:'', answer:''}
     },
-
   ]);
   const [courseData, setCourseData] = useState({});
   const handleSubmit = async () => {
@@ -111,7 +110,7 @@ const CreateCourse = (props: Props) => {
     const data = courseData;
     if (!isLoading) {
       console.log(data)
-      // await createCourse(data);
+      await createCourse(data);
     }
   };
   return (

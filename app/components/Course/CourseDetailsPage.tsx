@@ -64,6 +64,7 @@ const CourseDetailsPage = ({ id }: Props) => {
               clientSecret={clientSecret}
               setRoute={setRoute}
               setOpen={setOpen}
+              id={id}
             />
           )}
           <Footer />

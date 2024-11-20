@@ -18,6 +18,7 @@ type Props = {
   stripePromise: any;
   setRoute: any;
   setOpen: any;
+  id?: string
 };
 
 const CourseDetails = ({
@@ -26,6 +27,7 @@ const CourseDetails = ({
   stripePromise,
   setRoute,
   setOpen: openAuthModal,
+  id
 }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
   const [user, setUser] = useState<any>();
@@ -212,12 +214,31 @@ const CourseDetails = ({
                     </div>
                   )
                 )}
+                <div className="flex items-center justify-between">
+                  <Link
+                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer !bg-[#14dcc1]`}
+                    href={`/courses`}
+                  >
+                    Back to courses
+                  </Link>
+                  <Link
+                    className={`${styles.button} !w-[220px] my-3 font-Poppins cursor-pointer !bg-[#14dcc1]`}
+                    href={`/course/${id}/review`}
+                  >
+                    Enter Detail Review
+                  </Link>
+                </div>
+                <br />
               </div>
             </div>
           </div>
           <div className="w-full 800px:w-[33%] relative">
             <div className="sticky top-[100px] left-[0] z-[50] w-full">
-              <CoursePlayer videoUrl={data?.demoUrl} title={data?.title} isPreview={true}/>
+              <CoursePlayer
+                videoUrl={data?.demoUrl}
+                title={data?.title}
+                isPreview={true}
+              />
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
                   {data.price === 0 ? 'Free' : data.price}

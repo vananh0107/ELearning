@@ -3,7 +3,7 @@ import DashboardHero from '@/app/components/Admin/DashboardHero';
 import AdminSideBar from '@/app/components/Admin/sideBar/AdminSideBar';
 import AdminProtected from '@/app/hooks/adminProtected';
 import Heading from '@/app/utils/Heading';
-import AllCourses from '../../components/Admin/AllCourses.tsx'
+import AllCourses from '../../components/Admin/AllCourses'
 type Props = {};
 
 const page = (props: Props) => {
