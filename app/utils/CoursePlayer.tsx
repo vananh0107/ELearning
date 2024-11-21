@@ -4,24 +4,25 @@ import axios from 'axios';
 type Props = {
   videoUrl: string;
   title: string;
+  quizQuestions?: [];
 };
 
-const quizQuestions = [
-  {
-    time: 2,
-    question: 'Câu hỏi ở phút thứ 1?',
-    options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-    correctAnswer: 1,
-  },
-  {
-    time: 10,
-    question: 'Câu hỏi khi hết video?',
-    options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-    correctAnswer: 2,
-  },
-];
+// const quizQuestions = [
+//   {
+//     time: 2,
+//     question: 'Câu hỏi ở phút thứ 1?',
+//     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
+//     correctAnswer: 1,
+//   },
+//   {
+//     time: 10,
+//     question: 'Câu hỏi khi hết video?',
+//     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
+//     correctAnswer: 2,
+//   },
+// ];
 
-const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
+const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
   const [videoData, setVideoData] = useState({ otp: '', playbackInfo: '' });
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState<number | null>(null);
@@ -133,15 +134,15 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
         {currentQuiz !== null && (
           <div className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto w-full my-6">
             <h2 className="text-xl font-bold mb-4">
-              {quizQuestions.find((q) => q.time === currentQuiz)?.question}
+              {quizQuestions?.find((q) => q.time === currentQuiz)?.question}
             </h2>
             <div className="options space-y-2">
               {quizQuestions
-                .find((q) => q.time === currentQuiz)
+                ?.find((q) => q.time === currentQuiz)
                 ?.options.map((option, index) => {
                   const isCorrect =
                     index ===
-                    quizQuestions.find((q) => q.time === currentQuiz)
+                    quizQuestions?.find((q) => q.time === currentQuiz)
                       ?.correctAnswer;
                   const isSelected = selectedAnswer === index;
                   const optionClass = isSelected

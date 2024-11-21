@@ -135,6 +135,7 @@ const CourseContentMedia = ({
         title={data?.[activeVideo]?.title}
         videoUrl={data?.[activeVideo]?.videoUrl}
         isPreview={false}
+        quizQuestions={data?.quizQuestions}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
