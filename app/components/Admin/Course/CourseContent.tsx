@@ -1,4 +1,5 @@
 import { styles } from '@/app/styles/style';
+import axios from 'axios';
 import React, { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
@@ -173,14 +174,15 @@ const CourseContent: FC<Props> = ({
       item.description === '' ||
       item.videoUrl === '' ||
       item.links[0].title === '' ||
-      item.links[0].url === '' ||
-      item.quiz[0]?.question === '' ||
-      item.quiz[0]?.options[0] === '' ||
-      item.quiz[0]?.options[1] === '' ||
-      item.quiz[0]?.options[2] === '' ||
-      item.quiz[0]?.options[3] === '' ||
-      item.questionCode.question === '' ||
-      item.questionCode.answer === ''
+      item.links[0].url === ''
+      // ||
+      // item.quiz[0]?.question === '' ||
+      // item.quiz[0]?.options[0] === '' ||
+      // item.quiz[0]?.options[1] === '' ||
+      // item.quiz[0]?.options[2] === '' ||
+      // item.quiz[0]?.options[3] === '' ||
+      // item.questionCode.question === '' ||
+      // item.questionCode.answer === ''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -230,17 +232,7 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1]?.videoUrl === '' ||
       courseContentData[courseContentData.length - 1]?.description === '' ||
       courseContentData[courseContentData.length - 1]?.links[0].title === '' ||
-      courseContentData[courseContentData.length - 1]?.links[0].url === '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0]?.question ===
-        '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[0] ===
-        '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[1] ===
-        '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[2] ===
-        '' ||
-      courseContentData[courseContentData.length - 1]?.quiz[0]?.options[3] ===
-        ''
+      courseContentData[courseContentData.length - 1]?.links[0].url === ''
     ) {
       toast.error('Please fill all required fields');
     } else {
@@ -278,7 +270,38 @@ const CourseContent: FC<Props> = ({
       handlleCourseSubmit();
     }
   };
-  console.log(courseContentData);
+  const handleFileUpload = (e, videoSection) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("docxFile", file);
+      formData.append("videoSection", videoSection);
+      axios
+        .post("http://localhost:8000/api/v1/quiz", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", 
+          },
+        })
+        .then((response) => {
+          console.log("File uploaded successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+        });
+    }
+    // if (file) {
+    //   const updatedData = courseContentData.map((item) => {
+    //     if (item.videoSection === videoSection) {
+    //       return {
+    //         ...item,
+    //         docxFile: file,
+    //       };
+    //     }
+    //     return item;
+    //   });
+    //   setCourseContentData(updatedData);
+    // }
+  };
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -296,25 +319,34 @@ const CourseContent: FC<Props> = ({
               >
                 {showSectionInput && (
                   <>
-                    <div className="flex w-full items-center">
+                    <div className="flex w-full items-center gap-4">
+                      <div className="flex w-full items-center">
+                        <input
+                          type="text"
+                          className={`text-[20px] ${
+                            item.videoSection === 'Untitled Section'
+                              ? 'w-[170px]'
+                              : 'w-max'
+                          } font-Poppins cursor-pointer dark:text-white text-black bg-transparent outline-none`}
+                          value={item.videoSection}
+                          onChange={(e) => {
+                            const updatedData = courseContentData.map(
+                              (item, i) =>
+                                i === index
+                                  ? { ...item, videoSection: e.target.value }
+                                  : item
+                            );
+                            setCourseContentData(updatedData);
+                          }}
+                        />
+                        <BsPencil className="cursor-pointer dark:text-white text-black" />
+                      </div>
                       <input
-                        type="text"
-                        className={`text-[20px] ${
-                          item.videoSection === 'Untitled Section'
-                            ? 'w-[170px]'
-                            : 'w-max'
-                        } font-Poppins cursor-pointer dark:text-white text-black bg-transparent outline-none`}
-                        value={item.videoSection}
-                        onChange={(e) => {
-                          const updatedData = courseContentData.map((item, i) =>
-                            i === index
-                              ? { ...item, videoSection: e.target.value }
-                              : item
-                          );
-                          setCourseContentData(updatedData);
-                        }}
+                        type="file"
+                        accept=".docx"
+                        onChange={(e) => handleFileUpload(e, item.videoSection)}
+                        placeholder="Upload file quiz"
                       />
-                      <BsPencil className="cursor-pointer dark:text-white text-black" />
                     </div>
                     <br />
                   </>
@@ -670,7 +702,6 @@ const CourseContent: FC<Props> = ({
                         Question
                       </p>
                     </div>
-
                     <br />
                     <br />
                   </>

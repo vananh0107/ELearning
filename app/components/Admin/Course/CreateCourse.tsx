@@ -35,7 +35,7 @@ const CreateCourse = (props: Props) => {
     level: '',
     demoUrl: '',
     thumbnail: '',
-    categories:''
+    categories: '',
   });
   const [benefits, setBenefits] = useState([{ title: '' }]);
   const [prerequisites, setPrerequisites] = useState([{ title: '' }]);
@@ -45,7 +45,7 @@ const CreateCourse = (props: Props) => {
       title: '',
       description: '',
       videoSection: 'Untitled Section',
-      videoLength:'',
+      videoLength: '',
       links: [
         {
           title: '',
@@ -56,7 +56,8 @@ const CreateCourse = (props: Props) => {
       quiz: [
         { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
       ],
-      questionCode:{question:'', answer:''}
+      questionCode: { question: '', answer: '' },
+      docxFile: null,
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -79,14 +80,14 @@ const CreateCourse = (props: Props) => {
           url: link.url,
         })),
         suggestion: courseContent.suggestion,
-        quiz:courseContent.quiz.map((item) => ({
+        quiz: courseContent.quiz.map((item) => ({
           time: item.time,
           question: item.question,
           correctAnswer: item.correctAnswer,
           options: item.options,
         })),
-        questionCode:courseContent.questionCode
-
+        questionCode: courseContent.questionCode,
+        docxFile: courseContent.docxFile,
       })
     );
     const data = {
@@ -109,8 +110,8 @@ const CreateCourse = (props: Props) => {
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
     if (!isLoading) {
-      console.log(data)
-      await createCourse(data);
+      console.log(data);
+      // await createCourse(data);
     }
   };
   return (
