@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminSideBar from '@/app/components/Admin/sideBar/AdminSideBar';
 import Heading from '@/app/utils/Heading';
 import DashboardHeader from '@/app/components/Admin/DashboardHeader';
@@ -9,6 +9,16 @@ import CourseQuiz from '@/app/components/Admin/Course/CourseQuiz';
 type Props = {};
 
 const page = (props: Props) => {
+  const [quizzes, setQuizzes] = useState([]);
+
+  useEffect(() => {
+    const quizData = localStorage.getItem('quizData');
+    if (quizData) {
+      setQuizzes(JSON.parse(quizData));
+    }
+  }, []);
+  console.log(quizzes)
+
   return (
     <AdminProtected>
       <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
@@ -22,7 +32,7 @@ const page = (props: Props) => {
             <AdminSideBar />
           </div>
           <div className="w-[85%]">
-            <CourseQuiz />
+            <CourseQuiz quizData={quizzes}/>
           </div>
         </div>
       </div>

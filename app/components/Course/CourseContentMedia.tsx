@@ -36,6 +36,9 @@ type Props = {
   setActiveVideo: (activeVideo: number) => void;
   user: any;
   refetch: any;
+  isNextVideo?: boolean;
+  setIsNextVideo?: any;
+  // lastLesson:any
 };
 
 const CourseContentMedia = ({
@@ -45,7 +48,10 @@ const CourseContentMedia = ({
   setActiveVideo,
   user,
   refetch,
-}: Props) => {
+  isNextVideo,
+  setIsNextVideo,
+}: // lastLesson
+Props) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -129,13 +135,17 @@ const CourseContentMedia = ({
   };
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
+  // useEffect(() => {},[isNextVideo])
+  // console.log(isNextVideo)
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
         title={data?.[activeVideo]?.title}
         videoUrl={data?.[activeVideo]?.videoUrl}
         isPreview={false}
-        quizQuestions={data?.quizQuestions}
+        quizQuestions={data?.[activeVideo]?.quiz}
+        id={data?.[activeVideo]?._id}
+        setIsNextVideo={setIsNextVideo}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -151,19 +161,22 @@ const CourseContentMedia = ({
           <AiOutlineArrowLeft className="mr-2" />
           Prev Lesson
         </div>
+
         <div
           className={`${
             styles.button
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
-            data?.length - 1 === activeVideo && '!cursor-no-drop opacity-[.8]'
+            (data?.length - 1 === activeVideo || !isNextVideo) &&
+            '!cursor-no-drop opacity-[.8]'
           }`}
-          onClick={() =>
+          onClick={() => {
             setActiveVideo(
               data && data?.length - 1 === activeVideo
                 ? activeVideo
                 : activeVideo + 1
-            )
-          }
+            );
+            setIsNextVideo(false);
+          }}
         >
           Next Lesson
           <AiOutlineArrowRight className="ml-2" />
@@ -281,7 +294,10 @@ const CourseContentMedia = ({
           />
           {/* {message && ( */}
           <div className="mt-4 p-4 rounded-l shadow-md bg-gray-200 text-black dark:bg-gray-700 dark:text-white">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book.
           </div>
           {/* )} */}
           <button

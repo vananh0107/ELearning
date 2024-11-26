@@ -1,4 +1,7 @@
-import { useGetCourseContentQuery } from '@/redux/features/courses/coursesApi';
+import {
+  useGetCourseContentQuery,
+  useGetProgressQuery,
+} from '@/redux/features/courses/coursesApi';
 import React, { useState } from 'react';
 import Loader from '../Loader/Loader';
 import Heading from '@/app/utils/Heading';
@@ -16,9 +19,15 @@ const CourseContent = ({ id, user }: Props) => {
     isLoading,
     refetch,
   } = useGetCourseContentQuery(id, { refetchOnMountOrArgChange: true });
+  const {
+    data: progressData,
+    isLoading: progressLoading,
+    refetch: progressRefetch,
+  } = useGetProgressQuery({ courseId: id, refetchOnMountOrArgChange: true });
   const data = contentData?.content;
   const [activeVideo, setActiveVideo] = useState(0);
   const [open, setOpen] = useState(false);
+  const [isNextVideo, setIsNextVideo] = useState(false);
   const [route, setRoute] = useState('Login');
   return (
     <>
@@ -41,6 +50,9 @@ const CourseContent = ({ id, user }: Props) => {
             />
             <div className="col-span-7">
               <CourseContentMedia
+                isNextVideo={isNextVideo}
+                setIsNextVideo={setIsNextVideo}
+                // lastLesson={progressData?.lastLesson}
                 data={data}
                 id={id}
                 activeVideo={activeVideo}
@@ -51,7 +63,9 @@ const CourseContent = ({ id, user }: Props) => {
             </div>
             <div className="hidden 800px:block 800px:col-span-3">
               <CourseContentList
+                setIsNextVideo={setIsNextVideo}
                 setActiveVideo={setActiveVideo}
+                lastLesson={progressData?.lastLesson}
                 data={data}
                 activeVideo={activeVideo}
               />

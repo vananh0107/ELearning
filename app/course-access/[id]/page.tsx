@@ -19,6 +19,7 @@ const Page = () => {
       if (error) {
         redirect('/');
       }
+
     }
   }, [data, error]);
   return (

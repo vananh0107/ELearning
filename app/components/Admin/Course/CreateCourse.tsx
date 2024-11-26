@@ -8,6 +8,7 @@ import CoursePreview from './CoursePreview';
 import { useCreateCourseMutation } from '@/redux/features/courses/coursesApi';
 import toast from 'react-hot-toast';
 import { redirect } from 'next/navigation';
+import CourseQuiz from '@/app/components/Admin/Course/CourseQuiz';
 type Props = {};
 
 const CreateCourse = (props: Props) => {
@@ -26,6 +27,9 @@ const CreateCourse = (props: Props) => {
     }
   }, [isLoading, isSuccess, error]);
   const [active, setActive] = useState(0);
+  const [preview, setPreview] = useState(false);
+  // const [currentSection, setCurrenSection] = useState('');
+  const [quizData, setQuizData] = useState([]);
   const [courseInfo, setCourseInfo] = useState({
     name: '',
     description: '',
@@ -57,7 +61,7 @@ const CreateCourse = (props: Props) => {
         { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
       ],
       questionCode: { question: '', answer: '' },
-      docxFile: null,
+      quizSection: [],
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -87,7 +91,7 @@ const CreateCourse = (props: Props) => {
           options: item.options,
         })),
         questionCode: courseContent.questionCode,
-        docxFile: courseContent.docxFile,
+        quizSection: courseContent.quizSection,
       })
     );
     const data = {
@@ -110,11 +114,23 @@ const CreateCourse = (props: Props) => {
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
     if (!isLoading) {
-      console.log(data);
-      // await createCourse(data);
+      await createCourse(data);
     }
   };
-  return (
+
+  // useEffect(() => {
+  //   const data = courseContentData.find(
+  //     (item) =>
+  //       item.videoSection === currentSection && item.quizSection?.length > 0
+  //   );
+  //   console.log(data)
+  //   setQuizData(data?.quizSection);
+  // }, [currentSection]);
+  // console.log(currentSection);
+  console.log(courseContentData);
+  console.log(quizData);
+  console.log(preview)
+  return !preview ? (
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
         {active === 0 && (
@@ -142,6 +158,9 @@ const CreateCourse = (props: Props) => {
             courseContentData={courseContentData}
             setCourseContentData={setCourseContentData}
             handleSubmit={handleSubmit}
+            setPreview={setPreview}
+            preview={preview}
+            setQuizData={setQuizData}
           />
         )}
         {active === 3 && (
@@ -156,6 +175,10 @@ const CreateCourse = (props: Props) => {
       <div className="w-[20%] mt-[100px] h-screen fixed top-18 right-0">
         <CourseOptions active={active} setActive={setActive} />
       </div>
+    </div>
+  ) : (
+    <div className="w-[100%]">
+      <CourseQuiz quizData={quizData} setPreview={setPreview}/>
     </div>
   );
 };

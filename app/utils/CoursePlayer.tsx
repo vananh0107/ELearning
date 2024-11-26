@@ -1,10 +1,14 @@
 import React, { FC, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useUpdateProgressMutation } from '@/redux/features/courses/coursesApi';
+import { useParams } from 'next/navigation';
 
 type Props = {
   videoUrl: string;
   title: string;
   quizQuestions?: [];
+  id?: string;
+  setIsNextVideo?: any;
 };
 
 // const quizQuestions = [
@@ -22,7 +26,12 @@ type Props = {
 //   },
 // ];
 
-const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
+const CoursePlayer: FC<Props> = ({
+  videoUrl,
+  quizQuestions,
+  id,
+  setIsNextVideo,
+}) => {
   const [videoData, setVideoData] = useState({ otp: '', playbackInfo: '' });
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState<number | null>(null);
@@ -30,6 +39,10 @@ const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [quizStatus, setQuizStatus] = useState<string | null>(null);
   const [quizAnswered, setQuizAnswered] = useState(false);
+  const [updateProgress, { isSuccess, error, isLoading }] =
+    useUpdateProgressMutation();
+  const params = useParams();
+  const courseId = params?.id;
   useEffect(() => {
     axios
       .post(`${process.env.NEXT_PUBLIC_SERVER_URI}getVdoCipherOTP`, {
@@ -43,7 +56,6 @@ const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
       const player = window.VdoPlayer.getInstance(iframeRef);
-
       const checkTimeForQuiz = () => {
         const currentTime = Math.floor(player.video.currentTime);
         const quiz = quizQuestions.find((q) => q.time === currentTime);
@@ -54,10 +66,19 @@ const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
         }
       };
 
-      const interval = setInterval(checkTimeForQuiz, 1000);
+      const handleVideoEnd = () => {
+        console.log('vo');
+        if (setIsNextVideo) {
+          setIsNextVideo(true);
+        }
+      };
 
+      player.video.addEventListener('ended', handleVideoEnd);
+
+      const interval = setInterval(checkTimeForQuiz, 1000);
       return () => {
         clearInterval(interval);
+        player.video.removeEventListener('ended', handleVideoEnd);
       };
     }
   }, [iframeRef, isQuizActive]);
@@ -67,25 +88,39 @@ const CoursePlayer: FC<Props> = ({ videoUrl, quizQuestions }) => {
     const correctAnswer = quizQuestions.find(
       (q) => q.time === currentQuiz
     )?.correctAnswer;
+    const quizId = quizQuestions.find((q) => q.time === currentQuiz)?._id;
+
+    updateProgress({
+      contentId: id,
+      courseId: courseId,
+      quizStatus: index === correctAnswer,
+      quizId: quizId,
+    });
+
     setQuizStatus(index === correctAnswer ? 'correct' : 'incorrect');
     setQuizAnswered(true);
 
     setTimeout(() => {
-      setIsQuizActive(false);
-      setQuizAnswered(false);
-      setSelectedAnswer(null);
-      setQuizStatus(null);
+      if (index === correctAnswer) {
+        setIsQuizActive(false);
+        setQuizAnswered(false);
+        setSelectedAnswer(null);
+        setQuizStatus(null);
 
-      if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
-        const player = window.VdoPlayer.getInstance(iframeRef);
-        if (currentQuiz !== null) {
-          player.video.currentTime = currentQuiz + 1;
-          player.video.play();
+        if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
+          const player = window.VdoPlayer.getInstance(iframeRef);
+          if (currentQuiz !== null) {
+            player.video.currentTime = currentQuiz + 1;
+            player.video.play();
+          }
         }
+      } else {
+        setQuizAnswered(false);
+        setSelectedAnswer(null);
+        setQuizStatus(null);
       }
     }, 1000);
   };
-
   return (
     <div
       style={{

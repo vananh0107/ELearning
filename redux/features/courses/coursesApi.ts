@@ -2,10 +2,10 @@ import { apiSlice } from '../api/apiSlice';
 export const courseApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createCourse: builder.mutation({
-      query: ( data ) => ({
+      query: (data) => ({
         url: 'create-course',
         method: 'POST',
-        body:  data ,
+        body: data,
         credentials: 'include' as const,
       }),
     }),
@@ -100,6 +100,26 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: 'include' as const,
       }),
     }),
+    getProgress: builder.query({
+      query: ({ courseId }) => ({
+        url: `get-progress/${courseId}`,
+        method: 'GET',
+        credentials: 'include' as const,
+      }),
+    }),
+    updateProgress: builder.mutation({
+      query: ({ contentId, courseId, quizId, quizStatus }) => ({
+        url: `update-progress`,
+        body: {
+          contentId,
+          courseId,
+          quizId,
+          quizStatus,
+        },
+        method: 'POST',
+        credentials: 'include' as const,
+      }),
+    }),
   }),
 });
 
@@ -115,4 +135,6 @@ export const {
   useAddAnswerInQuestionMutation,
   useAddReviewInCourseMutation,
   useAddReplyInReviewMutation,
+  useGetProgressQuery,
+  useUpdateProgressMutation
 } = courseApi;

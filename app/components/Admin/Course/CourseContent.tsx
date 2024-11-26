@@ -9,13 +9,17 @@ import {
 } from 'react-icons/ai';
 import { BsLink45Deg, BsPencil } from 'react-icons/bs';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-
+import { useDispatch } from 'react-redux';
+import { saveQuiz } from '@/redux/features/courses/courseSlice';
 type Props = {
   active: number;
   setActive: (active: number) => void;
   courseContentData: any;
   setCourseContentData: (courseContent: any) => void;
   handleSubmit: any;
+  setPreview?: any;
+  preview?: boolean;
+  setQuizData?: any;
 };
 
 const CourseContent: FC<Props> = ({
@@ -24,11 +28,16 @@ const CourseContent: FC<Props> = ({
   active,
   setActive,
   handleSubmit: handlleCourseSubmit,
+  setPreview,
+  preview,
+  setQuizData,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData?.length).fill(false)
   );
   const [activeSection, setActiveSection] = useState(1);
+  const [activePreview, setActivePreview] = useState(false);
+  const dispatch = useDispatch();
   const handleSubmit = (e: any) => {
     e.preventDefault();
   };
@@ -186,7 +195,6 @@ const CourseContent: FC<Props> = ({
     ) {
       toast.error('Please fill all required fields');
     } else {
-      console.log(item);
       let newVideoSection = '';
       if (courseContentData.length > 0) {
         const lastVideoSection = item.videoSection;
@@ -274,33 +282,31 @@ const CourseContent: FC<Props> = ({
     const file = e.target.files[0];
     if (file) {
       const formData = new FormData();
-      formData.append("docxFile", file);
-      formData.append("videoSection", videoSection);
+      formData.append('file', file);
+      formData.append('videoSection', videoSection);
       axios
-        .post("http://localhost:8000/api/v1/quiz", formData, {
+        .post('http://localhost:8000/api/v1/review-quiz', formData, {
           headers: {
-            "Content-Type": "multipart/form-data", 
+            'Content-Type': 'multipart/form-data',
           },
         })
         .then((response) => {
-          console.log("File uploaded successfully:", response.data);
+          const updatedData = courseContentData.map((item, i) =>
+            item.videoSection === videoSection
+              ? { ...item, quizSection: response.data }
+              : item
+          );
+          // setPreview(true);
+          setActivePreview(true);
+          setCourseContentData(updatedData);
+          localStorage.setItem('quizData', JSON.stringify(response.data));
+          // dispatch(saveQuiz(response.data ));
+          console.log('File uploaded successfully:', response.data);
         })
         .catch((error) => {
-          console.error("Error uploading file:", error);
+          console.error('Error uploading file:', error);
         });
     }
-    // if (file) {
-    //   const updatedData = courseContentData.map((item) => {
-    //     if (item.videoSection === videoSection) {
-    //       return {
-    //         ...item,
-    //         docxFile: file,
-    //       };
-    //     }
-    //     return item;
-    //   });
-    //   setCourseContentData(updatedData);
-    // }
   };
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
@@ -341,12 +347,32 @@ const CourseContent: FC<Props> = ({
                         />
                         <BsPencil className="cursor-pointer dark:text-white text-black" />
                       </div>
-                      <input
-                        type="file"
-                        accept=".docx"
-                        onChange={(e) => handleFileUpload(e, item.videoSection)}
-                        placeholder="Upload file quiz"
-                      />
+                      <div className="flex w-full items-center justify-end dark:text-white">
+                        <input
+                          type="file"
+                          accept=".docx"
+                          onChange={(e) =>
+                            handleFileUpload(e, item.videoSection)
+                          }
+                          placeholder="Upload file quiz"
+                        />
+                        {item?.quizSection?.length > 0 && (
+                          <span
+                            className="cursor-pointer underline"
+                            onClick={() => {
+                              const data = courseContentData.find(
+                                (i) =>
+                                  i.videoSection === item.videoSection &&
+                                  i.quizSection?.length > 0
+                              );
+                              setQuizData(data?.quizSection);
+                              setPreview(true);
+                            }}
+                          >
+                            Preview
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <br />
                   </>
