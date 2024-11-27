@@ -1,7 +1,11 @@
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) => {
+  const params = useParams();
+  console.log(params)
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +33,7 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
     <div className="p-6 dark:text-white">
       <div className="flex flex-col md:flex-row items-center justify-between shadow-md p-6 rounded-md dark:bg-slate-800">
         <div className="flex flex-col items-center md:items-start md:w-1/2">
+        <Link href={`/course/${params?.id}`}>Back to course</Link>
           <div className="text-4xl font-bold text-yellow-500">
             {averageRating.toFixed(1)} <span className="text-gray-700 dark:text-white">Out of 5 Stars</span>
           </div>

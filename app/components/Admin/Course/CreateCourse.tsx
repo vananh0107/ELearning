@@ -117,7 +117,6 @@ const CreateCourse = (props: Props) => {
       await createCourse(data);
     }
   };
-  console.log(courseContentData)
   return !preview ? (
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">

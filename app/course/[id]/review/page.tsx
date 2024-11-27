@@ -50,7 +50,6 @@ const Page = ({ params }: any) => {
     });
     setReviews([...reviews, { id: reviews.length + 1, ...newReview }]);
   };
-  console.log(reviews);
   return (
     <div className="min-h-screen dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
       <Protected>

@@ -71,7 +71,7 @@ const CoursePlayer: FC<Props> = ({
         player.video.removeEventListener('ended', handleVideoEnd);
       };
     }
-  }, [iframeRef, isQuizActive]);
+  }, [iframeRef, isQuizActive, quizQuestions]);
   // useEffect(()=>{
   //   console.log(responseCompleteData)
   //   if(responseCompleteData?.isComplete){
@@ -79,7 +79,6 @@ const CoursePlayer: FC<Props> = ({
   //   }
   // },[responseCompleteData])
   const handleAnswerSelection = (index: number) => {
-  console.log(quizQuestions)
     setSelectedAnswer(index);
     const correctAnswer = quizQuestions.find(
       (q) => q.time === currentQuiz
@@ -117,7 +116,6 @@ const CoursePlayer: FC<Props> = ({
       }
     }, 1000);
   };
-  console.log(currentQuiz)
   return (
     <div
       style={{
@@ -165,7 +163,7 @@ const CoursePlayer: FC<Props> = ({
       >
         {currentQuiz !== null && (
           <div className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto w-full my-6">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl font-bold mb-4 text-black">
               {quizQuestions?.find((q) => q.time === currentQuiz)?.question}
             </h2>
             <div className="options space-y-2">

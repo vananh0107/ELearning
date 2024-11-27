@@ -17,8 +17,6 @@ const page = (props: Props) => {
       setQuizzes(JSON.parse(quizData));
     }
   }, []);
-  console.log(quizzes)
-
   return (
     <AdminProtected>
       <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">

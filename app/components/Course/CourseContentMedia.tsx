@@ -142,8 +142,6 @@ Props) => {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
   // useEffect(() => {},[isNextVideo])
-  console.log(activeVideo)
-  console.log(currentData)
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
