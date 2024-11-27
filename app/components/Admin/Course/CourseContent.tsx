@@ -20,6 +20,7 @@ type Props = {
   setPreview?: any;
   preview?: boolean;
   setQuizData?: any;
+  setCurrentSection?:any
 };
 
 const CourseContent: FC<Props> = ({
@@ -31,6 +32,7 @@ const CourseContent: FC<Props> = ({
   setPreview,
   preview,
   setQuizData,
+  setCurrentSection
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData?.length).fill(false)
@@ -296,11 +298,9 @@ const CourseContent: FC<Props> = ({
               ? { ...item, quizSection: response.data }
               : item
           );
-          // setPreview(true);
           setActivePreview(true);
           setCourseContentData(updatedData);
           localStorage.setItem('quizData', JSON.stringify(response.data));
-          // dispatch(saveQuiz(response.data ));
           console.log('File uploaded successfully:', response.data);
         })
         .catch((error) => {
@@ -356,7 +356,8 @@ const CourseContent: FC<Props> = ({
                           }
                           placeholder="Upload file quiz"
                         />
-                        {item?.quizSection?.length > 0 && (
+                        {/* {item?.quizSection?.length > 0 && ( */}
+                        {activePreview && (
                           <span
                             className="cursor-pointer underline"
                             onClick={() => {
@@ -367,11 +368,13 @@ const CourseContent: FC<Props> = ({
                               );
                               setQuizData(data?.quizSection);
                               setPreview(true);
+                              setCurrentSection(item.videoSection)
                             }}
                           >
                             Preview
                           </span>
                         )}
+                        {/* )} */}
                       </div>
                     </div>
                     <br />

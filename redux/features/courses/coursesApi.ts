@@ -1,3 +1,4 @@
+import { shuffleQuiz } from './../../../../Elearning/controllers/course.controller';
 import { apiSlice } from '../api/apiSlice';
 export const courseApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -120,6 +121,27 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: 'include' as const,
       }),
     }),
+    shuffleQuiz: builder.mutation({
+      query: ({ data }) => ({
+        url: `shuffle-quiz`,
+        body: {
+          data: data,
+        },
+        method: 'POST',
+        credentials: 'include' as const,
+      }),
+    }),
+    getComplete: builder.mutation({
+      query: ({ courseId, contentId }) => ({
+        url: `is-complete`,
+        body: {
+          courseId,
+          contentId,
+        },
+        method: 'POST',
+        credentials: 'include' as const,
+      }),
+    }),
   }),
 });
 
@@ -136,5 +158,7 @@ export const {
   useAddReviewInCourseMutation,
   useAddReplyInReviewMutation,
   useGetProgressQuery,
-  useUpdateProgressMutation
+  useUpdateProgressMutation,
+  useShuffleQuizMutation,
+  useGetCompleteMutation
 } = courseApi;

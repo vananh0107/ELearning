@@ -28,7 +28,6 @@ const CreateCourse = (props: Props) => {
   }, [isLoading, isSuccess, error]);
   const [active, setActive] = useState(0);
   const [preview, setPreview] = useState(false);
-  // const [currentSection, setCurrenSection] = useState('');
   const [quizData, setQuizData] = useState([]);
   const [courseInfo, setCourseInfo] = useState({
     name: '',
@@ -65,6 +64,7 @@ const CreateCourse = (props: Props) => {
     },
   ]);
   const [courseData, setCourseData] = useState({});
+  const [currentSection, setCurrentSection] = useState('');
   const handleSubmit = async () => {
     const formattedBenefits = benefits.filter((benefit) => ({
       title: benefit.title,
@@ -117,19 +117,7 @@ const CreateCourse = (props: Props) => {
       await createCourse(data);
     }
   };
-
-  // useEffect(() => {
-  //   const data = courseContentData.find(
-  //     (item) =>
-  //       item.videoSection === currentSection && item.quizSection?.length > 0
-  //   );
-  //   console.log(data)
-  //   setQuizData(data?.quizSection);
-  // }, [currentSection]);
-  // console.log(currentSection);
-  console.log(courseContentData);
-  console.log(quizData);
-  console.log(preview)
+  console.log(courseContentData)
   return !preview ? (
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
@@ -161,6 +149,7 @@ const CreateCourse = (props: Props) => {
             setPreview={setPreview}
             preview={preview}
             setQuizData={setQuizData}
+            setCurrentSection={setCurrentSection}
           />
         )}
         {active === 3 && (
@@ -178,7 +167,13 @@ const CreateCourse = (props: Props) => {
     </div>
   ) : (
     <div className="w-[100%]">
-      <CourseQuiz quizData={quizData} setPreview={setPreview}/>
+      <CourseQuiz
+        quizData={quizData}
+        setPreview={setPreview}
+        courseContentData={courseContentData}
+        setCourseContentData={setCourseContentData}
+        currentSection={currentSection}
+      />
     </div>
   );
 };

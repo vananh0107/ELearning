@@ -1,70 +1,38 @@
+import { useShuffleQuizMutation } from '@/redux/features/courses/coursesApi';
 import Link from 'next/link';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
-// const quizData = [
-//   {
-//     question: 'What is the capital of France?',
-//     options: ['Berlin', 'Madrid', 'Paris', 'Rome'],
-//     correctAnswer: 2,
-//   },
-//   {
-//     question: 'Which language is used for web development?',
-//     options: ['Python', 'C++', 'JavaScript', 'Java'],
-//     correctAnswer: 2,
-//   },
-//   {
-//     question: 'Who developed the theory of relativity?',
-//     options: ['Newton', 'Einstein', 'Galileo', 'Tesla'],
-//     correctAnswer: 1,
-//   },
-//   {
-//     question: 'What is the largest planet in our solar system?',
-//     options: ['Earth', 'Mars', 'Jupiter', 'Venus'],
-//     correctAnswer: 2,
-//   },
-//   {
-//     question: 'What is the boiling point of water?',
-//     options: ['90°C', '100°C', '110°C', '120°C'],
-//     correctAnswer: 1,
-//   },
-//   {
-//     question: 'Who wrote "Hamlet"?',
-//     options: ['Charles Dickens', 'William Shakespeare', 'Mark Twain', 'Homer'],
-//     correctAnswer: 1,
-//   },
-//   {
-//     question: 'Which country is known as the Land of Rising Sun?',
-//     options: ['China', 'Japan', 'South Korea', 'Thailand'],
-//     correctAnswer: 1,
-//   },
-// ];
 type Props = {
   quizData: [];
   setPreview: any;
+  courseContentData: any;
+  setCourseContentData: any;
+  currentSection: any;
 };
-const QuizPreview: FC<Props> = ({ quizData, setPreview }) => {
-  // const [questions, setQuestions] = useState(quizData);
-
-  // // Hàm để random các câu hỏi
-  // const handleRandomize = () => {
-  //   const shuffledQuestions = [...quizData].sort(() => Math.random() - 0.5);
-  //   setQuestions(shuffledQuestions);
-  // };
-
+const QuizPreview: FC<Props> = ({
+  quizData,
+  setPreview,
+  courseContentData,
+  setCourseContentData,
+  currentSection,
+}) => {
+  const [data, setData] = useState(quizData);
+  const [shuffleQuiz, { data: dataTake }] = useShuffleQuizMutation();
+  useEffect(() => {
+    const updatedData = courseContentData.map((item, i) =>
+      item.videoSection === currentSection
+        ? { ...item, quizSection: dataTake?.shuffleData || data }
+        : item
+    );
+    setCourseContentData(updatedData);
+    setData(dataTake?.shuffleData || data);
+  }, [dataTake]);
   return (
     <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen pt-[50px] text-gray-800 dark:text-gray-200">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">
-          Total Questions: {quizData.length}
-        </h2>
-        {/* <button
-          onClick={handleRandomize}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          Random
-        </button> */}
+        <h2 className="text-2xl font-bold">Total Questions: {data.length}</h2>
       </div>
-      {quizData.map((quiz, index) => (
+      {data.map((quiz, index) => (
         <div
           key={index}
           className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700"
@@ -88,12 +56,24 @@ const QuizPreview: FC<Props> = ({ quizData, setPreview }) => {
           </ul>
         </div>
       ))}
-      <span
-        className="px-4 py-2 bg-emerald-400 text-white rounded-md shadow transition cursor-pointer"
-        onClick={() => setPreview(false)}
-      >
-        Back
-      </span>
+      <div className="flex justify-between">
+        <span
+          className="px-4 py-2 bg-emerald-400 text-white rounded-md shadow transition cursor-pointer"
+          onClick={() => {
+            setPreview(false);
+          }}
+        >
+          Back
+        </span>
+        <span
+          className="px-4 py-2 bg-emerald-400 text-white rounded-md shadow transition cursor-pointer"
+          onClick={() => {
+            shuffleQuiz({ data });
+          }}
+        >
+          Shuffle
+        </span>
+      </div>
     </div>
   );
 };

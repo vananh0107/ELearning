@@ -9,6 +9,7 @@ type Props = {
   isDemo?: boolean;
   lastLesson?: any;
   setIsNextVideo?: any;
+  isNextVideo?: any;
 };
 
 const CourseContentList: FC<Props> = (props) => {
@@ -25,19 +26,22 @@ const CourseContentList: FC<Props> = (props) => {
 
   useEffect(() => {
     if (props.lastLesson?.contentId) {
-      const activeVideoIndex = props.data.findIndex(
+      let activeVideoIndex = props.data.findIndex(
         (item: any) => item._id === props.lastLesson.contentId
       );
       if (activeVideoIndex !== -1) {
-        props.setActiveVideo(activeVideoIndex);
+        // props.setActiveVideo(activeVideoIndex);
         const lockedSet = new Set<number>();
+        if (props.isNextVideo) {
+          activeVideoIndex += 1;
+        }
         for (let i = activeVideoIndex + 1; i < props.data.length; i++) {
           lockedSet.add(i);
         }
         setLockedVideos(lockedSet);
       }
     }
-  }, [props.lastLesson, props.data, props.setActiveVideo]);
+  }, [props.lastLesson, props.data, props.isNextVideo]);
 
   const toggleSection = (section: string) => {
     const newVisibleSections = new Set(visibleSections);
@@ -115,7 +119,7 @@ const CourseContentList: FC<Props> = (props) => {
                       key={item._id}
                       onClick={() => {
                         if (!props.isDemo && !isLocked) {
-                          props.isNextVideo(false);
+                          // props.setIsNextVideo(false);
                           props.setActiveVideo(videoIndex);
                         }
                       }}

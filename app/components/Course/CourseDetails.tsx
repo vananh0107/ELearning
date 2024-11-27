@@ -1,3 +1,4 @@
+'use client'
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
 import Ratings from '@/app/utils/Ratings';
@@ -6,32 +7,32 @@ import React, { useEffect, useState } from 'react';
 import { IoCheckmarkDoneOutline, IoCloseOutline } from 'react-icons/io5';
 import { format } from 'timeago.js';
 import CourseContentList from '../Course/CourseContentList';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckOutForm from '../../components/Payment/CheckOutForm';
+import { useRouter } from "next/navigation";
 import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
 import Image from 'next/image';
 import avatarDefault from '../../../public/assets/avatar.jpg';
 import { VscVerifiedFilled } from 'react-icons/vsc';
+import { useCreatePaymentIntentMutation } from '@/redux/features/orders/ordersApi';
 type Props = {
   data: any;
   clientSecret: string;
   stripePromise: any;
   setRoute: any;
   setOpen: any;
-  id?: string
+  id?: string;
 };
 
 const CourseDetails = ({
   data,
-  clientSecret,
-  stripePromise,
   setRoute,
   setOpen: openAuthModal,
-  id
+  id,
 }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
+  const [createPaymentIntent, { data:responeData }] = useCreatePaymentIntentMutation();
   const [user, setUser] = useState<any>();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     setUser(userData?.user);
   }, [userData]);
@@ -41,13 +42,17 @@ const CourseDetails = ({
   const isPurchased =
     user && user?.courses?.find((item: any) => item.courseId === data._id);
   const handleOrder = (e: any) => {
-    if (user) {
-      setOpen(true);
-    } else {
-      setRoute('Login');
-      openAuthModal(true);
-    }
+    createPaymentIntent({
+      amountInfo: 1000000,
+      description: 'test',
+      courseId: data._id,
+    });
+
   };
+  useEffect(()=>{
+    router.push(responeData?.data.shortLink);
+    // console.log(responeData)
+  },[responeData])
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -241,10 +246,10 @@ const CourseDetails = ({
               />
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
-                  {data.price === 0 ? 'Free' : data.price}
+                  {data.price === 0 ? 'Free' : data.price+"₫"}
                 </h1>
                 <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
-                  {data.estimatedPrice}
+                  {data.estimatedPrice+"₫"}
                 </h5>
                 <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
                   {discountPercentengePrice}% Off
@@ -263,7 +268,7 @@ const CourseDetails = ({
                     className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
-                    Buy Now {data.price}$
+                    Buy Now {data.price}₫
                   </div>
                 )}
               </div>
@@ -295,13 +300,13 @@ const CourseDetails = ({
                   onClick={() => setOpen(false)}
                 />
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 {stripePromise && clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
                     <CheckOutForm setOpen={setOpen} data={data} user={user} />
                   </Elements>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         )}

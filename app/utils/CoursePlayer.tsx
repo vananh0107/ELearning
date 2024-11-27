@@ -1,6 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useUpdateProgressMutation } from '@/redux/features/courses/coursesApi';
+import {
+  useGetCompleteMutation,
+  useUpdateProgressMutation,
+} from '@/redux/features/courses/coursesApi';
 import { useParams } from 'next/navigation';
 
 type Props = {
@@ -10,21 +13,6 @@ type Props = {
   id?: string;
   setIsNextVideo?: any;
 };
-
-// const quizQuestions = [
-//   {
-//     time: 2,
-//     question: 'Câu hỏi ở phút thứ 1?',
-//     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-//     correctAnswer: 1,
-//   },
-//   {
-//     time: 10,
-//     question: 'Câu hỏi khi hết video?',
-//     options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-//     correctAnswer: 2,
-//   },
-// ];
 
 const CoursePlayer: FC<Props> = ({
   videoUrl,
@@ -41,6 +29,8 @@ const CoursePlayer: FC<Props> = ({
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [updateProgress, { isSuccess, error, isLoading }] =
     useUpdateProgressMutation();
+  const [getComplete, { data: responseCompleteData }] =
+    useGetCompleteMutation();
   const params = useParams();
   const courseId = params?.id;
   useEffect(() => {
@@ -67,23 +57,29 @@ const CoursePlayer: FC<Props> = ({
       };
 
       const handleVideoEnd = () => {
-        console.log('vo');
-        if (setIsNextVideo) {
-          setIsNextVideo(true);
-        }
+        getComplete({ courseId, contentId: id });
+        // if (setIsNextVideo) {
+        //   setIsNextVideo(true);
+        // }
       };
 
       player.video.addEventListener('ended', handleVideoEnd);
 
-      const interval = setInterval(checkTimeForQuiz, 1000);
+      const interval = setInterval(checkTimeForQuiz, 500);
       return () => {
         clearInterval(interval);
         player.video.removeEventListener('ended', handleVideoEnd);
       };
     }
   }, [iframeRef, isQuizActive]);
-
+  // useEffect(()=>{
+  //   console.log(responseCompleteData)
+  //   if(responseCompleteData?.isComplete){
+  //     setIsNextVideo(true);
+  //   }
+  // },[responseCompleteData])
   const handleAnswerSelection = (index: number) => {
+  console.log(quizQuestions)
     setSelectedAnswer(index);
     const correctAnswer = quizQuestions.find(
       (q) => q.time === currentQuiz
@@ -121,6 +117,7 @@ const CoursePlayer: FC<Props> = ({
       }
     }, 1000);
   };
+  console.log(currentQuiz)
   return (
     <div
       style={{

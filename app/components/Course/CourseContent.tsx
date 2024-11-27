@@ -63,6 +63,7 @@ const CourseContent = ({ id, user }: Props) => {
             </div>
             <div className="hidden 800px:block 800px:col-span-3">
               <CourseContentList
+                isNextVideo={isNextVideo}
                 setIsNextVideo={setIsNextVideo}
                 setActiveVideo={setActiveVideo}
                 lastLesson={progressData?.lastLesson}

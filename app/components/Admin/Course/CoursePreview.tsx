@@ -40,10 +40,10 @@ const CoursePreview: FC<Props> = ({
         </div>
         <div className="flex items-center">
           <h1 className="pt-5 text-[25px] dark:text-white">
-            {courseData?.price === 0 ? 'Free' : courseData.price + '$'}
+            {courseData?.price === 0 ? 'Free' : courseData.price + '₫'}
           </h1>
           <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 dark:text-white">
-            {courseData.estimatedPrice + '$'}
+            {courseData.estimatedPrice + '₫'}
           </h5>
           <h4 className="pl-5 pt-4 text-[22px] dark:text-white">
             {discountPercentagePrice + '% '} Off
