@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { IoLayersOutline } from 'react-icons/io5';
 import { MdOutlineOndemandVideo } from 'react-icons/md';
 
 type Props = {
@@ -10,6 +11,8 @@ type Props = {
   lastLesson?: any;
   setIsNextVideo?: any;
   isNextVideo?: any;
+  responseCompleteData?;
+  any;
 };
 
 const CourseContentList: FC<Props> = (props) => {
@@ -23,7 +26,6 @@ const CourseContentList: FC<Props> = (props) => {
 
   const [lockedVideos, setLockedVideos] = useState<Set<number>>(new Set());
   let totalCount: number = 0;
-
   useEffect(() => {
     if (props.lastLesson?.contentId) {
       let activeVideoIndex = props.data.findIndex(

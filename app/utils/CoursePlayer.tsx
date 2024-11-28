@@ -12,6 +12,9 @@ type Props = {
   quizQuestions?: [];
   id?: string;
   setIsNextVideo?: any;
+  updateProgress?:any;
+  responseCompleteData?:any
+  getComplete?:any
 };
 
 const CoursePlayer: FC<Props> = ({
@@ -19,6 +22,9 @@ const CoursePlayer: FC<Props> = ({
   quizQuestions,
   id,
   setIsNextVideo,
+  updateProgress,
+  responseCompleteData,
+  getComplete
 }) => {
   const [videoData, setVideoData] = useState({ otp: '', playbackInfo: '' });
   const [isQuizActive, setIsQuizActive] = useState(false);
@@ -27,10 +33,6 @@ const CoursePlayer: FC<Props> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [quizStatus, setQuizStatus] = useState<string | null>(null);
   const [quizAnswered, setQuizAnswered] = useState(false);
-  const [updateProgress, { isSuccess, error, isLoading }] =
-    useUpdateProgressMutation();
-  const [getComplete, { data: responseCompleteData }] =
-    useGetCompleteMutation();
   const params = useParams();
   const courseId = params?.id;
   useEffect(() => {
@@ -72,12 +74,11 @@ const CoursePlayer: FC<Props> = ({
       };
     }
   }, [iframeRef, isQuizActive, quizQuestions]);
-  // useEffect(()=>{
-  //   console.log(responseCompleteData)
-  //   if(responseCompleteData?.isComplete){
-  //     setIsNextVideo(true);
-  //   }
-  // },[responseCompleteData])
+  useEffect(()=>{
+    if(responseCompleteData?.isComplete){
+      setIsNextVideo(true);
+    }
+  },[responseCompleteData])
   const handleAnswerSelection = (index: number) => {
     setSelectedAnswer(index);
     const correctAnswer = quizQuestions.find(

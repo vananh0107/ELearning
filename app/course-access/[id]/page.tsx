@@ -2,7 +2,7 @@
 import Loader from '@/app/components/Loader/Loader';
 import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
 import { redirect, useParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CourseContent from '../../components/Course/CourseContent';
 const Page = () => {
   const params = useParams();

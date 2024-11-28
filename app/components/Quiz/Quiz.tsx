@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
-
-const Quiz = () => {
+type Props = {
+  questions: any;
+  setActiveVideo:any;
+  activeVideo: any;
+  setIsNextVideo:any;
+  updateProgress:any;
+  data:any;
+  id:any
+  setQuiz:any
+};
+const Quiz = ({ questions , setActiveVideo, setIsNextVideo, activeVideo, updateProgress, data, id, setQuiz}: Props) => {
   const [timeLeft, setTimeLeft] = useState(3620);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
 
-  const questions = [
-    {
-      question: 'What is the capital of France?',
-      options: ['Berlin', 'Madrid', 'Paris', 'Rome'],
-      correctAnswer: 2,
-    },
-    {
-      question: 'Which language is used for web development?',
-      options: ['Python', 'C++', 'JavaScript', 'Java'],
-      correctAnswer: 2,
-    },
-    {
-      question: 'Who developed the theory of relativity?',
-      options: ['Newton', 'Einstein', 'Galileo', 'Tesla'],
-      correctAnswer: 1,
-    },
-  ];
+  // const questions = [
+  //   {
+  //     question: 'What is the capital of France?',
+  //     options: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+  //     correctAnswer: 2,
+  //   },
+  //   {
+  //     question: 'Which language is used for web development?',
+  //     options: ['Python', 'C++', 'JavaScript', 'Java'],
+  //     correctAnswer: 2,
+  //   },
+  //   {
+  //     question: 'Who developed the theory of relativity?',
+  //     options: ['Newton', 'Einstein', 'Galileo', 'Tesla'],
+  //     correctAnswer: 1,
+  //   },
+  // ];
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -70,7 +79,21 @@ const Quiz = () => {
       minutes < 10 ? `0${minutes}` : minutes
     }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
   };
-
+  const handleNextLesson = () => {
+    setActiveVideo(
+      data && data?.length - 1 === activeVideo
+        ? activeVideo
+        : activeVideo + 1
+    );
+    setIsNextVideo(false);
+    updateProgress({
+      contentId: data?.[activeVideo + 1]._id,
+      courseId: id,
+      quizStatus: null,
+      quizId: null,
+    });
+    setQuiz([])
+  };
   return (
     <div
       className={`min-h-screen flex flex-col items-center justify-center  ${
@@ -98,10 +121,12 @@ const Quiz = () => {
                 / {questions.length}
               </p>
               <button
-                onClick={resetQuiz}
+                onClick={
+                  score === questions.length ? handleNextLesson : resetQuiz
+                }
                 className="px-6 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:text-gray-200 hover:dark:bg-blue-600 transition duration-300"
               >
-                Retry Quiz
+                {score === questions.length ? 'Next Lesson' : 'Retry Quiz'}
               </button>
             </div>
 

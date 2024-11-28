@@ -18,17 +18,13 @@ import toast from 'react-hot-toast';
 import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
-  useAddReplyInReviewMutation,
-  useAddReviewInCourseMutation,
-  useGetCompleteMutation,
   useGetCourseDetailsQuery,
-  useUpdateProgressMutation,
 } from '@/redux/features/courses/coursesApi';
 import { format } from 'timeago.js';
 import { BiMessage } from 'react-icons/bi';
 import { VscVerifiedFilled } from 'react-icons/vsc';
-import Ratings from '@/app/utils/Ratings';
 import socketIO from 'socket.io-client';
+import { useRouter } from 'next/navigation';
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || '';
 const socketId = socketIO(ENDPOINT, { transports: ['websocket'] });
 type Props = {
@@ -40,7 +36,11 @@ type Props = {
   refetch: any;
   isNextVideo?: boolean;
   setIsNextVideo?: any;
-  // lastLesson:any
+  lastLesson: any;
+  updateProgress: any;
+  getComplete: any;
+  responseCompleteData: any;
+  setQuiz:any;
 };
 
 const CourseContentMedia = ({
@@ -52,18 +52,22 @@ const CourseContentMedia = ({
   refetch,
   isNextVideo,
   setIsNextVideo,
-}: // lastLesson
-Props) => {
+  lastLesson,
+  updateProgress,
+  getComplete,
+  responseCompleteData,
+  setQuiz,
+}: Props) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [questionId, setQuestionId] = useState('');
   const [code, setCode] = useState('');
   const [currentData, setCurrentData] = useState(data?.[activeVideo]?.quiz);
-  const [updateProgress, {}] = useUpdateProgressMutation();
   const handleSubmit = () => {
     console.log('Code submitted:', code);
   };
+  const router = useRouter()
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
@@ -130,7 +134,7 @@ Props) => {
   }, [isSuccess, answerSuccess, error, answerError]);
   useEffect(() => {
     setCurrentData(data?.[activeVideo]?.quiz);
-  },[activeVideo])
+  }, [activeVideo]);
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
       answer,
@@ -141,7 +145,10 @@ Props) => {
   };
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
-  // useEffect(() => {},[isNextVideo])
+
+  console.log(
+    data,activeVideo,id
+  );
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -150,7 +157,10 @@ Props) => {
         isPreview={false}
         quizQuestions={currentData}
         id={data?.[activeVideo]?._id}
+        updateProgress={updateProgress}
         setIsNextVideo={setIsNextVideo}
+        responseCompleteData={responseCompleteData}
+        getComplete={getComplete}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -171,23 +181,30 @@ Props) => {
           className={`${
             styles.button
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
-            (data?.length - 1 === activeVideo || !isNextVideo) &&
+            activeVideo + 1 >= lastLesson?.order &&
+            (!isNextVideo || data?.length - 1 === activeVideo) &&
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
-            if (isNextVideo) {
-              setActiveVideo(
-                data && data?.length - 1 === activeVideo
-                  ? activeVideo
-                  : activeVideo + 1
-              );
-              // setIsNextVideo(false);
-              updateProgress({
-                contentId: data?.[activeVideo+1]._id,
-                courseId: id,
-                quizStatus: null,
-                quizId: null,
-              });
+            if ((isNextVideo||lastLesson.isLessonCompleted) && lastLesson?.order > activeVideo) {
+              if(data[activeVideo].quizSection.length > 0) {
+                // setQuizActive(true)
+                setQuiz(data[activeVideo].quizSection)
+              }
+              else{
+                setActiveVideo(
+                  data && data?.length - 1 === activeVideo
+                    ? activeVideo
+                    : activeVideo + 1
+                );
+                setIsNextVideo(false);
+                updateProgress({
+                  contentId: data?.[activeVideo + 1]._id,
+                  courseId: id,
+                  quizStatus: null,
+                  quizId: null,
+                });
+              }
             }
           }}
         >
