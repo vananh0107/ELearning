@@ -1,6 +1,6 @@
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AiFillStar,
   AiOutlineArrowLeft,
@@ -40,7 +40,7 @@ type Props = {
   updateProgress: any;
   getComplete: any;
   responseCompleteData: any;
-  setQuiz:any;
+  setQuiz: any;
 };
 
 const CourseContentMedia = ({
@@ -67,7 +67,7 @@ const CourseContentMedia = ({
   const handleSubmit = () => {
     console.log('Code submitted:', code);
   };
-  const router = useRouter()
+  const router = useRouter();
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
@@ -146,9 +146,57 @@ const CourseContentMedia = ({
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
-  console.log(
-    data,activeVideo,id
-  );
+  console.log(data, activeVideo, id);
+
+  const testCases = [
+    { input: '', expected: 'Hello, World!' },
+    { input: 'test', expected: 'Hello, World!' },
+  ];
+  const [testResults, setTestResults] = useState([]);
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage of Left Panel width
+  const [topSectionHeight, setTopSectionHeight] = useState(50); // Percentage of Top Section height
+  const isResizingHorizontal = useRef(false);
+  const isResizingVertical = useRef(false);
+
+  const handleMouseDownHorizontal = () => {
+    isResizingHorizontal.current = true;
+    document.body.style.cursor = "col-resize";
+  };
+
+  const handleMouseDownVertical = () => {
+    isResizingVertical.current = true;
+    document.body.style.cursor = "row-resize";
+  };
+
+  const handleMouseMove = (e) => {
+    if (isResizingHorizontal.current) {
+      const newWidth = (e.clientX / window.innerWidth) * 100;
+      if (newWidth > 20 && newWidth < 80) {
+        setLeftPanelWidth(newWidth);
+      }
+    }
+    if (isResizingVertical.current) {
+      const newHeight = (e.clientY / window.innerHeight) * 100;
+      if (newHeight > 20 && newHeight < 80) {
+        setTopSectionHeight(newHeight);
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    isResizingHorizontal.current = false;
+    isResizingVertical.current = false;
+    document.body.style.cursor = "default";
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -186,12 +234,14 @@ const CourseContentMedia = ({
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
-            if ((isNextVideo||lastLesson.isLessonCompleted) && lastLesson?.order > activeVideo) {
-              if(data[activeVideo].quizSection.length > 0) {
+            if (
+              (isNextVideo || lastLesson.isLessonCompleted) &&
+              lastLesson?.order > activeVideo
+            ) {
+              if (data[activeVideo].quizSection.length > 0) {
                 // setQuizActive(true)
-                setQuiz(data[activeVideo].quizSection)
-              }
-              else{
+                setQuiz(data[activeVideo].quizSection);
+              } else {
                 setActiveVideo(
                   data && data?.length - 1 === activeVideo
                     ? activeVideo
@@ -307,35 +357,86 @@ const CourseContentMedia = ({
         </>
       )}
       {activeBar === 3 && (
-        <div className="w-full">
-          <div className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 p-4 rounded-lg shadow-md mb-6">
-            <p className="text-slate-800 dark:text-white text-sm">
-              Đề bài: Nhập vào một số để kiểm tra xem đó có phải là số nguyên tố
-              hay không.
-            </p>
+          <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+          {/* Left Panel */}
+          <div
+            className="flex flex-col border-r border-gray-300 dark:border-gray-700"
+            style={{ width: `${leftPanelWidth}%` }}
+          >
+            {/* Top Section */}
+            <div
+              className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4"
+              style={{ height: `${topSectionHeight}%` }}
+            >
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Bài Tập</h2>
+              <p className="mt-4 text-gray-700 dark:text-gray-300">
+                Bạn hãy điền các câu lệnh thích hợp vào dấu <code>...</code> để chương trình hiển thị ra màn hình dòng chữ:
+              </p>
+              <div className="bg-black text-white p-4 rounded mt-2 font-mono">Hello, World!</div>
+              <p className="mt-4 text-gray-700 dark:text-gray-300">
+                Để nộp bài trên hệ thống bạn có thể bấm nút <strong>CHẠY THỬ</strong> sau đó bấm <strong>NỘP BÀI</strong>.
+              </p>
+            </div>
+    
+            {/* Resizer for Vertical Resize */}
+            <div
+              onMouseDown={handleMouseDownVertical}
+              className="cursor-row-resize h-1 bg-gray-500 dark:bg-gray-700"
+            ></div>
+    
+            {/* Bottom Section */}
+            <div
+              className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4"
+              style={{ height: `${100 - topSectionHeight}%` }}
+            >
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Test Cases</h3>
+              <div className="mt-4">
+                <div className="p-4 bg-gray-200 dark:bg-gray-800 rounded mb-2 shadow-sm text-gray-800 dark:text-gray-300">
+                  <p>
+                    <strong>Đầu vào:</strong> ""
+                  </p>
+                  <p>
+                    <strong>Kết quả mong đợi:</strong> "Hello, World!"
+                  </p>
+                </div>
+                <div className="p-4 bg-gray-200 dark:bg-gray-800 rounded mb-2 shadow-sm text-gray-800 dark:text-gray-300">
+                  <p>
+                    <strong>Đầu vào:</strong> "test"
+                  </p>
+                  <p>
+                    <strong>Kết quả mong đợi:</strong> "Hello, World!"
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <CodeMirror
+    
+          {/* Resizer for Horizontal Resize */}
+          <div
+            onMouseDown={handleMouseDownHorizontal}
+            className="cursor-col-resize w-1 bg-gray-500 dark:bg-gray-700"
+          ></div>
+    
+          {/* Right Panel */}
+          <div
+            className="p-6"
+            style={{ width: `${100 - leftPanelWidth}%` }}
+          >
+            <CodeMirror
             value={code}
-            height="400px"
+            height="80vh"
             extensions={[javascript()]}
             onChange={(value) => setCode(value)}
             theme={isDarkMode ? darcula : quietlight}
             className="  border-gray-300 rounded-lg dark:text-white text-black"
           />
-          {/* {message && ( */}
-          <div className="mt-4 p-4 rounded-l shadow-md bg-gray-200 text-black dark:bg-gray-700 dark:text-white">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
-          </div>
-          {/* )} */}
           <button
             onClick={handleSubmit}
             className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
           >
             Submit Code
           </button>
+          </div>
         </div>
       )}
     </div>

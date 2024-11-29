@@ -21,6 +21,7 @@ type Props = {
   preview?: boolean;
   setQuizData?: any;
   setCurrentSection?:any
+  isEdit?:boolean
 };
 
 const CourseContent: FC<Props> = ({
@@ -32,7 +33,8 @@ const CourseContent: FC<Props> = ({
   setPreview,
   preview,
   setQuizData,
-  setCurrentSection
+  setCurrentSection,
+  isEdit
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData?.length).fill(false)
@@ -308,6 +310,7 @@ const CourseContent: FC<Props> = ({
         });
     }
   };
+  console.log(courseContentData)
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -357,7 +360,7 @@ const CourseContent: FC<Props> = ({
                           placeholder="Upload file quiz"
                         />
                         {/* {item?.quizSection?.length > 0 && ( */}
-                        {activePreview && (
+                        {(activePreview||isEdit) && (
                           <span
                             className="cursor-pointer underline"
                             onClick={() => {

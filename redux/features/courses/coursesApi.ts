@@ -45,6 +45,13 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: 'include' as const,
       }),
     }),
+    getReviewCourse: builder.query({
+      query: (courseId) => ({
+        url: `get-review/${courseId}`,
+        method: 'GET',
+        credentials: 'include' as const,
+      }),
+    }),
     getCourseContent: builder.query({
       query: (id) => ({
         url: `get-course-content/${id}`,
@@ -159,5 +166,6 @@ export const {
   useGetProgressQuery,
   useUpdateProgressMutation,
   useShuffleQuizMutation,
-  useGetCompleteMutation
+  useGetCompleteMutation,
+  useGetReviewCourseQuery
 } = courseApi;

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
 import Ratings from '@/app/utils/Ratings';
@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { IoCheckmarkDoneOutline, IoCloseOutline } from 'react-icons/io5';
 import { format } from 'timeago.js';
 import CourseContentList from '../Course/CourseContentList';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
 import Image from 'next/image';
 import avatarDefault from '../../../public/assets/avatar.jpg';
@@ -29,7 +29,8 @@ const CourseDetails = ({
   id,
 }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const [createPaymentIntent, { data:responeData }] = useCreatePaymentIntentMutation();
+  const [createPaymentIntent, { data: responeData }] =
+    useCreatePaymentIntentMutation();
   const [user, setUser] = useState<any>();
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -47,12 +48,12 @@ const CourseDetails = ({
       description: 'test',
       courseId: data._id,
     });
-
   };
-  useEffect(()=>{
+  useEffect(() => {
     router.push(responeData?.data.shortLink);
     // console.log(responeData)
-  },[responeData])
+  }, [responeData]);
+  console.log(data?.ratings.toFixed(1));
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -63,7 +64,7 @@ const CourseDetails = ({
             </h1>
             <div className="flex items-center justify-between pt-3">
               <div className="flex items-center">
-                <Ratings rating={data.ratings} />
+                <Ratings rating={data?.ratings.toFixed(1)} />
                 <h5 className="text-black dark:text-white">
                   {data.reviews?.length} Reviews
                 </h5>
@@ -136,7 +137,7 @@ const CourseDetails = ({
               <br />
               <div className="w-full">
                 <div className="800px:flex items-center">
-                  <Ratings rating={data?.rating} />
+                  <Ratings rating={data?.ratings.toFixed(1)} />
                   <div className="mb-2 800px:mb-[unset]" />
                   <h5 className="text-[25px] font-Poppins text-black dark:text-white">
                     {Number.isInteger(data?.ratings)
@@ -147,53 +148,15 @@ const CourseDetails = ({
                 </div>
                 <br />
                 {(data?.reviews && [...data.reviews].reverse()).map(
-                  (item: any, index: number) => (
-                    <div className="w-full pb-4" key={index}>
-                      <div className="flex">
-                        <div className="w-[50px] h-[50px]">
-                          <Image
-                            src={
-                              item.user.avatar
-                                ? item.user.avatar.url
-                                : avatarDefault
-                            }
-                            width={50}
-                            height={50}
-                            alt=""
-                            className="w-[50px] h-[50px] rounded-full object-cover"
-                          />
-                        </div>
-                        <div className="hidden 800px:block pl-2">
-                          <div className="flex items-center">
-                            <h5 className="text-[18px] pr-2 text-black dark:text-white">
-                              {item.user.name}
-                            </h5>
-                            <Ratings rating={item.rating} />
-                          </div>
-                          <p className="text-black dark:text-white">
-                            {item.comment}
-                          </p>
-                          <small className="text-[#000000d1] dark:text-[#ffffff83]">
-                            {format(item.createdAt)}
-                          </small>
-                        </div>
-                        <div className="pl-2 flex 800px:hidden items-center">
-                          <h5 className="text-[18px] pr-2 text-black dark:text-white">
-                            {item.user.name}
-                          </h5>
-                          <Ratings rating={item.rating} />
-                        </div>
-                      </div>
-                      {item.commentReplies.map((i: any, index: number) => (
-                        <div
-                          className="w-full flex 800px:ml-16 my-5"
-                          key={index}
-                        >
+                  (item: any, index: number) =>
+                    index < 4 && (
+                      <div className="w-full pb-4" key={index}>
+                        <div className="flex">
                           <div className="w-[50px] h-[50px]">
                             <Image
                               src={
-                                i.user.avatar
-                                  ? i.user.avatar.url
+                                item.user.avatar
+                                  ? item.user.avatar.url
                                   : avatarDefault
                               }
                               width={50}
@@ -202,22 +165,63 @@ const CourseDetails = ({
                               className="w-[50px] h-[50px] rounded-full object-cover"
                             />
                           </div>
-                          <div className="pl-2">
+                          <div className="hidden 800px:block pl-2">
                             <div className="flex items-center">
-                              <h5 className="text-[20px]">{item.user.name}</h5>
-                              {item.user.role === 'admin' && (
-                                <VscVerifiedFilled className="text-[#0a6ad1] ml-2 text-[20px]" />
-                              )}
-                            </div>{' '}
-                            <p>{i.comment}</p>
-                            <small className="text-[#ffffff83]">
-                              {format(i.createdAt)}
+                              <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                                {item.user.name}
+                              </h5>
+                              <Ratings rating={item.rating} />
+                            </div>
+                            <p className="text-black dark:text-white">
+                              {item.comment}
+                            </p>
+                            <small className="text-[#000000d1] dark:text-[#ffffff83]">
+                              {format(item.createdAt)}
                             </small>
                           </div>
+                          <div className="pl-2 flex 800px:hidden items-center">
+                            <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                              {item.user.name}
+                            </h5>
+                            <Ratings rating={item.rating} />
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  )
+                        {item.commentReplies.map((i: any, index: number) => (
+                          <div
+                            className="w-full flex 800px:ml-16 my-5"
+                            key={index}
+                          >
+                            <div className="w-[50px] h-[50px]">
+                              <Image
+                                src={
+                                  i.user.avatar
+                                    ? i.user.avatar.url
+                                    : avatarDefault
+                                }
+                                width={50}
+                                height={50}
+                                alt=""
+                                className="w-[50px] h-[50px] rounded-full object-cover"
+                              />
+                            </div>
+                            <div className="pl-2">
+                              <div className="flex items-center">
+                                <h5 className="text-[20px]">
+                                  {item.user.name}
+                                </h5>
+                                {item.user.role === 'admin' && (
+                                  <VscVerifiedFilled className="text-[#0a6ad1] ml-2 text-[20px]" />
+                                )}
+                              </div>{' '}
+                              <p>{i.comment}</p>
+                              <small className="text-[#ffffff83]">
+                                {format(i.createdAt)}
+                              </small>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )
                 )}
                 <div className="flex items-center justify-between">
                   <Link
@@ -246,10 +250,10 @@ const CourseDetails = ({
               />
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
-                  {data.price === 0 ? 'Free' : data.price+"₫"}
+                  {data.price === 0 ? 'Free' : data.price + '₫'}
                 </h1>
                 <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
-                  {data.estimatedPrice+"₫"}
+                  {data.estimatedPrice + '₫'}
                 </h5>
                 <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
                   {discountPercentengePrice}% Off

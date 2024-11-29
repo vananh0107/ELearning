@@ -7,8 +7,9 @@ type Props = {
 };
 
 const Ratings: FC<Props> = ({ rating }) => {
+  console.log(rating)
   const stars = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 1; i <= 5; i++) {
     if (i < rating) {
       stars.push(
         <AiFillStar

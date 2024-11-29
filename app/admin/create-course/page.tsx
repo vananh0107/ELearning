@@ -10,7 +10,7 @@ type Props = {};
 const page = (props: Props) => {
   return (
     <AdminProtected>
-      <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
+      <div className="dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
         <Heading
           title="ELearning - Admin"
           description="Elearning is a platform for student to learn and get help from teachers"

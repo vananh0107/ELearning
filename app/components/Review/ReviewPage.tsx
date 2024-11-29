@@ -1,44 +1,59 @@
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import React, { useState } from "react";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { styles } from '@/app/styles/style';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import React, { useState } from 'react';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
-const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) => {
+const ReviewPage = ({
+  reviews,
+  // averageRating,
+  totalReviews,
+  onSubmitReview,
+}) => {
   const params = useParams();
-  console.log(params)
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const reviewsPerPage = 5; 
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  const reviewsPerPage = 5;
+  const totalPages = Math.ceil(reviews?.length / reviewsPerPage);
 
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+  const currentReviews = reviews?.slice(indexOfFirstReview, indexOfLastReview);
 
   const handleSubmit = () => {
     if (rating > 0 && comment.trim()) {
       onSubmitReview({ rating, comment });
       setRating(0);
-      setComment("");
+      setComment('');
     }
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  let averageRating = 0;
+  if (reviews) {
+    averageRating =
+      reviews.reduce((total, review) => total + review.rating, 0) /
+      reviews.length;
+  }
   return (
     <div className="p-6 dark:text-white">
       <div className="flex flex-col md:flex-row items-center justify-between shadow-md p-6 rounded-md dark:bg-slate-800">
         <div className="flex flex-col items-center md:items-start md:w-1/2">
-        <Link href={`/course/${params?.id}`}>Back to course</Link>
           <div className="text-4xl font-bold text-yellow-500">
-            {averageRating.toFixed(1)} <span className="text-gray-700 dark:text-white">Out of 5 Stars</span>
+            {averageRating?.toFixed(1)}{' '}
+            <span className="text-gray-700 dark:text-white">
+              Out of 5 Stars
+            </span>
           </div>
           <div className="text-gray-500 mt-2 dark:text-white">
-            Overall rating of <span className="text-blue-600 font-medium">{totalReviews} reviews</span>
+            Overall rating of{' '}
+            <span className="text-blue-600 font-medium">
+              {totalReviews} reviews
+            </span>
           </div>
           <div className="mt-4 space-y-2">
             {[5, 4, 3, 2, 1].map((star) => (
@@ -48,7 +63,7 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
                     <AiFillStar
                       key={index}
                       className={`${
-                        index < star ? "text-yellow-500" : "text-gray-300"
+                        index < star ? 'text-yellow-500' : 'text-gray-300'
                       }`}
                     />
                   ))}
@@ -56,18 +71,28 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
                 <div className="w-40 h-3 bg-gray-200 rounded-full mx-4">
                   <div
                     className="h-full bg-yellow-500 rounded-full"
-                    style={{ width: `${(reviews.filter((r) => r.rating === star).length / totalReviews) * 100}%` }}
+                    style={{
+                      width: `${
+                        (reviews?.filter((r) => r.rating === star).length /
+                          totalReviews) *
+                        100
+                      }%`,
+                    }}
                   ></div>
                 </div>
                 <div className="text-gray-500">
-                  {reviews.filter((r) => r.rating === star).length}
+                  {reviews?.filter((r) => r.rating === star).length}
                 </div>
               </div>
             ))}
           </div>
         </div>
         <div className="text-center md:text-right mt-6 md:mt-0 md:w-1/2">
-          <img src="https://www.powerreviews.com/wp-content/uploads/2021/12/review-vol-rec.png" alt="" className="w-full h-full"/>
+          <img
+            src="https://www.powerreviews.com/wp-content/uploads/2021/12/review-vol-rec.png"
+            alt=""
+            className="w-full h-full"
+          />
         </div>
       </div>
 
@@ -75,7 +100,11 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
         <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
         <div className="flex items-center mb-4">
           {[...Array(5)].map((_, index) => (
-            <span key={index} onClick={() => setRating(index + 1)} className="cursor-pointer">
+            <span
+              key={index}
+              onClick={() => setRating(index + 1)}
+              className="cursor-pointer"
+            >
               {rating > index ? (
                 <AiFillStar className="text-yellow-500 text-2xl" />
               ) : (
@@ -101,20 +130,26 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
 
       <div className="mt-6 shadow-md p-6 rounded-md dark:bg-slate-800">
         <h3 className="text-lg font-semibold mb-4">Reviews</h3>
-        {currentReviews.map((review, index) => (
+        {currentReviews?.map((review, index) => (
           <div key={index} className="border-b border-gray-200 pb-4 mb-4">
             <div className="flex items-center">
               <div className="flex items-center mr-4">
                 {[...Array(5)].map((_, i) => (
                   <AiFillStar
                     key={i}
-                    className={i < review.rating ? "text-yellow-500" : "text-gray-300"}
+                    className={
+                      i < review.rating ? 'text-yellow-500' : 'text-gray-300'
+                    }
                   />
                 ))}
               </div>
-              <div className="text-gray-700 dark:text-white">{review.comment}</div>
+              <div className="text-gray-700 dark:text-white">
+                {review.comment}
+              </div>
             </div>
-            <div className="text-gray-500 text-sm mt-2 dark:text-white">Posted on {new Date().toLocaleDateString()}</div>
+            <div className="text-gray-500 text-sm mt-2 dark:text-white">
+              Posted on {new Date().toLocaleDateString()}
+            </div>
           </div>
         ))}
 
@@ -125,8 +160,8 @@ const ReviewPage = ({ reviews, averageRating, totalReviews, onSubmitReview }) =>
               onClick={() => handlePageChange(index + 1)}
               className={`px-4 py-2 rounded shadow-sm ${
                 currentPage === index + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
               {index + 1}

@@ -11,6 +11,7 @@ import {
 } from '@/redux/features/courses/coursesApi';
 import toast from 'react-hot-toast';
 import { redirect } from 'next/navigation';
+import CourseQuiz from '@/app/components/Admin/Course/CourseQuiz';
 type Props = {
   id: string;
 };
@@ -64,7 +65,7 @@ const EditCourse: FC<Props> = ({ id }) => {
     level: '',
     demoUrl: '',
     thumbnail: '',
-    categories:''
+    categories: '',
   });
   const [benefits, setBenefits] = useState([{ title: '' }]);
   const [prerequisites, setPrerequisites] = useState([{ title: '' }]);
@@ -74,7 +75,7 @@ const EditCourse: FC<Props> = ({ id }) => {
       title: '',
       description: '',
       videoSection: 'Untitled Section',
-      videoLength:'',
+      videoLength: '',
       links: [
         {
           title: '',
@@ -85,10 +86,14 @@ const EditCourse: FC<Props> = ({ id }) => {
       quiz: [
         { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
       ],
-      questionCode:{question:'', answer:''}
+      questionCode: { question: '', answer: '' },
+      quizSection: [],
     },
   ]);
   const [courseData, setCourseData] = useState({});
+  const [quizData, setQuizData] = useState([]);
+  const [preview, setPreview] = useState(false);
+  const [currentSection, setCurrentSection] = useState('');
   const handleSubmit = async () => {
     const formattedBenefits = benefits.map((benefit) => ({
       title: benefit.title,
@@ -108,13 +113,14 @@ const EditCourse: FC<Props> = ({ id }) => {
           url: link.url,
         })),
         suggestion: courseContent.suggestion,
-        quiz:courseContent.quiz.map((item) => ({
+        quiz: courseContent.quiz.map((item) => ({
           time: item.time,
           question: item.question,
           correctAnswer: item.correctAnswer,
           options: item.options,
         })),
-        questionCode:courseContent.questionCode
+        questionCode: courseContent.questionCode,
+        quizSection: courseContent.quizSection,
       })
     );
     const data = {
@@ -127,7 +133,7 @@ const EditCourse: FC<Props> = ({ id }) => {
       demoUrl: courseInfo.demoUrl,
       thumbnail: courseInfo.thumbnail,
       totalVideos: courseContentData.length,
-      categories:courseInfo.categories,
+      categories: courseInfo.categories,
       benefits: formattedBenefits,
       prerequisites: formattedPrerequisites,
       courseContent: formattedCourseContentData,
@@ -136,10 +142,11 @@ const EditCourse: FC<Props> = ({ id }) => {
   };
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
+    // console.log(data);
     await editCourse({ id: editCourseData?._id, data });
   };
-  return (
-    <div className="w-full flex min-h-screen dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black">
+  return !preview ? (
+    <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
         {active === 0 && (
           <CourseInformation
@@ -166,21 +173,36 @@ const EditCourse: FC<Props> = ({ id }) => {
             courseContentData={courseContentData}
             setCourseContentData={setCourseContentData}
             handleSubmit={handleSubmit}
+            setPreview={setPreview}
+            preview={preview}
+            setQuizData={setQuizData}
+            isEdit={true}
+            setCurrentSection={setCurrentSection}
           />
         )}
         {active === 3 && (
           <CoursePreview
-            isEdit={true}
             active={active}
             setActive={setActive}
             courseData={courseData}
             handleCourseCreate={handleCourseCreate}
+            isEdit={true}
           />
         )}
       </div>
-      <div className="w-[20%] mt-[100px] h-screen fixed  top-18 right-0">
+      <div className="w-[20%] mt-[100px] h-screen fixed top-18 right-0">
         <CourseOptions active={active} setActive={setActive} />
       </div>
+    </div>
+  ) : (
+    <div className="w-[100%]">
+      <CourseQuiz
+        quizData={quizData}
+        setPreview={setPreview}
+        courseContentData={courseContentData}
+        setCourseContentData={setCourseContentData}
+        currentSection={currentSection}
+      />
     </div>
   );
 };
