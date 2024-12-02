@@ -148,6 +148,16 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: 'include' as const,
       }),
     }),
+    submitCode: builder.mutation({
+      query: ({courseId,contentId, questionId, code, language}) => ({
+        url: `run-testcase`,
+        body: {
+          courseId,contentId, questionId, code, language
+        },
+        method: 'POST',
+        credentials: 'include' as const,
+      }),
+    }),
   }),
 });
 
@@ -167,5 +177,6 @@ export const {
   useUpdateProgressMutation,
   useShuffleQuizMutation,
   useGetCompleteMutation,
-  useGetReviewCourseQuery
+  useGetReviewCourseQuery,
+  useSubmitCodeMutation
 } = courseApi;

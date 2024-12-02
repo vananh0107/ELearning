@@ -10,7 +10,9 @@ import {
 import { BsLink45Deg, BsPencil } from 'react-icons/bs';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { FaLaptopCode } from 'react-icons/fa';
 import { saveQuiz } from '@/redux/features/courses/courseSlice';
+import { IoCheckmarkDoneSharp } from 'react-icons/io5';
 type Props = {
   active: number;
   setActive: (active: number) => void;
@@ -20,8 +22,8 @@ type Props = {
   setPreview?: any;
   preview?: boolean;
   setQuizData?: any;
-  setCurrentSection?:any
-  isEdit?:boolean
+  setCurrentSection?: any;
+  isEdit?: boolean;
 };
 
 const CourseContent: FC<Props> = ({
@@ -34,8 +36,9 @@ const CourseContent: FC<Props> = ({
   preview,
   setQuizData,
   setCurrentSection,
-  isEdit
+  isEdit,
 }) => {
+  console.log(courseContentData);
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData?.length).fill(false)
   );
@@ -92,6 +95,18 @@ const CourseContent: FC<Props> = ({
       quiz: updatedQuiz,
     };
 
+    setCourseContentData(updatedData);
+  };
+  const handleAddCode = (index: number) => {
+    const updatedData = [...courseContentData];
+    const questionCode = {
+      question: '',
+      testCases: [{ testCase: '', expectedResult: '', isHide: false }],
+    };
+    updatedData[index] = {
+      ...updatedData[index],
+      questionCode: questionCode,
+    };
     setCourseContentData(updatedData);
   };
   const handleUpdateQuestion = (
@@ -212,15 +227,8 @@ const CourseContent: FC<Props> = ({
         description: '',
         videoSection: newVideoSection,
         links: [{ title: '', url: '' }],
-        quiz: [
-          {
-            time: 0,
-            question: '',
-            correctAnswer: 0,
-            options: ['', '', '', ''],
-          },
-        ],
-        questionCode: { question: '', answer: '' },
+        quiz: [],
+        questionCode: {},
         videoLength: 0,
       };
       const updatedData = [...courseContentData, newContent];
@@ -255,14 +263,8 @@ const CourseContent: FC<Props> = ({
         description: '',
         videoSection: `Untitled Section ${activeSection}`,
         links: [{ title: '', url: '' }],
-        quiz: [
-          {
-            time: 0,
-            question: '',
-            correctAnswer: 0,
-            options: ['', '', '', ''],
-          },
-        ],
+        quiz: [],
+        questionCode: {},
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -303,14 +305,69 @@ const CourseContent: FC<Props> = ({
           setActivePreview(true);
           setCourseContentData(updatedData);
           localStorage.setItem('quizData', JSON.stringify(response.data));
-          console.log('File uploaded successfully:', response.data);
         })
-        .catch((error) => {
-          console.error('Error uploading file:', error);
-        });
+        .catch((error) => {});
     }
   };
-  console.log(courseContentData)
+  console.log(courseContentData);
+  const handleUpdateTestCase = (
+    index: number,
+    testCaseIndex: number,
+    key: string,
+    value: string
+  ) => {
+    const updatedData = [...courseContentData];
+    updatedData[index].questionCode.testCases[testCaseIndex] = {
+      ...updatedData[index].questionCode.testCases[testCaseIndex],
+      [key]: value,
+    };
+    setCourseContentData(updatedData);
+  };
+  const handleAddTestCase = (index: number) => {
+    const updatedData = [...courseContentData];
+    const newTestCase = { testCase: '', expectedResult: '', isHide: false };
+    updatedData[index].questionCode.testCases.push(newTestCase);
+    setCourseContentData(updatedData);
+  };
+  const handleToggleHideTestCase = (index: number, testCaseIndex: number) => {
+    const updatedQuestionCode = {
+      ...courseContentData[index].questionCode,
+    };
+    const updatedTestCases = [...updatedQuestionCode.testCases];
+    const currentTestCase = updatedTestCases[testCaseIndex];
+    updatedTestCases[testCaseIndex] = {
+      ...currentTestCase,
+      isHide: !currentTestCase.isHide,
+    };
+    updatedQuestionCode.testCases = updatedTestCases;
+    const updatedCourseContent = {
+      ...courseContentData[index],
+      questionCode: updatedQuestionCode,
+    };
+    const updatedCourseContentData = [...courseContentData];
+    updatedCourseContentData[index] = updatedCourseContent;
+    setCourseContentData(updatedCourseContentData);
+  };
+  const handleRemoveTestCase = (index: number, testCaseIndex: number) => {
+    const updatedData = [...courseContentData];
+    updatedData[index].questionCode.testCases = updatedData[
+      index
+    ].questionCode.testCases.filter((_, i) => i !== testCaseIndex);
+    setCourseContentData(updatedData);
+  };
+  const handleRemoveCode = (index: number) => {
+    const updatedData = [...courseContentData];
+    updatedData[index].questionCode = {};
+    setCourseContentData(updatedData);
+  };
+  const handleUpdateCode = (index: number, key: string, value: string) => {
+    const updatedData = [...courseContentData];
+    if (!updatedData[index].questionCode) {
+      updatedData[index].questionCode = { question: '', testCases: [] };
+    }
+    updatedData[index].questionCode[key] = value;
+    setCourseContentData(updatedData);
+  };
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -359,24 +416,29 @@ const CourseContent: FC<Props> = ({
                           }
                           placeholder="Upload file quiz"
                         />
-                        {/* {item?.quizSection?.length > 0 && ( */}
-                        {(activePreview||isEdit) && (
-                          <span
-                            className="cursor-pointer underline"
-                            onClick={() => {
-                              const data = courseContentData.find(
-                                (i) =>
-                                  i.videoSection === item.videoSection &&
-                                  i.quizSection?.length > 0
-                              );
-                              setQuizData(data?.quizSection);
-                              setPreview(true);
-                              setCurrentSection(item.videoSection)
-                            }}
-                          >
-                            Preview
-                          </span>
-                        )}
+                        {activePreview ||
+                          (isEdit &&
+                            courseContentData.find(
+                              (i) =>
+                                i.videoSection === item.videoSection &&
+                                i.quizSection?.length > 0
+                            ) && (
+                              <span
+                                className="cursor-pointer underline"
+                                onClick={() => {
+                                  const data = courseContentData.find(
+                                    (i) =>
+                                      i.videoSection === item.videoSection &&
+                                      i.quizSection?.length > 0
+                                  );
+                                  setQuizData(data?.quizSection);
+                                  setPreview(true);
+                                  setCurrentSection(item.videoSection);
+                                }}
+                              >
+                                Preview
+                              </span>
+                            ))}
                         {/* )} */}
                       </div>
                     </div>
@@ -589,56 +651,6 @@ const CourseContent: FC<Props> = ({
                       </p>
                     </div>
                     <br />
-                    <div className="my-3">
-                      <label className={styles.label}>Question Code</label>
-                      <textarea
-                        rows={6}
-                        cols={20}
-                        placeholder="Print Hello world"
-                        className={`${styles.input} !h-min`}
-                        value={item.questionCode?.question}
-                        onChange={(e) => {
-                          const updatedData = courseContentData.map((item, i) =>
-                            i === index
-                              ? {
-                                  ...item,
-                                  questionCode: {
-                                    ...item.questionCode,
-                                    question: e.target.value,
-                                  },
-                                }
-                              : item
-                          );
-                          setCourseContentData(updatedData);
-                        }}
-                      />
-                    </div>
-                    <div className="my-3">
-                      <label className={styles.label}>
-                        Expected Answer Code
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Hello world"
-                        className={`${styles.input}`}
-                        value={item.questionCode?.answer}
-                        onChange={(e) => {
-                          const updatedData = courseContentData.map((item, i) =>
-                            i === index
-                              ? {
-                                  ...item,
-                                  questionCode: {
-                                    ...item.questionCode,
-                                    answer: e.target.value,
-                                  },
-                                }
-                              : item
-                          );
-                          setCourseContentData(updatedData);
-                        }}
-                      />
-                    </div>
-                    <br />
                     {item?.quiz?.map((question: any, questionIndex: number) => (
                       <div className="mb-3 block" key={questionIndex}>
                         <div className="w-full flex items-center justify-between">
@@ -735,19 +747,136 @@ const CourseContent: FC<Props> = ({
                       </p>
                     </div>
                     <br />
+                    {JSON.stringify(item?.questionCode) !== '{}' &&
+                      (item?.questionCode?.question === '' ||
+                        item?.questionCode?.question) && (
+                        <div className="mb-3 block">
+                          <div className="w-full flex items-center justify-between">
+                            <label className={styles.label}>
+                              Question Code
+                            </label>
+                            <AiOutlineDelete
+                              className="text-[20px] text-black dark:text-white cursor-pointer mt-3"
+                              onClick={() => handleRemoveCode(index)}
+                            />
+                          </div>
+                          <input
+                            placeholder="Enter code question here..."
+                            className={`${styles.input}`}
+                            value={item.questionCode?.question}
+                            onChange={(e) =>
+                              handleUpdateCode(
+                                index,
+                                'question',
+                                e.target.value
+                              )
+                            }
+                          />
+                          <div className="mt-3">
+                            {item.questionCode?.testCases?.map(
+                              (testCase, testCaseIndex) => (
+                                <div key={testCaseIndex} className="mb-4">
+                                  <div className="w-full flex items-center justify-between">
+                                    <div className="flex items-center">
+                                      <span className={`${styles.label} mr-4`}>
+                                        Test Case {testCaseIndex + 1}
+                                      </span>
+                                      <input
+                                        type="checkbox"
+                                        checked={testCase.isHide}
+                                        onChange={() =>
+                                          handleToggleHideTestCase(
+                                            index,
+                                            testCaseIndex
+                                          )
+                                        }
+                                      />
+                                      <label className="ml-2 text-black dark:text-white">
+                                        Hide
+                                      </label>
+                                    </div>
+                                    <AiOutlineDelete
+                                      className="text-[20px] text-black dark:text-white cursor-pointer"
+                                      onClick={() =>
+                                        handleRemoveTestCase(
+                                          index,
+                                          testCaseIndex
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder="Enter Test Case Input"
+                                    className={`${styles.input} mt-2`}
+                                    value={testCase.testCase}
+                                    onChange={(e) =>
+                                      handleUpdateTestCase(
+                                        index,
+                                        testCaseIndex,
+                                        'testCase',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Enter Expected Result"
+                                    className={`${styles.input} mt-2`}
+                                    value={testCase.expectedResult}
+                                    onChange={(e) =>
+                                      handleUpdateTestCase(
+                                        index,
+                                        testCaseIndex,
+                                        'expectedResult',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                            {item.questionCode?.testCases && (
+                              <div>
+                                <p
+                                  className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                                  onClick={() => handleAddTestCase(index)}
+                                >
+                                  <IoCheckmarkDoneSharp className="mr-2" /> Add
+                                  Test Case
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                    {(JSON.stringify(item?.questionCode) === '{}' ||
+                      !item?.questionCode?.question) && (
+                      <div className="inline-block mb-6 mt-3">
+                        <p
+                          className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                          onClick={() => handleAddCode(index)}
+                        >
+                          <FaLaptopCode className="mr-2" /> Add Question Code
+                        </p>
+                      </div>
+                    )}
+                    <br />
                     <br />
                   </>
                 )}
-                {/* {index === courseContentData.length - 1 && ( */}
-                <div>
-                  <p
-                    className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
-                    onClick={(e: any) => newContentHandler(item)}
-                  >
-                    <AiOutlinePlusCircle className="mr-2" /> Add New Content
-                  </p>
-                </div>
-                {/* )} */}
+                {courseContentData[index + 1]?.videoSection !=
+                  item.videoSection && (
+                  <div>
+                    <p
+                      className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                      onClick={(e: any) => newContentHandler(item)}
+                    >
+                      <AiOutlinePlusCircle className="mr-2" /> Add New Content
+                    </p>
+                  </div>
+                )}
               </div>
             </>
           );

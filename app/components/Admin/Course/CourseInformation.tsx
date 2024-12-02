@@ -107,7 +107,7 @@ const CourseInformation: FC<Props> = ({
               required
               value={courseInfo.price}
               id="price"
-              placeholder="$$$"
+              placeholder="₫₫₫"
               className={`${styles.input}`}
               onChange={(e: any) => {
                 setCourseInfo({ ...courseInfo, price: e.target.value });
@@ -124,7 +124,7 @@ const CourseInformation: FC<Props> = ({
               required
               value={courseInfo.estimatedPrice}
               id="price"
-              placeholder="$$$"
+              placeholder="₫₫₫"
               className={`${styles.input}`}
               onChange={(e: any) => {
                 setCourseInfo({

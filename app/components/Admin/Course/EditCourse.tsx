@@ -84,9 +84,8 @@ const EditCourse: FC<Props> = ({ id }) => {
       ],
       suggestion: '',
       quiz: [
-        { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
       ],
-      questionCode: { question: '', answer: '' },
+      questionCode: {},
       quizSection: [],
     },
   ]);

@@ -19,12 +19,14 @@ import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
   useGetCourseDetailsQuery,
+  useSubmitCodeMutation,
 } from '@/redux/features/courses/coursesApi';
 import { format } from 'timeago.js';
 import { BiMessage } from 'react-icons/bi';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import socketIO from 'socket.io-client';
 import { useRouter } from 'next/navigation';
+import { FaLock } from 'react-icons/fa';
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || '';
 const socketId = socketIO(ENDPOINT, { transports: ['websocket'] });
 type Props = {
@@ -64,14 +66,12 @@ const CourseContentMedia = ({
   const [questionId, setQuestionId] = useState('');
   const [code, setCode] = useState('');
   const [currentData, setCurrentData] = useState(data?.[activeVideo]?.quiz);
-  const handleSubmit = () => {
-    console.log('Code submitted:', code);
-  };
   const router = useRouter();
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
+  const [submitCode, {}] = useSubmitCodeMutation();
   const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
     id,
     { refetchOnMountOrArgChange: true }
@@ -145,27 +145,30 @@ const CourseContentMedia = ({
   };
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
-
-  console.log(data, activeVideo, id);
-
-  const testCases = [
-    { input: '', expected: 'Hello, World!' },
-    { input: 'test', expected: 'Hello, World!' },
-  ];
+  const handleSubmit = () => {
+    submitCode({
+      code,
+      courseId: id,
+      contentId: data?.[activeVideo]._id,
+      questionId: data[activeVideo]?.questionCode?._id,
+      language: 'python',
+    });
+    // console.log('Code submitted:', code);
+  };
   const [testResults, setTestResults] = useState([]);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage of Left Panel width
-  const [topSectionHeight, setTopSectionHeight] = useState(50); // Percentage of Top Section height
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50);
+  const [topSectionHeight, setTopSectionHeight] = useState(50);
   const isResizingHorizontal = useRef(false);
   const isResizingVertical = useRef(false);
 
   const handleMouseDownHorizontal = () => {
     isResizingHorizontal.current = true;
-    document.body.style.cursor = "col-resize";
+    document.body.style.cursor = 'col-resize';
   };
 
   const handleMouseDownVertical = () => {
     isResizingVertical.current = true;
-    document.body.style.cursor = "row-resize";
+    document.body.style.cursor = 'row-resize';
   };
 
   const handleMouseMove = (e) => {
@@ -186,19 +189,39 @@ const CourseContentMedia = ({
   const handleMouseUp = () => {
     isResizingHorizontal.current = false;
     isResizingVertical.current = false;
-    document.body.style.cursor = "default";
+    document.body.style.cursor = 'default';
   };
 
   React.useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
+  const testCases = [
+    { testCase: '""', expectedResult: '"Hello, World!"', isHide: false },
+    { testCase: '"test"', expectedResult: '"Hello, World!"', isHide: false },
+    {
+      testCase: '"hiddenTest"',
+      expectedResult: '"Should be hidden"',
+      isHide: true,
+    },
+    {
+      testCase: '"example"',
+      expectedResult: '"Example Result"',
+      isHide: false,
+    },
+    {
+      testCase: '"hiddenExample"',
+      expectedResult: '"Hidden Example"',
+      isHide: true,
+    },
+  ];
+  console.log(data[activeVideo]?.questionCode?.testCases);
   return (
-    <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
+    <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
         title={data?.[activeVideo]?.title}
         videoUrl={data?.[activeVideo]?.videoUrl}
@@ -357,85 +380,87 @@ const CourseContentMedia = ({
         </>
       )}
       {activeBar === 3 && (
-          <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-          {/* Left Panel */}
+        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
           <div
             className="flex flex-col border-r border-gray-300 dark:border-gray-700"
             style={{ width: `${leftPanelWidth}%` }}
           >
-            {/* Top Section */}
             <div
               className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4"
               style={{ height: `${topSectionHeight}%` }}
             >
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Bài Tập</h2>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                Bài Tập
+              </h2>
               <p className="mt-4 text-gray-700 dark:text-gray-300">
-                Bạn hãy điền các câu lệnh thích hợp vào dấu <code>...</code> để chương trình hiển thị ra màn hình dòng chữ:
-              </p>
-              <div className="bg-black text-white p-4 rounded mt-2 font-mono">Hello, World!</div>
-              <p className="mt-4 text-gray-700 dark:text-gray-300">
-                Để nộp bài trên hệ thống bạn có thể bấm nút <strong>CHẠY THỬ</strong> sau đó bấm <strong>NỘP BÀI</strong>.
+                {data[activeVideo]?.questionCode?.question}
               </p>
             </div>
-    
-            {/* Resizer for Vertical Resize */}
             <div
               onMouseDown={handleMouseDownVertical}
-              className="cursor-row-resize h-1 bg-gray-500 dark:bg-gray-700"
+              className="cursor-row-resize h-[3px] bg-gray-500 dark:bg-gray-700"
             ></div>
-    
-            {/* Bottom Section */}
             <div
               className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4"
               style={{ height: `${100 - topSectionHeight}%` }}
             >
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Test Cases</h3>
-              <div className="mt-4">
-                <div className="p-4 bg-gray-200 dark:bg-gray-800 rounded mb-2 shadow-sm text-gray-800 dark:text-gray-300">
-                  <p>
-                    <strong>Đầu vào:</strong> ""
-                  </p>
-                  <p>
-                    <strong>Kết quả mong đợi:</strong> "Hello, World!"
-                  </p>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                Testcase
+              </h2>
+              {data[activeVideo]?.questionCode?.testCases.length > 0 && (
+                <div className="mt-4">
+                  {data[activeVideo]?.questionCode?.testCases?.map(
+                    (testCase, testCaseIndex) => (
+                      <div
+                        key={testCaseIndex}
+                        className={`p-4 rounded mb-2 shadow-sm ${
+                          testCase.isHide
+                            ? 'bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                            : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-300'
+                        }`}
+                      >
+                        <p className="font-semibold flex items-center">
+                          <span>Test Case {testCaseIndex + 1} </span>
+                          {testCase.isHide && (
+                            <span className="ml-2">
+                              <FaLock />
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-black dark:text-white">
+                          <strong>Đầu vào:</strong>{' '}
+                          {testCase.isHide ? '' : testCase.testCase}
+                        </p>
+                        <p className="text-black dark:text-white">
+                          <strong>Kết quả mong đợi:</strong>{' '}
+                          {testCase.isHide ? '' : testCase.expectedResult}
+                        </p>
+                      </div>
+                    )
+                  )}
                 </div>
-                <div className="p-4 bg-gray-200 dark:bg-gray-800 rounded mb-2 shadow-sm text-gray-800 dark:text-gray-300">
-                  <p>
-                    <strong>Đầu vào:</strong> "test"
-                  </p>
-                  <p>
-                    <strong>Kết quả mong đợi:</strong> "Hello, World!"
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
-    
-          {/* Resizer for Horizontal Resize */}
           <div
             onMouseDown={handleMouseDownHorizontal}
-            className="cursor-col-resize w-1 bg-gray-500 dark:bg-gray-700"
+            className="cursor-col-resize w-[3px] bg-gray-500 dark:bg-gray-700"
           ></div>
-    
-          {/* Right Panel */}
-          <div
-            className="p-6"
-            style={{ width: `${100 - leftPanelWidth}%` }}
-          >
+          <div className="p-3" style={{ width: `${100 - leftPanelWidth}%` }}>
             <CodeMirror
-            value={code}
-            height="80vh"
-            extensions={[javascript()]}
-            onChange={(value) => setCode(value)}
-            theme={isDarkMode ? darcula : quietlight}
-            className="  border-gray-300 rounded-lg dark:text-white text-black"
-          />
-          <button
-            onClick={handleSubmit}
-            className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
-          >
-            Submit Code
-          </button>
+              value={code}
+              height="80vh"
+              extensions={[javascript()]}
+              onChange={(value) => setCode(value)}
+              theme={isDarkMode ? darcula : quietlight}
+              className="  border-gray-300 rounded-lg dark:text-white text-black"
+            />
+            <button
+              onClick={handleSubmit}
+              className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+            >
+              Submit Code
+            </button>
           </div>
         </div>
       )}

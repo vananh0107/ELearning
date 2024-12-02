@@ -95,7 +95,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #1771c6;

@@ -53,7 +53,7 @@ const CourseDetails = ({
     router.push(responeData?.data.shortLink);
     // console.log(responeData)
   }, [responeData]);
-  console.log(data?.ratings.toFixed(1));
+  console.log(data);
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -269,7 +269,7 @@ const CourseDetails = ({
                   </Link>
                 ) : (
                   <div
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
                     Buy Now {data.price}₫

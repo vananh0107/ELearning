@@ -16,6 +16,7 @@ const Page = (props: Props) => {
   const searchParams = useSearchParams();
   const search = searchParams?.get('title');
   const { data, isLoading } = useGetUsersAllCoursesQuery(undefined, {});
+  console.log(data)
   const { data: categoriesData } = useGetHeroDataQuery('Categories', {});
   const [route, setRoute] = useState('Login');
   const [open, setOpen] = useState(false);

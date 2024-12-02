@@ -56,10 +56,8 @@ const CreateCourse = (props: Props) => {
         },
       ],
       suggestion: '',
-      quiz: [
-        { time: 0, question: '', correctAnswer: 0, options: ['', '', '', ''] },
-      ],
-      questionCode: { question: '', answer: '' },
+      quiz: [],
+      questionCode: {},
       quizSection: [],
     },
   ]);
@@ -113,6 +111,7 @@ const CreateCourse = (props: Props) => {
   };
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
+    console.log(data);
     if (!isLoading) {
       await createCourse(data);
     }
