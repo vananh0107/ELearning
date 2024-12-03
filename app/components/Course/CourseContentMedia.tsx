@@ -43,6 +43,8 @@ type Props = {
   getComplete: any;
   responseCompleteData: any;
   setQuiz: any;
+  dataAfterSubmit: any;
+  submitCode: any;
 };
 
 const CourseContentMedia = ({
@@ -58,6 +60,8 @@ const CourseContentMedia = ({
   updateProgress,
   getComplete,
   responseCompleteData,
+  submitCode,
+  dataAfterSubmit,
   setQuiz,
 }: Props) => {
   const [activeBar, setActiveBar] = useState(0);
@@ -71,7 +75,6 @@ const CourseContentMedia = ({
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
-  const [submitCode, {}] = useSubmitCodeMutation();
   const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
     id,
     { refetchOnMountOrArgChange: true }
@@ -150,7 +153,6 @@ const CourseContentMedia = ({
       code,
       courseId: id,
       contentId: data?.[activeVideo]._id,
-      questionId: data[activeVideo]?.questionCode?._id,
       language: 'python',
     });
     // console.log('Code submitted:', code);
@@ -200,26 +202,9 @@ const CourseContentMedia = ({
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
-  const testCases = [
-    { testCase: '""', expectedResult: '"Hello, World!"', isHide: false },
-    { testCase: '"test"', expectedResult: '"Hello, World!"', isHide: false },
-    {
-      testCase: '"hiddenTest"',
-      expectedResult: '"Should be hidden"',
-      isHide: true,
-    },
-    {
-      testCase: '"example"',
-      expectedResult: '"Example Result"',
-      isHide: false,
-    },
-    {
-      testCase: '"hiddenExample"',
-      expectedResult: '"Hidden Example"',
-      isHide: true,
-    },
-  ];
-  console.log(data[activeVideo]?.questionCode?.testCases);
+  useEffect(() => {
+    getComplete({ courseId: id, contentId: data?.[activeVideo]._id });
+  }, [dataAfterSubmit]);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -232,6 +217,7 @@ const CourseContentMedia = ({
         setIsNextVideo={setIsNextVideo}
         responseCompleteData={responseCompleteData}
         getComplete={getComplete}
+        // dataAfterSubmit={dataAfterSubmit}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -380,47 +366,62 @@ const CourseContentMedia = ({
         </>
       )}
       {activeBar === 3 && (
-        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+        <div
+        className="flex flex-col md:flex-row h-screen bg-gray-100 dark:bg-gray-900"
+      >
+        {/* Left Panel */}
+        <div
+          className="flex flex-col md:border-r border-gray-300 dark:border-gray-700 w-full md:w-[40%]"
+        >
+          {/* Top Section */}
           <div
-            className="flex flex-col border-r border-gray-300 dark:border-gray-700"
-            style={{ width: `${leftPanelWidth}%` }}
+            className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4 h-auto md:h-[50%]"
           >
-            <div
-              className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4"
-              style={{ height: `${topSectionHeight}%` }}
-            >
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                Bài Tập
-              </h2>
-              <p className="mt-4 text-gray-700 dark:text-gray-300">
-                {data[activeVideo]?.questionCode?.question}
-              </p>
-            </div>
-            <div
-              onMouseDown={handleMouseDownVertical}
-              className="cursor-row-resize h-[3px] bg-gray-500 dark:bg-gray-700"
-            ></div>
-            <div
-              className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4"
-              style={{ height: `${100 - topSectionHeight}%` }}
-            >
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                Testcase
-              </h2>
-              {data[activeVideo]?.questionCode?.testCases.length > 0 && (
-                <div className="mt-4">
-                  {data[activeVideo]?.questionCode?.testCases?.map(
-                    (testCase, testCaseIndex) => (
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+              Bài Tập
+            </h2>
+            <p className="mt-4 text-gray-700 dark:text-gray-300">
+              {data[activeVideo]?.questionCode?.question}
+            </p>
+          </div>
+      
+          {/* Resize Bar */}
+          <div
+            onMouseDown={handleMouseDownVertical}
+            className="cursor-row-resize h-[3px] bg-gray-500 dark:bg-gray-700 hidden md:block"
+          ></div>
+      
+          {/* Bottom Section */}
+          <div
+            className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto md:h-[50%]"
+          >
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+              Testcase
+            </h2>
+            {data[activeVideo]?.questionCode?.testCases.length > 0 && (
+              <div className="mt-4">
+                {data[activeVideo]?.questionCode?.testCases?.map(
+                  (testCase, testCaseIndex) => {
+                    const result = dataAfterSubmit?.results.find(
+                      (res) => res.testCase === testCase.testCase
+                    );
+      
+                    const bgColor =
+                      result?.passed === true
+                        ? 'bg-green-400 dark:bg-green-600'
+                        : result?.passed === false
+                        ? 'bg-red-100 dark:bg-red-800'
+                        : testCase.isHide
+                        ? 'bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                        : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-300';
+      
+                    return (
                       <div
                         key={testCaseIndex}
-                        className={`p-4 rounded mb-2 shadow-sm ${
-                          testCase.isHide
-                            ? 'bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-                            : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-300'
-                        }`}
+                        className={`p-3 rounded mb-2 shadow-sm ${bgColor}`}
                       >
-                        <p className="font-semibold flex items-center">
-                          <span>Test Case {testCaseIndex + 1} </span>
+                        <p className="font-semibold flex items-center text-black dark:text-white">
+                          <span>Test Case {testCaseIndex + 1}</span>
                           {testCase.isHide && (
                             <span className="ml-2">
                               <FaLock />
@@ -435,34 +436,46 @@ const CourseContentMedia = ({
                           <strong>Kết quả mong đợi:</strong>{' '}
                           {testCase.isHide ? '' : testCase.expectedResult}
                         </p>
+                        {result && !testCase.isHide && (
+                          <p className="text-black dark:text-white">
+                            <strong>Kết quả thực tế:</strong>{' '}
+                            {result.actualResult}
+                          </p>
+                        )}
                       </div>
-                    )
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          <div
-            onMouseDown={handleMouseDownHorizontal}
-            className="cursor-col-resize w-[3px] bg-gray-500 dark:bg-gray-700"
-          ></div>
-          <div className="p-3" style={{ width: `${100 - leftPanelWidth}%` }}>
-            <CodeMirror
-              value={code}
-              height="80vh"
-              extensions={[javascript()]}
-              onChange={(value) => setCode(value)}
-              theme={isDarkMode ? darcula : quietlight}
-              className="  border-gray-300 rounded-lg dark:text-white text-black"
-            />
-            <button
-              onClick={handleSubmit}
-              className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
-            >
-              Submit Code
-            </button>
+                    );
+                  }
+                )}
+              </div>
+            )}
           </div>
         </div>
+      
+        {/* Resize Bar */}
+        <div
+          onMouseDown={handleMouseDownHorizontal}
+          className="cursor-col-resize w-[3px] bg-gray-500 dark:bg-gray-700 hidden md:block"
+        ></div>
+      
+        {/* Code Editor */}
+        <div className="p-3 w-full md:w-[70%]">
+          <CodeMirror
+            value={code}
+            height="80vh"
+            extensions={[javascript()]}
+            onChange={(value) => setCode(value)}
+            theme={isDarkMode ? darcula : quietlight}
+            className="border-gray-300 rounded-lg dark:text-white text-black"
+          />
+          <button
+            onClick={handleSubmit}
+            className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+          >
+            Submit Code
+          </button>
+        </div>
+      </div>
+      
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import {
   useGetCompleteMutation,
   useGetCourseContentQuery,
   useGetProgressQuery,
+  useSubmitCodeMutation,
   useUpdateProgressMutation,
 } from '@/redux/features/courses/coursesApi';
 import React, { useEffect, useState } from 'react';
@@ -28,6 +29,7 @@ const CourseContent = ({ id, user }: Props) => {
     refetch: progressRefetch,
   } = useGetProgressQuery({ courseId: id, refetchOnMountOrArgChange: true });
   const [updateProgress, { data: dataAfterQuiz }] = useUpdateProgressMutation();
+  const [submitCode, { data: dataAfterSubmit }] = useSubmitCodeMutation();
   const [getComplete, { data: responseCompleteData }] =
     useGetCompleteMutation();
   const data = contentData?.content;
@@ -38,7 +40,8 @@ const CourseContent = ({ id, user }: Props) => {
   const [quiz, setQuiz] = useState([]);
   useEffect(() => {
     progressRefetch();
-  }, [dataAfterQuiz]);
+  }, [dataAfterQuiz, dataAfterSubmit]);
+
   return (
     <>
       {isLoading ? (
@@ -62,6 +65,7 @@ const CourseContent = ({ id, user }: Props) => {
               data={data}
               id={id}
               setQuiz={setQuiz}
+              section={data?.[activeVideo]?.videoSection}
             />
           ) : (
             <div className="w-full grid 800px:grid-cols-10">
@@ -72,6 +76,8 @@ const CourseContent = ({ id, user }: Props) => {
               />
               <div className="col-span-7">
                 <CourseContentMedia
+                  submitCode={submitCode}
+                  dataAfterSubmit={dataAfterSubmit}
                   setQuiz={setQuiz}
                   updateProgress={updateProgress}
                   isNextVideo={isNextVideo}

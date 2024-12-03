@@ -149,10 +149,10 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     submitCode: builder.mutation({
-      query: ({courseId,contentId, questionId, code, language}) => ({
+      query: ({courseId,contentId, code, language}) => ({
         url: `run-testcase`,
         body: {
-          courseId,contentId, questionId, code, language
+          courseId,contentId, code, language
         },
         method: 'POST',
         credentials: 'include' as const,

@@ -14,7 +14,8 @@ type Props = {
   setIsNextVideo?: any;
   updateProgress?:any;
   responseCompleteData?:any
-  getComplete?:any
+  getComplete?:any,
+  dataAfterSubmit?:any
 };
 
 const CoursePlayer: FC<Props> = ({
@@ -24,7 +25,8 @@ const CoursePlayer: FC<Props> = ({
   setIsNextVideo,
   updateProgress,
   responseCompleteData,
-  getComplete
+  getComplete,
+  dataAfterSubmit
 }) => {
   const [videoData, setVideoData] = useState({ otp: '', playbackInfo: '' });
   const [isQuizActive, setIsQuizActive] = useState(false);
@@ -44,7 +46,6 @@ const CoursePlayer: FC<Props> = ({
         setVideoData(res.data);
       });
   }, [videoUrl]);
-
   useEffect(() => {
     if (typeof window !== 'undefined' && window.VdoPlayer && iframeRef) {
       const player = window.VdoPlayer.getInstance(iframeRef);

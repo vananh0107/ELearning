@@ -309,7 +309,7 @@ const CourseContent: FC<Props> = ({
         .catch((error) => {});
     }
   };
-  console.log(courseContentData);
+  console.log(activePreview);
   const handleUpdateTestCase = (
     index: number,
     testCaseIndex: number,
@@ -368,6 +368,7 @@ const CourseContent: FC<Props> = ({
     updatedData[index].questionCode[key] = value;
     setCourseContentData(updatedData);
   };
+  console.log(courseContentData)
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -416,13 +417,13 @@ const CourseContent: FC<Props> = ({
                           }
                           placeholder="Upload file quiz"
                         />
-                        {activePreview ||
+                        {(activePreview ||
                           (isEdit &&
                             courseContentData.find(
                               (i) =>
                                 i.videoSection === item.videoSection &&
                                 i.quizSection?.length > 0
-                            ) && (
+                            ))) && (
                               <span
                                 className="cursor-pointer underline"
                                 onClick={() => {
@@ -438,7 +439,7 @@ const CourseContent: FC<Props> = ({
                               >
                                 Preview
                               </span>
-                            ))}
+                            )}
                         {/* )} */}
                       </div>
                     </div>
