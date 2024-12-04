@@ -14,21 +14,6 @@ const page: FC<Props> = (props: Props) => {
   const [route, setRoute] = useState('Login');
   const { user } = useSelector((state: any) => state.auth);
 
-  const initialReviews = [
-    {
-      id: 1,
-      rating: 5,
-      comment: "They're lifesavers! Came through for me on a tight deadline.",
-    },
-    { id: 2, rating: 5, comment: 'Amazing service! Highly recommend them.' },
-    { id: 3, rating: 4, comment: 'Great work, but some room for improvement.' },
-    { id: 4, rating: 5, comment: 'Absolutely fantastic! Very professional.' },
-    { id: 5, rating: 5, comment: 'Fast, reliable, and high quality work.' },
-    { id: 6, rating: 3, comment: 'Decent service, but could be better.' },
-    { id: 7, rating: 5, comment: 'Perfect execution of my project!' },
-    { id: 8, rating: 4, comment: 'Really good experience overall.' },
-  ];
-
   const [reviews, setReviews] = useState(initialReviews);
 
   const averageRating =

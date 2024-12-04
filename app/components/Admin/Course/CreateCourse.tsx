@@ -59,6 +59,7 @@ const CreateCourse = (props: Props) => {
       quiz: [],
       questionCode: {},
       quizSection: [],
+      timeQuizSection:0
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -90,6 +91,7 @@ const CreateCourse = (props: Props) => {
         })),
         questionCode: courseContent.questionCode,
         quizSection: courseContent.quizSection,
+        timeQuizSection:courseContent.timeQuizSection,
       })
     );
     const data = {
@@ -111,7 +113,6 @@ const CreateCourse = (props: Props) => {
   };
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
-    console.log(data);
     if (!isLoading) {
       await createCourse(data);
     }

@@ -51,9 +51,7 @@ const CourseDetails = ({
   };
   useEffect(() => {
     router.push(responeData?.data.shortLink);
-    // console.log(responeData)
   }, [responeData]);
-  console.log(data);
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -225,13 +223,13 @@ const CourseDetails = ({
                 )}
                 <div className="flex items-center justify-between">
                   <Link
-                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer !bg-[#14dcc1]`}
+                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer`}
                     href={`/courses`}
                   >
                     Back to courses
                   </Link>
                   <Link
-                    className={`${styles.button} !w-[220px] my-3 font-Poppins cursor-pointer !bg-[#14dcc1]`}
+                    className={`${styles.button} !w-[220px] my-3 font-Poppins cursor-pointer`}
                     href={`/course/${id}/review`}
                   >
                     Enter Detail Review
@@ -262,14 +260,14 @@ const CourseDetails = ({
               <div className="flex items-center">
                 {isPurchased ? (
                   <Link
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer`}
                     href={`/course-access/${data._id}`}
                   >
                     Enter to Course
                   </Link>
                 ) : (
                   <div
-                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer`}
                     onClick={handleOrder}
                   >
                     Buy Now {data.price}₫

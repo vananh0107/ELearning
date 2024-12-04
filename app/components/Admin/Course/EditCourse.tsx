@@ -83,10 +83,10 @@ const EditCourse: FC<Props> = ({ id }) => {
         },
       ],
       suggestion: '',
-      quiz: [
-      ],
+      quiz: [],
       questionCode: {},
       quizSection: [],
+      timeQuizSection: 0,
     },
   ]);
   const [courseData, setCourseData] = useState({});
@@ -120,6 +120,9 @@ const EditCourse: FC<Props> = ({ id }) => {
         })),
         questionCode: courseContent.questionCode,
         quizSection: courseContent.quizSection,
+        timeQuizSection: courseContent.timeQuizSection
+          ? courseContent.timeQuizSection
+          : 0,
       })
     );
     const data = {
@@ -141,7 +144,7 @@ const EditCourse: FC<Props> = ({ id }) => {
   };
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
-    // console.log(data);
+    console.log(data);
     await editCourse({ id: editCourseData?._id, data });
   };
   return !preview ? (

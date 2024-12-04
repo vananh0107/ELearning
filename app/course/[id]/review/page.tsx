@@ -12,8 +12,8 @@ import {
 } from '@/redux/features/courses/coursesApi';
 
 const Page = ({ params }: any) => {
-  const { data } = useGetReviewCourseQuery(params.id, {});
-  const [addReviewInCourse, { data: dataTake , isSuccess}] =
+  const { data, refetch } = useGetReviewCourseQuery(params.id, {});
+  const [addReviewInCourse, {}] =
 
     useAddReviewInCourseMutation();
   const [open, setOpen] = useState(false);
@@ -22,17 +22,15 @@ const Page = ({ params }: any) => {
   const [route, setRoute] = useState('Login');
   const { user } = useSelector((state: any) => state.auth);
   useEffect(() => {
-    if (dataTake) setReviews(dataTake.review);
-    else if (data) {
-      setReviews(data.review);
-    }
-  }, [dataTake,data]);
-  const handleAddReview = (newReview: any) => {
-    addReviewInCourse({
+      setReviews(data?.review);
+  }, [data]);
+  const handleAddReview =async (newReview: any) => {
+    await addReviewInCourse({
       review: newReview.comment,
       rating: newReview.rating,
       courseId: params.id,
     });
+    refetch();
   };
   return (
     <div className="min-h-screen dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">

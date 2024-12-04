@@ -115,13 +115,14 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     updateProgress: builder.mutation({
-      query: ({ contentId, courseId, quizId, quizStatus }) => ({
+      query: ({ contentId, courseId, quizId, quizStatus,quizSectionStatus }) => ({
         url: `update-progress`,
         body: {
           contentId,
           courseId,
           quizId,
           quizStatus,
+          quizSectionStatus
         },
         method: 'POST',
         credentials: 'include' as const,

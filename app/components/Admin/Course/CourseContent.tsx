@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { FaLaptopCode } from 'react-icons/fa';
 import { saveQuiz } from '@/redux/features/courses/courseSlice';
 import { IoCheckmarkDoneSharp } from 'react-icons/io5';
+import TimePicker from 'react-time-picker';
 type Props = {
   active: number;
   setActive: (active: number) => void;
@@ -38,12 +39,13 @@ const CourseContent: FC<Props> = ({
   setCurrentSection,
   isEdit,
 }) => {
-  console.log(courseContentData);
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData?.length).fill(false)
   );
   const [activeSection, setActiveSection] = useState(1);
   const [activePreview, setActivePreview] = useState(false);
+  const [testMinute, setTestMinute] = useState(0);
+  const [testHour, setTestHour] = useState(0);
   const dispatch = useDispatch();
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -309,7 +311,6 @@ const CourseContent: FC<Props> = ({
         .catch((error) => {});
     }
   };
-  console.log(activePreview);
   const handleUpdateTestCase = (
     index: number,
     testCaseIndex: number,
@@ -368,7 +369,7 @@ const CourseContent: FC<Props> = ({
     updatedData[index].questionCode[key] = value;
     setCourseContentData(updatedData);
   };
-  console.log(courseContentData)
+  console.log(courseContentData);
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>
@@ -418,28 +419,96 @@ const CourseContent: FC<Props> = ({
                           placeholder="Upload file quiz"
                         />
                         {(activePreview ||
+                          courseContentData.find(
+                            (i) =>
+                              i.videoSection === item.videoSection &&
+                              i.quizSection?.length > 0
+                          ) ||
                           (isEdit &&
                             courseContentData.find(
                               (i) =>
                                 i.videoSection === item.videoSection &&
                                 i.quizSection?.length > 0
                             ))) && (
-                              <span
-                                className="cursor-pointer underline"
-                                onClick={() => {
-                                  const data = courseContentData.find(
-                                    (i) =>
-                                      i.videoSection === item.videoSection &&
-                                      i.quizSection?.length > 0
+                          <div className="flex items-center gap-4">
+                            {/* Preview Link */}
+                            <span
+                              className="cursor-pointer underline text-blue-500 hover:text-blue-700"
+                              onClick={() => {
+                                const data = courseContentData.find(
+                                  (i) =>
+                                    i.videoSection === item.videoSection &&
+                                    i.quizSection?.length > 0
+                                );
+                                setQuizData(data?.quizSection);
+                                setPreview(true);
+                                setCurrentSection(item.videoSection);
+                              }}
+                            >
+                              Preview
+                            </span>
+
+                            {/* Input Fields */}
+                            <div className="flex items-center gap-2">
+                              <input
+                                value={testHour}
+                                type="number"
+                                min="0"
+                                max="23"
+                                placeholder="Hours"
+                                className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                onChange={(e) => {
+                                  const currentTime = item.timeQuizSection
+                                    ? item.timeQuizSection
+                                    : 0;
+                                  const updateTime =
+                                    parseInt(e.target.value, 10) * 60 +
+                                    (currentTime % 60);
+                                  const updatedData = courseContentData.map(
+                                    (item, i) =>
+                                      i === index
+                                        ? {
+                                            ...item,
+                                            timeQuizSection: updateTime,
+                                          }
+                                        : item
                                   );
-                                  setQuizData(data?.quizSection);
-                                  setPreview(true);
-                                  setCurrentSection(item.videoSection);
+                                  setTestHour(parseInt(e.target.value, 10));
+                                  setCourseContentData(updatedData);
                                 }}
-                              >
-                                Preview
-                              </span>
-                            )}
+                              />
+                              h
+                              <input
+                                value={testMinute}
+                                type="number"
+                                min="0"
+                                max="59"
+                                placeholder="Minutes"
+                                className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                onChange={(e) => {
+                                  const currentTime = item.timeQuizSection
+                                    ? item.timeQuizSection
+                                    : 0;
+                                  const updateTime =
+                                    Math.floor(currentTime / 60) * 60 +
+                                    parseInt(e.target.value, 10);
+                                  const updatedData = courseContentData.map(
+                                    (item, i) =>
+                                      i === index
+                                        ? {
+                                            ...item,
+                                            timeQuizSection: updateTime,
+                                          }
+                                        : item
+                                  );
+                                  setTestMinute(parseInt(e.target.value, 10));
+                                  setCourseContentData(updatedData);
+                                }}
+                              />
+                              s
+                            </div>
+                          </div>
+                        )}
                         {/* )} */}
                       </div>
                     </div>

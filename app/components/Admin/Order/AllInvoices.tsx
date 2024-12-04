@@ -14,7 +14,7 @@ type Props = {
 
 const AllInvoices = ({ isDashboard }: Props) => {
   const { theme, setTheme } = useTheme();
-  const { isLoading, data } = useGetAllOrdersQuery({});
+  const { isLoading, data, isSuccess } = useGetAllOrdersQuery({});
   const { data: usersData } = useGetAllUsersQuery({});
   const { data: coursesData } = useGetAllCoursesQuery({});
   const [orderData, setOrderData] = useState<any[]>([]);
@@ -49,7 +49,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
       ? []
       : [
           { field: 'userEmail', headerName: 'Email', flex: 1 },
-          { field: 'title', headerName: 'Course Title', flex: 1 },
+          // { field: 'title', headerName: 'Course Title', flex: 1 },
         ]),
     { field: 'price', headerName: 'Price', flex: 0.5 },
     ...(isDashboard
@@ -72,8 +72,9 @@ const AllInvoices = ({ isDashboard }: Props) => {
           },
         ]),
   ];
+  const [rows, setRows] = useState([]);
   //mock data to test
-  // const rows: any = [
+  // const rows: any = [];
   //   {
   //     id: '1',
   //     userName: 'John Doe',
@@ -107,17 +108,37 @@ const AllInvoices = ({ isDashboard }: Props) => {
   //     created_at: '1 days ago',
   //   },
   // ];
-  orderData &&
-    orderData.forEach((item: any) => {
-      rows.push({
+  // console.log(orderData)
+  // {
+  //   orderData &&
+  //     orderData?.orders?.forEach((item: any) => {
+  //       console.log(item)
+  //       rows.push({
+  //         id: item._id,
+  //         userName: item.userName,
+  //         userEmail: item.userEmail,
+  //         // title: item.title,
+  //         price: item.price,
+  //         created_at: format(item.createdAt),
+  //       });
+  //     });
+  // }
+  useEffect(() => {
+    const temp = [];
+    console.log(orderData)
+    orderData?.orders?.forEach((item: any) => {
+      temp.push({
         id: item._id,
         userName: item.userName,
         userEmail: item.userEmail,
-        title: item.title,
+        // title: item.title,
         price: item.price,
         created_at: format(item.createdAt),
       });
     });
+    setRows(temp);
+  }, [isSuccess]);
+  console.log(rows);
   return (
     <div className={!isDashboard ? 'mt-[120px]' : 'mt-[0px]'}>
       {isLoading ? (

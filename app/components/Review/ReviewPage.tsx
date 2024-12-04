@@ -44,7 +44,7 @@ const ReviewPage = ({
       <div className="flex flex-col md:flex-row items-center justify-between shadow-md p-6 rounded-md dark:bg-slate-800">
         <div className="flex flex-col items-center md:items-start md:w-1/2">
           <div className="text-4xl font-bold text-yellow-500">
-            {averageRating?.toFixed(1)}{' '}
+            {averageRating ? averageRating?.toFixed(1) : 0}{' '}
             <span className="text-gray-700 dark:text-white">
               Out of 5 Stars
             </span>
