@@ -15,7 +15,7 @@ const page = (props: Props) => {
         description="Elearning is a platform for student to learn and get help from teachers"
         keywords="Programming, React, Next.js, TypeScript, ELearning"
       />
-      <div className="flex h-screen">
+      <div className="flex">
         <div className="1500px:w-[16%] w-1/5">
           <AdminSideBar />
         </div>

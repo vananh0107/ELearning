@@ -21,7 +21,8 @@ const Quiz = ({
   setQuiz,
   section,
 }: Props) => {
-  const [timeLeft, setTimeLeft] = useState(20);
+  console.log( data?.[activeVideo].timeQuizSection*60)
+  const [timeLeft, setTimeLeft] = useState( data?.[activeVideo].timeQuizSection*60);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
@@ -63,7 +64,7 @@ const Quiz = ({
     });
   }, [showResult]);
   const resetQuiz = () => {
-    setTimeLeft(60);
+    setTimeLeft(data?.[activeVideo].timeQuizSection);
     setCurrentQuestion(0);
     setScore(0);
     setUserAnswers([]);

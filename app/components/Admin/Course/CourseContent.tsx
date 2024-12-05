@@ -317,11 +317,23 @@ const CourseContent: FC<Props> = ({
     key: string,
     value: string
   ) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].questionCode.testCases[testCaseIndex] = {
-      ...updatedData[index].questionCode.testCases[testCaseIndex],
-      [key]: value,
-    };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          questionCode: {
+            ...item.questionCode,
+            testCases: item.questionCode.testCases.map((testCase, j) =>
+              j === testCaseIndex
+                ? { ...testCase, [key]: value }
+                : testCase
+            ),
+          },
+        };
+      }
+      return item;
+    });
+  
     setCourseContentData(updatedData);
   };
   const handleAddTestCase = (index: number) => {
@@ -451,7 +463,10 @@ const CourseContent: FC<Props> = ({
                             {/* Input Fields */}
                             <div className="flex items-center gap-2">
                               <input
-                                value={testHour}
+                                value={
+                                  parseInt(item.timeQuizSection / 60, 10) ||
+                                  testHour
+                                }
                                 type="number"
                                 min="0"
                                 max="23"
@@ -479,7 +494,10 @@ const CourseContent: FC<Props> = ({
                               />
                               h
                               <input
-                                value={testMinute}
+                                value={
+                                  parseInt(item.timeQuizSection % 60, 10) ||
+                                  testMinute
+                                }
                                 type="number"
                                 min="0"
                                 max="59"
@@ -505,7 +523,7 @@ const CourseContent: FC<Props> = ({
                                   setCourseContentData(updatedData);
                                 }}
                               />
-                              s
+                              m
                             </div>
                           </div>
                         )}
@@ -875,7 +893,7 @@ const CourseContent: FC<Props> = ({
                                       }
                                     />
                                   </div>
-                                  <input
+                                  <textarea
                                     type="text"
                                     placeholder="Enter Test Case Input"
                                     className={`${styles.input} mt-2`}

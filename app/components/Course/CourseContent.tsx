@@ -1,7 +1,6 @@
 import {
   useGetCompleteMutation,
   useGetCourseContentQuery,
-  useGetProgressQuery,
   useSubmitCodeMutation,
   useUpdateProgressMutation,
 } from '@/redux/features/courses/coursesApi';
@@ -15,33 +14,41 @@ import Quiz from '@/app/components/Quiz/Quiz';
 type Props = {
   id: string;
   user: any;
+  progressData: any;
+  progressLoading: any;
+  progressRefetch: any;
 };
 
-const CourseContent = ({ id, user }: Props) => {
+const CourseContent = ({
+  id,
+  user,
+  progressData,
+  progressLoading,
+  progressRefetch,
+}: Props) => {
   const {
     data: contentData,
     isLoading,
     refetch,
   } = useGetCourseContentQuery(id, { refetchOnMountOrArgChange: true });
-  const {
-    data: progressData,
-    isLoading: progressLoading,
-    refetch: progressRefetch,
-  } = useGetProgressQuery({ courseId: id, refetchOnMountOrArgChange: true });
   const [updateProgress, { data: dataAfterQuiz }] = useUpdateProgressMutation();
   const [submitCode, { data: dataAfterSubmit }] = useSubmitCodeMutation();
   const [getComplete, { data: responseCompleteData }] =
     useGetCompleteMutation();
   const data = contentData?.content;
-  const [activeVideo, setActiveVideo] = useState(0);
+  const [activeVideo, setActiveVideo] = useState(
+    progressData ? progressData.lastLesson.order - 1 : 0
+  );
   const [open, setOpen] = useState(false);
   const [isNextVideo, setIsNextVideo] = useState(false);
   const [route, setRoute] = useState('Login');
   const [quiz, setQuiz] = useState([]);
   useEffect(() => {
-    progressRefetch();
+    if (progressRefetch) {
+      progressRefetch();
+    }
   }, [dataAfterQuiz, dataAfterSubmit]);
-
+  console.log(activeVideo)
   return (
     <>
       {isLoading ? (

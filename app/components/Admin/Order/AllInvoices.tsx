@@ -15,40 +15,19 @@ type Props = {
 const AllInvoices = ({ isDashboard }: Props) => {
   const { theme, setTheme } = useTheme();
   const { isLoading, data, isSuccess } = useGetAllOrdersQuery({});
-  const { data: usersData } = useGetAllUsersQuery({});
-  const { data: coursesData } = useGetAllCoursesQuery({});
-  const [orderData, setOrderData] = useState<any[]>([]);
-  useEffect(() => {
-    if (data) {
-      const temp = data.orders.map((item: any) => {
-        const user = usersData?.users.find(
-          (user: any) => user._id === item.userId
-        );
-        const course = coursesData?.courses.find(
-          (course: any) => course._id === item.course_Id
-        );
-        return {
-          ...item,
-          userName: user?.name,
-          userEmail: user?.email,
-          title: course?.name,
-          price: '$' + course?.price,
-        };
-      });
-      setOrderData(temp);
-    }
-  }, [data, usersData, coursesData]);
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 0.3 },
+    ...(isDashboard
+      ? [] // Nếu là dashboard, không thêm cột ID
+      : [{ field: 'id', headerName: 'ID', flex: 0.4 }]),
     {
       field: 'userName',
       headerName: 'User Name',
-      flex: isDashboard ? 0.6 : 0.5,
+      flex: isDashboard ? 0.5 : 0.5,
     },
     ...(isDashboard
       ? []
       : [
-          { field: 'userEmail', headerName: 'Email', flex: 1 },
+          { field: 'courseName', headerName: 'Course Name', flex: 1 },
           // { field: 'title', headerName: 'Course Title', flex: 1 },
         ]),
     { field: 'price', headerName: 'Price', flex: 0.5 },
@@ -61,7 +40,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
             flex: 0.2,
             renderCell: (params: any) => {
               return (
-                <a href={`mailto:${params.row.userEmail}`}>
+                <a href={`mailto:${params.row.userEmail}`} className='relative top-3'>
                   <AiOutlineMail
                     className="dark:text-white text-black"
                     size={20}
@@ -72,67 +51,17 @@ const AllInvoices = ({ isDashboard }: Props) => {
           },
         ]),
   ];
+  
   const [rows, setRows] = useState([]);
-  //mock data to test
-  // const rows: any = [];
-  //   {
-  //     id: '1',
-  //     userName: 'John Doe',
-  //     userEmail: 'johndoe@example.com',
-  //     title: 'Course 1',
-  //     price: '$100',
-  //     created_at: '1 days ago',
-  //   },
-  //   {
-  //     id: '2',
-  //     userName: 'Jane Doe',
-  //     userEmail: 'janedoe@example.com',
-  //     title: 'Course 2',
-  //     price: '$200',
-  //     created_at: '2 days ago',
-  //   },
-  //   {
-  //     id: '3',
-  //     userName: 'Mike Doe',
-  //     userEmail: 'mikedoe@example.com',
-  //     title: 'Course 3',
-  //     price: '$1500',
-  //     created_at: '3 days ago',
-  //   },
-  //   {
-  //     id: '4',
-  //     userName: 'Sarah Doe',
-  //     userEmail: 'sarahdoe@example.com',
-  //     title: 'Course 4',
-  //     price: '$300',
-  //     created_at: '1 days ago',
-  //   },
-  // ];
-  // console.log(orderData)
-  // {
-  //   orderData &&
-  //     orderData?.orders?.forEach((item: any) => {
-  //       console.log(item)
-  //       rows.push({
-  //         id: item._id,
-  //         userName: item.userName,
-  //         userEmail: item.userEmail,
-  //         // title: item.title,
-  //         price: item.price,
-  //         created_at: format(item.createdAt),
-  //       });
-  //     });
-  // }
   useEffect(() => {
     const temp = [];
-    console.log(orderData)
-    orderData?.orders?.forEach((item: any) => {
+    data?.results?.forEach((item: any) => {
       temp.push({
         id: item._id,
         userName: item.userName,
-        userEmail: item.userEmail,
+        courseName: item.courseName,
         // title: item.title,
-        price: item.price,
+        price: item.coursePrice,
         created_at: format(item.createdAt),
       });
     });
@@ -203,7 +132,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
           >
             <DataGrid
               checkboxSelection={isDashboard ? false : true}
-              rows={orderData}
+              rows={rows}
               columns={columns}
               components={isDashboard ? {} : { Toolbar: GridToolbar }}
             />

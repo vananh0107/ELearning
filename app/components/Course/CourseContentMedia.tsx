@@ -155,7 +155,6 @@ const CourseContentMedia = ({
       contentId: data?.[activeVideo]._id,
       language: 'python',
     });
-    // console.log('Code submitted:', code);
   };
   const [testResults, setTestResults] = useState([]);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50);
@@ -205,6 +204,7 @@ const CourseContentMedia = ({
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]._id });
   }, [dataAfterSubmit]);
+  console.log(lastLesson, activeVideo);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -244,28 +244,34 @@ const CourseContentMedia = ({
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
-            if (
-              ((isNextVideo || lastLesson.isLessonCompleted) &&
-                lastLesson?.order > activeVideo) ||
-              responseCompleteData?.isActiveQuizSection
-            ) {
-              if (data[activeVideo].quizSection.length > 0) {
-                // setQuizActive(true)
-                setQuiz(data[activeVideo].quizSection);
-                console.log("sang quiz")
-              } else {
-                setActiveVideo(
-                  data && data?.length - 1 === activeVideo
-                    ? activeVideo
-                    : activeVideo + 1
-                );
-                setIsNextVideo(false);
-                updateProgress({
-                  contentId: data?.[activeVideo + 1]._id,
-                  courseId: id,
-                  quizStatus: null,
-                  quizId: null,
-                });
+            if (lastLesson?.order > activeVideo + 1) {
+              setActiveVideo(
+                data && data?.length - 1 === activeVideo
+                  ? activeVideo
+                  : activeVideo + 1
+              );
+            } else {
+              if (
+                ((isNextVideo || lastLesson.isLessonCompleted) &&
+                  lastLesson?.order > activeVideo) ||
+                responseCompleteData?.isActiveQuizSection
+              ) {
+                if (data[activeVideo].quizSection.length > 0) {
+                  setQuiz(data[activeVideo].quizSection);
+                } else {
+                  setActiveVideo(
+                    data && data?.length - 1 === activeVideo
+                      ? activeVideo
+                      : activeVideo + 1
+                  );
+                  setIsNextVideo(false);
+                  updateProgress({
+                    contentId: data?.[activeVideo + 1]._id,
+                    courseId: id,
+                    quizStatus: null,
+                    quizId: null,
+                  });
+                }
               }
             }
           }}
