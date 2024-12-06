@@ -1,12 +1,7 @@
 import { styles } from '@/app/styles/style';
 import CoursePlayer from '@/app/utils/CoursePlayer';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  AiFillStar,
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineStar,
-} from 'react-icons/ai';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
@@ -19,7 +14,6 @@ import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
   useGetCourseDetailsQuery,
-  useSubmitCodeMutation,
 } from '@/redux/features/courses/coursesApi';
 import { format } from 'timeago.js';
 import { BiMessage } from 'react-icons/bi';
@@ -29,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { FaLock } from 'react-icons/fa';
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || '';
 const socketId = socketIO(ENDPOINT, { transports: ['websocket'] });
+
 type Props = {
   data: any;
   id: string;
@@ -75,10 +70,7 @@ const CourseContentMedia = ({
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
-  const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
-    id,
-    { refetchOnMountOrArgChange: true }
-  );
+  const {} = useGetCourseDetailsQuery(id, { refetchOnMountOrArgChange: true });
   const [
     addAnswerInQuestion,
     {
@@ -156,8 +148,7 @@ const CourseContentMedia = ({
       language: 'python',
     });
   };
-  const [testResults, setTestResults] = useState([]);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(50);
+  const [leftPanelWidth, setLeftPanelWidth] = useState(40);
   const [topSectionHeight, setTopSectionHeight] = useState(50);
   const isResizingHorizontal = useRef(false);
   const isResizingVertical = useRef(false);
@@ -239,11 +230,19 @@ const CourseContentMedia = ({
             styles.button
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
             activeVideo + 1 >= lastLesson?.order &&
-            (!isNextVideo || data?.length - 1 === activeVideo) &&
+            !isNextVideo &&
             !responseCompleteData?.isActiveQuizSection &&
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
+            if (
+              data?.[data?.length - 1]?._id === data?.[activeVideo]?._id &&
+              data?.[data?.length - 1]?._id === responseCompleteData?.content &&
+              responseCompleteData.isComplete
+            ) {
+              router.push(`/course-access/${id}/congratulation`);
+            }
+
             if (lastLesson?.order > activeVideo + 1) {
               setActiveVideo(
                 data && data?.length - 1 === activeVideo
@@ -276,7 +275,10 @@ const CourseContentMedia = ({
             }
           }}
         >
-          Next Lesson
+          {(data?.[data?.length - 1]?._id === data?.[activeVideo]?._id &&
+            data?.[data?.length - 1]?._id) === responseCompleteData?.content
+            ? 'Next to 🎁'
+            : 'Next Lesson'}
           <AiOutlineArrowRight className="ml-2" />
         </div>
       </div>
@@ -377,9 +379,15 @@ const CourseContentMedia = ({
       {activeBar === 3 && (
         <div className="flex flex-col md:flex-row h-screen bg-gray-100 dark:bg-gray-900">
           {/* Left Panel */}
-          <div className="flex flex-col md:border-r border-gray-300 dark:border-gray-700 w-full md:w-[40%]">
+          <div
+            style={{ width: `${leftPanelWidth}%` }}
+            className="flex flex-col md:border-r border-gray-300 dark:border-gray-700 w-full md:w-[40%]"
+          >
             {/* Top Section */}
-            <div className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4 h-auto md:h-[50%]">
+            <div
+              style={{ height: `${topSectionHeight}%` }}
+              className="overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4 h-auto md:h-[50%]"
+            >
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                 Bài Tập
               </h2>

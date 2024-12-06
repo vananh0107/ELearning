@@ -5,7 +5,10 @@ import { PiUsersFourLight } from 'react-icons/pi';
 import { Box, CircularProgress } from '@mui/material';
 import OrdersAnalytics from '../Analytics/OrdersAnalytics';
 import AllInvoices from '../Order/AllInvoices';
-import { useGetOrdersAnalyticsQuery, useGetUsersAnalyticsQuery } from '@/redux/features/analytics/analyticsApi';
+import {
+  useGetOrdersAnalyticsQuery,
+  useGetUsersAnalyticsQuery,
+} from '@/redux/features/analytics/analyticsApi';
 type Props = {
   open?: boolean;
   value?: number;
@@ -125,13 +128,13 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
               </div>
               <div>
                 <CircularProgressWithLabel
-                  value={userComparePercentage?.percentChange > 0 ? 100 : 0}
+                  value={userComparePercentage?.percentChange > 0 ? 100 : -100}
                   open={open}
                 />
                 <h5 className="text-center pt-4 dark:text-white">
                   {userComparePercentage?.percentChange > 0
                     ? '+' + userComparePercentage?.percentChange.toFixed(2)
-                    : '-' + userComparePercentage?.percentChange.toFixed(2)}
+                    : userComparePercentage?.percentChange.toFixed(2)}
                   %
                 </h5>
               </div>

@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { IoLayersOutline } from 'react-icons/io5';
 import { MdOutlineOndemandVideo } from 'react-icons/md';
 
 type Props = {
@@ -11,8 +10,7 @@ type Props = {
   lastLesson?: any;
   setIsNextVideo?: any;
   isNextVideo?: any;
-  responseCompleteData?;
-  any;
+  responseCompleteData?: any;
 };
 
 const CourseContentList: FC<Props> = (props) => {

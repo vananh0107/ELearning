@@ -67,7 +67,6 @@ const AllInvoices = ({ isDashboard }: Props) => {
     });
     setRows(temp);
   }, [isSuccess]);
-  console.log(rows);
   return (
     <div className={!isDashboard ? 'mt-[120px]' : 'mt-[0px]'}>
       {isLoading ? (

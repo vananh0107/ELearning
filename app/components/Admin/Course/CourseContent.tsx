@@ -324,16 +324,14 @@ const CourseContent: FC<Props> = ({
           questionCode: {
             ...item.questionCode,
             testCases: item.questionCode.testCases.map((testCase, j) =>
-              j === testCaseIndex
-                ? { ...testCase, [key]: value }
-                : testCase
+              j === testCaseIndex ? { ...testCase, [key]: value } : testCase
             ),
           },
         };
       }
       return item;
     });
-  
+
     setCourseContentData(updatedData);
   };
   const handleAddTestCase = (index: number) => {
@@ -894,7 +892,8 @@ const CourseContent: FC<Props> = ({
                                     />
                                   </div>
                                   <textarea
-                                    type="text"
+                                    rows={8}
+                                    cols={30}
                                     placeholder="Enter Test Case Input"
                                     className={`${styles.input} mt-2`}
                                     value={testCase.testCase}

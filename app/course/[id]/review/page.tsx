@@ -10,26 +10,29 @@ import {
   useAddReviewInCourseMutation,
   useGetReviewCourseQuery,
 } from '@/redux/features/courses/coursesApi';
+import toast from 'react-hot-toast';
 
 const Page = ({ params }: any) => {
   const { data, refetch } = useGetReviewCourseQuery(params.id, {});
-  const [addReviewInCourse, {}] =
-
-    useAddReviewInCourseMutation();
+  const [addReviewInCourse, {}] = useAddReviewInCourseMutation();
   const [open, setOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(5);
   const [reviews, setReviews] = useState([]);
   const [route, setRoute] = useState('Login');
   const { user } = useSelector((state: any) => state.auth);
   useEffect(() => {
-      setReviews(data?.review);
+    setReviews(data?.review);
   }, [data]);
-  const handleAddReview =async (newReview: any) => {
-    await addReviewInCourse({
+  const handleAddReview = async (newReview: any) => {
+    const respone = await addReviewInCourse({
       review: newReview.comment,
       rating: newReview.rating,
       courseId: params.id,
     });
+    if (respone.error) {
+      toast.error(respone.error.data.message);
+      return;
+    }
     refetch();
   };
   return (
