@@ -8,25 +8,27 @@ type Props = {
   setActive: (active: number) => void;
   courseData: any;
   handleCourseCreate: any;
-  isEdit?:boolean;
+  isEdit?: boolean;
 };
 const CoursePreview: FC<Props> = ({
   courseData,
   handleCourseCreate,
   setActive,
   active,
-  isEdit
+  isEdit,
 }) => {
   const discountPercentage =
-    ((courseData.estimatedPrice - courseData.price) /
-      courseData.estimatedPrice) *
-    100;
+    courseData.estimatedPrice != 0
+      ? ((courseData.estimatedPrice - courseData.price) /
+          courseData.estimatedPrice) *
+        100
+      : 0;
   const discountPercentagePrice = discountPercentage.toFixed(0);
   const prevButton = () => {
     setActive(active - 1);
   };
   const createCourse = () => {
-    console.log(courseData)
+    console.log(courseData);
     handleCourseCreate();
   };
   return (
@@ -84,9 +86,9 @@ const CoursePreview: FC<Props> = ({
           <div className="flex items-center justify-between pt-3">
             <div className="flex items-center">
               <Ratings rating={0} />
-              <h5 className='dark:text-white'>0 Preview</h5>
+              <h5 className="dark:text-white">0 Preview</h5>
             </div>
-            <h5 className='dark:text-white'>0 Student</h5>
+            <h5 className="dark:text-white">0 Student</h5>
           </div>
           <br />
           <h1 className="text-[25px] font-Poppins font-[600] dark:text-white">
@@ -96,7 +98,7 @@ const CoursePreview: FC<Props> = ({
         {courseData?.benefits?.map((item: any, index: number) => (
           <div className="w-full flex 800px:items-center py-2" key={index}>
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} className='dark:text-white'/>
+              <IoCheckmarkDoneOutline size={20} className="dark:text-white" />
             </div>
             <p className="pl-2 dark:text-white">{item.title}</p>
           </div>
@@ -109,7 +111,7 @@ const CoursePreview: FC<Props> = ({
         {courseData?.prerequisites?.map((item: any, index: number) => (
           <div className="w-full flex 800px:items-center py-2" key={index}>
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} className='dark:text-white'/>
+              <IoCheckmarkDoneOutline size={20} className="dark:text-white" />
             </div>
             <p className="pl-2 dark:text-white">{item.title}</p>
           </div>
@@ -138,7 +140,7 @@ const CoursePreview: FC<Props> = ({
           className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
           onClick={() => createCourse()}
         >
-          {isEdit? 'Edit' : 'Create' }
+          {isEdit ? 'Edit' : 'Create'}
         </div>
       </div>
     </div>

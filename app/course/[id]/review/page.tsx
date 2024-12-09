@@ -29,34 +29,38 @@ const Page = ({ params }: any) => {
       rating: newReview.rating,
       courseId: params.id,
     });
-    if (respone.error) {
+    if(!user){
+      toast.error("You need login before adding");
+    }
+    else if (respone.error) {
       toast.error(respone.error.data.message);
       return;
+    }
+    else{
+      toast.success("Review added successfully");
     }
     refetch();
   };
   return (
     <div className="min-h-screen dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
-      <Protected>
-        <Heading
-          title={`${user?.name} profile - ELearning`}
-          description="Elearning is a platform for student to learn and get help from teachers"
-          keywords="Programming, React, Next.js, TypeScript, ELearning"
-        />
-        <Header
-          open={open}
-          setOpen={setOpen}
-          activeItem={activeItem}
-          setRoute={setRoute}
-          route={route}
-        />
-        <ReviewPage
-          reviews={reviews}
-          totalReviews={reviews?.length}
-          onSubmitReview={handleAddReview}
-        />
-        <Footer />
-      </Protected>
+      <Heading
+        title={`Review Course - ELearning`}
+        description="Elearning is a platform for student to learn and get help from teachers"
+        keywords="Programming, React, Next.js, TypeScript, ELearning"
+      />
+      <Header
+        open={open}
+        setOpen={setOpen}
+        activeItem={activeItem}
+        setRoute={setRoute}
+        route={route}
+      />
+      <ReviewPage
+        reviews={reviews}
+        totalReviews={reviews?.length}
+        onSubmitReview={handleAddReview}
+      />
+      <Footer />
     </div>
   );
 };

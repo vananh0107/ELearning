@@ -127,7 +127,7 @@ const CourseContentList: FC<Props> = (props) => {
                       <div className="flex items-start">
                         <MdOutlineOndemandVideo
                           size={25}
-                          className="mr-2"
+                          className="mr-2 mt-1"
                           color="#1cdada"
                         />
                         <h1 className="text-[18px] inline-block break-words text-black dark:text-white">

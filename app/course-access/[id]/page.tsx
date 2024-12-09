@@ -13,6 +13,7 @@ const Page = () => {
     data: progressData,
     isLoading: progressLoading,
     refetch: progressRefetch,
+    called 
   } = useGetProgressQuery({ courseId: id, refetchOnMountOrArgChange: true });
   useEffect(() => {
     if (data) {
@@ -35,6 +36,7 @@ const Page = () => {
         <>
           <CourseContent
             id={id}
+            called ={called }
             user={data.user}
             progressData={progressData}
             progressLoading={progressLoading}

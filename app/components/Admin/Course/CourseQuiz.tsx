@@ -21,11 +21,11 @@ const QuizPreview: FC<Props> = ({
   useEffect(() => {
     const updatedData = courseContentData.map((item, i) =>
       item.videoSection === currentSection
-        ? { ...item, quizSection: dataTake?.shuffleData || data }
+        ? { ...item, quizSection: dataTake?.results || data }
         : item
     );
     setCourseContentData(updatedData);
-    setData(dataTake?.shuffleData || data);
+    setData(dataTake?.results || data);
   }, [dataTake]);
   return (
     <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen pt-[50px] text-gray-800 dark:text-gray-200">

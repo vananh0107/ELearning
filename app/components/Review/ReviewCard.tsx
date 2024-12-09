@@ -4,6 +4,7 @@ import React from 'react';
 
 type Props = {
   item: any;
+  index: any;
 };
 
 const ReviewCard = (props: Props) => {
@@ -26,7 +27,7 @@ const ReviewCard = (props: Props) => {
               {props.item.profession}
             </h6>
           </div>
-          <Ratings rating={5} />
+          <Ratings rating={props.index % 2 ? 5 : 4.5} />
         </div>
         {/*mobile*/}
         <div className="800px:hidden justify-between w-full flex flex-col">

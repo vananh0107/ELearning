@@ -33,8 +33,8 @@ const Hero: FC<Props> = (props) => {
               className="object-contain 1100px:max-w-[90%] w-[90%] 1500px:max-w-[85%] h-[auto] z-[10]"
             />
           </div>
-          <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px]">
-            <h2 className="dark:text-white text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[50px] font-[600] font-Josefin py-2 1000px:leading-[75px] 1500px:w-[60%]">
+          <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center  mt-[150px]">
+            <h2 className="dark:text-white text-[#000000c7] text-[30px]  w-full 1200px:text-[50px] font-[600] font-Josefin py-2 1000px:leading-[75px] 1500px:w-[60%]">
               {data?.layout?.banner?.title}
             </h2>
             <br />

@@ -10,6 +10,7 @@ const ReviewPage = ({
   totalReviews,
   onSubmitReview,
 }) => {
+  
   const params = useParams();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');

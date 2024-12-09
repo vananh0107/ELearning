@@ -419,114 +419,6 @@ const CourseContent: FC<Props> = ({
                         />
                         <BsPencil className="cursor-pointer dark:text-white text-black" />
                       </div>
-                      <div className="flex w-full items-center justify-end dark:text-white">
-                        <input
-                          type="file"
-                          accept=".docx"
-                          onChange={(e) =>
-                            handleFileUpload(e, item.videoSection)
-                          }
-                          placeholder="Upload file quiz"
-                        />
-                        {(activePreview ||
-                          courseContentData.find(
-                            (i) =>
-                              i.videoSection === item.videoSection &&
-                              i.quizSection?.length > 0
-                          ) ||
-                          (isEdit &&
-                            courseContentData.find(
-                              (i) =>
-                                i.videoSection === item.videoSection &&
-                                i.quizSection?.length > 0
-                            ))) && (
-                          <div className="flex items-center gap-4">
-                            {/* Preview Link */}
-                            <span
-                              className="cursor-pointer underline text-blue-500 hover:text-blue-700"
-                              onClick={() => {
-                                const data = courseContentData.find(
-                                  (i) =>
-                                    i.videoSection === item.videoSection &&
-                                    i.quizSection?.length > 0
-                                );
-                                setQuizData(data?.quizSection);
-                                setPreview(true);
-                                setCurrentSection(item.videoSection);
-                              }}
-                            >
-                              Preview
-                            </span>
-
-                            {/* Input Fields */}
-                            <div className="flex items-center gap-2">
-                              <input
-                                value={
-                                  parseInt(item.timeQuizSection / 60, 10) ||
-                                  testHour
-                                }
-                                type="number"
-                                min="0"
-                                max="23"
-                                placeholder="Hours"
-                                className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                onChange={(e) => {
-                                  const currentTime = item.timeQuizSection
-                                    ? item.timeQuizSection
-                                    : 0;
-                                  const updateTime =
-                                    parseInt(e.target.value, 10) * 60 +
-                                    (currentTime % 60);
-                                  const updatedData = courseContentData.map(
-                                    (item, i) =>
-                                      i === index
-                                        ? {
-                                            ...item,
-                                            timeQuizSection: updateTime,
-                                          }
-                                        : item
-                                  );
-                                  setTestHour(parseInt(e.target.value, 10));
-                                  setCourseContentData(updatedData);
-                                }}
-                              />
-                              h
-                              <input
-                                value={
-                                  parseInt(item.timeQuizSection % 60, 10) ||
-                                  testMinute
-                                }
-                                type="number"
-                                min="0"
-                                max="59"
-                                placeholder="Minutes"
-                                className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                onChange={(e) => {
-                                  const currentTime = item.timeQuizSection
-                                    ? item.timeQuizSection
-                                    : 0;
-                                  const updateTime =
-                                    Math.floor(currentTime / 60) * 60 +
-                                    parseInt(e.target.value, 10);
-                                  const updatedData = courseContentData.map(
-                                    (item, i) =>
-                                      i === index
-                                        ? {
-                                            ...item,
-                                            timeQuizSection: updateTime,
-                                          }
-                                        : item
-                                  );
-                                  setTestMinute(parseInt(e.target.value, 10));
-                                  setCourseContentData(updatedData);
-                                }}
-                              />
-                              m
-                            </div>
-                          </div>
-                        )}
-                        {/* )} */}
-                      </div>
                     </div>
                     <br />
                   </>
@@ -955,14 +847,122 @@ const CourseContent: FC<Props> = ({
                 )}
                 {courseContentData[index + 1]?.videoSection !=
                   item.videoSection && (
-                  <div>
-                    <p
-                      className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
-                      onClick={(e: any) => newContentHandler(item)}
-                    >
-                      <AiOutlinePlusCircle className="mr-2" /> Add New Content
-                    </p>
-                  </div>
+                  <>
+                    <div className="flex w-full justify-between mb-4  dark:text-white">
+                      <input
+                        type="file"
+                        accept=".docx"
+                        onChange={(e) => handleFileUpload(e, item.videoSection)}
+                        placeholder="Upload file quiz"
+                      />
+                      {(activePreview ||
+                        courseContentData.find(
+                          (i) =>
+                            i.videoSection === item.videoSection &&
+                            i.quizSection?.length > 0
+                        ) ||
+                        (isEdit &&
+                          courseContentData.find(
+                            (i) =>
+                              i.videoSection === item.videoSection &&
+                              i.quizSection?.length > 0
+                          ))) && (
+                        <div className="flex items-center gap-4">
+                          {/* Preview Link */}
+                          <span
+                            className="cursor-pointer underline text-blue-500 hover:text-blue-700"
+                            onClick={() => {
+                              const data = courseContentData.find(
+                                (i) =>
+                                  i.videoSection === item.videoSection &&
+                                  i.quizSection?.length > 0
+                              );
+                              setQuizData(data?.quizSection);
+                              setPreview(true);
+                              setCurrentSection(item.videoSection);
+                            }}
+                          >
+                            Preview
+                          </span>
+
+                          {/* Input Fields */}
+                          <div className="flex items-center  gap-2">
+                            <input
+                              value={
+                                parseInt(item.timeQuizSection / 60, 10) ||
+                                testHour
+                              }
+                              type="number"
+                              min="0"
+                              max="23"
+                              placeholder="Hours"
+                              className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              onChange={(e) => {
+                                const currentTime = item.timeQuizSection
+                                  ? item.timeQuizSection
+                                  : 0;
+                                const updateTime =
+                                  parseInt(e.target.value, 10) * 60 +
+                                  (currentTime % 60);
+                                const updatedData = courseContentData.map(
+                                  (item, i) =>
+                                    i === index
+                                      ? {
+                                          ...item,
+                                          timeQuizSection: updateTime,
+                                        }
+                                      : item
+                                );
+                                setTestHour(parseInt(e.target.value, 10));
+                                setCourseContentData(updatedData);
+                              }}
+                            />
+                            h
+                            <input
+                              value={
+                                parseInt(item.timeQuizSection % 60, 10) ||
+                                testMinute
+                              }
+                              type="number"
+                              min="0"
+                              max="59"
+                              placeholder="Minutes"
+                              className="border border-gray-300 rounded py-1 w-12 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              onChange={(e) => {
+                                const currentTime = item.timeQuizSection
+                                  ? item.timeQuizSection
+                                  : 0;
+                                const updateTime =
+                                  Math.floor(currentTime / 60) * 60 +
+                                  parseInt(e.target.value, 10);
+                                const updatedData = courseContentData.map(
+                                  (item, i) =>
+                                    i === index
+                                      ? {
+                                          ...item,
+                                          timeQuizSection: updateTime,
+                                        }
+                                      : item
+                                );
+                                setTestMinute(parseInt(e.target.value, 10));
+                                setCourseContentData(updatedData);
+                              }}
+                            />
+                            m
+                          </div>
+                        </div>
+                      )}
+                      {/* )} */}
+                    </div>
+                    <div>
+                      <p
+                        className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                        onClick={(e: any) => newContentHandler(item)}
+                      >
+                        <AiOutlinePlusCircle className="mr-2" /> Add New Content
+                      </p>
+                    </div>
+                  </>
                 )}
               </div>
             </>

@@ -38,20 +38,23 @@ const CourseDetails = ({
     setUser(userData?.user);
   }, [userData]);
   const discountPercentage =
-    ((data?.estimatedPrice - data?.price) / data?.estimatedPrice) * 100;
+    data?.estimatedPrice != 0
+      ? ((data?.estimatedPrice - data?.price) / data?.estimatedPrice) * 100
+      : 0;
   const discountPercentengePrice = discountPercentage.toFixed(0);
   const isPurchased =
     user && user?.courses?.find((item: any) => item.courseId === data._id);
-  const handleOrder = (e: any) => {
-    createPaymentIntent({
+  const handleOrder = async (e: any) => {
+    const response = await createPaymentIntent({
       amountInfo: 1000000,
       description: 'test',
       courseId: data._id,
     });
+    console.log(response);
+    if (responeData?.data?.shortLink) {
+      router.push(responeData.data.shortLink);
+    }
   };
-  useEffect(() => {
-    router.push(responeData?.data.shortLink);
-  }, [responeData]);
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">

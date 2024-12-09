@@ -7,7 +7,6 @@ type Props = {
 };
 
 const Ratings: FC<Props> = ({ rating }) => {
-  console.log(rating)
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i < rating) {
@@ -28,7 +27,18 @@ const Ratings: FC<Props> = ({ rating }) => {
           className="mr-2 cursor-pointer"
         />
       );
-    } else {
+    }
+    else if (i === rating) {
+      stars.push(
+        <AiFillStar
+          key={i}
+          size={20}
+          color="#f6b100"
+          className="mr-2 cursor-pointer"
+        />
+      );
+    }
+     else {
       stars.push(
         <AiOutlineStar
           key={i}

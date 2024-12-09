@@ -18,7 +18,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
   const columns = [
     ...(isDashboard
       ? [] // Nếu là dashboard, không thêm cột ID
-      : [{ field: 'id', headerName: 'ID', flex: 0.4 }]),
+      : [{ field: 'id', headerName: 'ID', flex: 0.8 }]),
     {
       field: 'userName',
       headerName: 'User Name',

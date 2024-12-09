@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 type Props = {
   questions: any;
   setActiveVideo: any;
@@ -21,12 +22,14 @@ const Quiz = ({
   setQuiz,
   section,
 }: Props) => {
-  console.log( data?.[activeVideo].timeQuizSection*60)
-  const [timeLeft, setTimeLeft] = useState( data?.[activeVideo].timeQuizSection*60);
+  const [timeLeft, setTimeLeft] = useState(
+    data?.[activeVideo].timeQuizSection * 60
+  );
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -80,17 +83,21 @@ const Quiz = ({
     }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
   };
   const handleNextLesson = () => {
-    setActiveVideo(
-      data && data?.length - 1 === activeVideo ? activeVideo : activeVideo + 1
-    );
-    setIsNextVideo(false);
-    updateProgress({
-      contentId: data?.[activeVideo + 1]._id,
-      courseId: id,
-      quizStatus: null,
-      quizId: null,
-    });
-    setQuiz([]);
+    if (data && data?.length - 1 === activeVideo) {
+      router.push(`/course-access/${id}/congratulation`);
+    } else {
+      setActiveVideo(
+        data && data?.length - 1 === activeVideo ? activeVideo : activeVideo + 1
+      );
+      setIsNextVideo(false);
+      updateProgress({
+        contentId: data?.[activeVideo + 1]._id,
+        courseId: id,
+        quizStatus: null,
+        quizId: null,
+      });
+      setQuiz([]);
+    }
   };
   return (
     <div
@@ -130,7 +137,11 @@ const Quiz = ({
                 }
                 className="px-6 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:text-gray-200 hover:dark:bg-blue-600 transition duration-300"
               >
-                {score === questions.length ? 'Next Lesson' : 'Retry Quiz'}
+                {score === questions.length
+                  ? data?.length - 1 === activeVideo
+                    ? 'Next to 🎁'
+                    : 'Next Lesson'
+                  : 'Retry Quiz'}
               </button>
             </div>
 

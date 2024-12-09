@@ -193,9 +193,8 @@ const CourseContentMedia = ({
     };
   }, []);
   useEffect(() => {
-    getComplete({ courseId: id, contentId: data?.[activeVideo]._id });
+    getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit]);
-  console.log(lastLesson, activeVideo);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -278,12 +277,14 @@ const CourseContentMedia = ({
           {(data?.[data?.length - 1]?._id === data?.[activeVideo]?._id &&
             data?.[data?.length - 1]?._id) === responseCompleteData?.content
             ? 'Next to 🎁'
+            : data[activeVideo]?.quizSection?.length > 0
+            ? 'Next Quiz'
             : 'Next Lesson'}
           <AiOutlineArrowRight className="ml-2" />
         </div>
       </div>
       <h1 className="pt-2 text-[25px] font-[600] dark:text-white text-black ">
-        {data?.[activeVideo].title}
+        {data?.[activeVideo]?.title}
       </h1>
       <br />
       <div className="w-full p-4 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">

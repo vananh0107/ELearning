@@ -17,6 +17,7 @@ type Props = {
   progressData: any;
   progressLoading: any;
   progressRefetch: any;
+  called ?:any;
 };
 
 const CourseContent = ({
@@ -25,6 +26,7 @@ const CourseContent = ({
   progressData,
   progressLoading,
   progressRefetch,
+  called 
 }: Props) => {
   const {
     data: contentData,
@@ -44,11 +46,10 @@ const CourseContent = ({
   const [route, setRoute] = useState('Login');
   const [quiz, setQuiz] = useState([]);
   useEffect(() => {
-    if (progressRefetch) {
+    if (called) {
       progressRefetch();
     }
   }, [dataAfterQuiz, dataAfterSubmit]);
-  console.log(activeVideo)
   return (
     <>
       {isLoading ? (

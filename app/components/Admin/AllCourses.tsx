@@ -28,13 +28,13 @@ const AllCourses = (props: Props) => {
   const columns = [
     { field: 'id', headerName: 'ID', flex: 0.5 },
     { field: 'title', headerName: 'Course Title', flex: 1 },
-    { field: 'ratings', headerName: 'Ratings', flex: 0.5 },
-    { field: 'purchased', headerName: 'Purchased', flex: 0.5 },
+    { field: 'ratings', headerName: 'Ratings', flex: 0.4 },
+    { field: 'purchased', headerName: 'Purchased', flex: 0.4 },
     { field: 'created_at', headerName: 'Created At', flex: 0.5 },
     {
       field: '  ',
       headerName: 'Edit',
-      flex: 0.2,
+      flex: 0.3,
       renderCell: (params: any) => {
         return (
           <Link href={`/admin/edit-course/${params.row.id}`}>
@@ -48,7 +48,7 @@ const AllCourses = (props: Props) => {
     {
       field: ' ',
       headerName: 'Delete',
-      flex: 0.2,
+      flex: 0.3,
       renderCell: (params: any) => {
         return (
           <>
@@ -68,22 +68,6 @@ const AllCourses = (props: Props) => {
       },
     },
   ];
-  // const rows = [
-  // {
-  //   id: 1,
-  //   title: 'Course 1',
-  //   ratings: 4.5,
-  //   purchased: true,
-  //   created_at: '2022-01-01',
-  // },
-  // {
-  //   id: 2,
-  //   title: 'Course 2',
-  //   ratings: 4.0,
-  //   purchased: false,
-  //   created_at: '2022-01-02',
-  // },
-  // ];
   const rows: any = [];
   {
     data &&

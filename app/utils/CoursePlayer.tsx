@@ -51,7 +51,7 @@ const CoursePlayer: FC<Props> = ({
       const player = window.VdoPlayer.getInstance(iframeRef);
       const checkTimeForQuiz = () => {
         const currentTime = Math.floor(player.video.currentTime);
-        const quiz = quizQuestions.find((q) => q.time === currentTime);
+        const quiz = quizQuestions?.find((q) => q.time === currentTime);
         if (quiz && !isQuizActive) {
           setIsQuizActive(true);
           setCurrentQuiz(currentTime);
@@ -82,10 +82,10 @@ const CoursePlayer: FC<Props> = ({
   },[responseCompleteData])
   const handleAnswerSelection = (index: number) => {
     setSelectedAnswer(index);
-    const correctAnswer = quizQuestions.find(
+    const correctAnswer = quizQuestions?.find(
       (q) => q.time === currentQuiz
     )?.correctAnswer;
-    const quizId = quizQuestions.find((q) => q.time === currentQuiz)?._id;
+    const quizId = quizQuestions?.find((q) => q.time === currentQuiz)?._id;
 
     updateProgress({
       contentId: id,

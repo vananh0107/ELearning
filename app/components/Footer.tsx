@@ -18,7 +18,7 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="/about"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   Our Story
                 </Link>
@@ -26,7 +26,7 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="/privacy-policy"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   Privacy Policy
                 </Link>
@@ -34,7 +34,7 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="/faq"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   FAQ
                 </Link>
@@ -42,14 +42,14 @@ const Footer = (props: Props) => {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className="text-[20px] font-[600] text-black dark:text-white">
+            <h3 className="text-[20px] font-[600] text-black hover:text-gray-500 dark:text-white">
               Quick Links
             </h3>
             <ul className="space-y-4">
               <li>
                 <Link
                   href="/courses"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   Course
                 </Link>
@@ -57,7 +57,7 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="/profile"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   My Account
                 </Link>
@@ -65,7 +65,7 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="/course-dasboard"
-                  className="text-base text-black dark:text-gray-300 dark:hover:text-white"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
                 >
                   Course Dashboard
                 </Link>
@@ -73,38 +73,56 @@ const Footer = (props: Props) => {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className='text-[20px] font-[600] text-black dark:text-white'>Social Links</h3>
+            <h3 className="text-[20px] font-[600] text-black dark:text-white">
+              Social Links
+            </h3>
             <ul className="space-y-4">
               <li>
-                <Link href='https://www.youtube.com' className="text-base text-black dark:text-gray-300 dark:hover:text-white">Youtube</Link>
+                <Link
+                  href="https://www.youtube.com"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
+                >
+                  Youtube
+                </Link>
               </li>
               <li>
-                <Link href='https://www.instagram.com' className="text-base text-black dark:text-gray-300 dark:hover:text-white">Instagram</Link>
+                <Link
+                  href="https://www.instagram.com"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white"
+                >
+                  Instagram
+                </Link>
               </li>
               <li>
-                <Link href='https://www.github.com' className="text-base text-black dark:text-gray-300 dark:hover:text-white">Github</Link>
+                <Link
+                  href="https://www.github.com"
+                  className="text-base text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white "
+                >
+                  Github
+                </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className='text-[20px] font-[600] text-black dark:text-white pb-3'>Contact Info</h3>
-            <p className='text-base text-black dark:text-gray-300 dark:hover:text-white pb-2'>
+            <h3 className="text-[20px] font-[600] text-black dark:text-white pb-3">
+              Contact Info
+            </h3>
+            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2 hover:text-gray-500">
               Call Us: 098 879 4435
             </p>
-            <p className='text-base text-black dark:text-gray-300 dark:hover:text-white pb-2'>
+            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2 hover:text-gray-500">
               Address: Thanh Tri, Ha Noi, Viet Nam
             </p>
-            <p className='text-base text-black dark:text-gray-300 dark:hover:text-white pb-2'>
+            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2 hover:text-gray-500">
               Mail Us: anhbuivan@gmail.com
             </p>
           </div>
-          
         </div>
-        <br/>
         <br />
-          <p className='text-center text-black dark:text-white'>
-            Copyright 2024 ELearning | All Rights Reserved
-          </p>
+        <br />
+        <p className="text-center text-black dark:text-white">
+          Copyright 2024 ELearning | All Rights Reserved
+        </p>
       </div>
       <br />
     </footer>
