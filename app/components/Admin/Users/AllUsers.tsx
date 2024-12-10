@@ -59,7 +59,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     { field: 'name', headerName: 'Name', flex: 0.4 },
     { field: 'email', headerName: 'Email', flex: 0.6 },
     { field: 'role', headerName: 'Role', flex: 0.3 },
-    { field: 'courses', headerName: 'Purchased Courses', flex: 0.4 },
+    { field: 'courses', headerName: 'Purchased', flex: 0.4 },
     { field: 'created_at', headerName: 'Joined At', flex: 0.4 },
     {
       field: ' ',

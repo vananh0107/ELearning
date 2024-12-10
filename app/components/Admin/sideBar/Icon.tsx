@@ -14,7 +14,7 @@ import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-
+import PersonIcon from '@mui/icons-material/Person';
 export {
   HomeOutlinedIcon,
   ArrowForwardIosIcon,
@@ -32,4 +32,5 @@ export {
   ManageHistoryIcon,
   SettingsIcon,
   ExitToAppIcon,
+  PersonIcon
 };

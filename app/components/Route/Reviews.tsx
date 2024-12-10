@@ -75,7 +75,7 @@ const Reviews = (props: Props) => {
         <br />
         <br />
       </div>
-      <div className="grid grid-cols-1 gap-[25px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-2 lg:gap-[25px] xl:grid-cols-2 xl:gap-[35px] mb-12 border-0 md:[&>*:nth-child(3)]:!mt-[-80px] md:[&>*:nth-child(6)]:!mt-[-60px]">
+      <div className="grid grid-cols-1 gap-[25px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-2 lg:gap-[25px] xl:grid-cols-2 xl:gap-[35px] mb-12 border-0 md:[&>*:nth-child(3)]:!mt-[-80px] md:[&>*:nth-child(6)]:!mt-[-70px]">
         {reviews &&
           reviews.map((i, index) => (
             <ReviewCard item={i} key={index} index={index} />

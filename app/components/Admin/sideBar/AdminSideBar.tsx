@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Box, IconButton, Typography } from '@mui/material';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { FaRegUser } from "react-icons/fa";
 import {
   HomeOutlinedIcon,
   ArrowForwardIosIcon,
@@ -20,6 +21,7 @@ import {
   ManageHistoryIcon,
   SettingsIcon,
   ExitToAppIcon,
+  PersonIcon
 } from './Icon';
 import avatarDefault from '../../../../public/assets/avatar.jpg';
 import { useSelector } from 'react-redux';
@@ -280,15 +282,15 @@ const AdminSideBar = () => {
               {!isCollapsed && 'Extras'}
             </Typography>
             <Item
-              title="Settings"
-              to="/admin/settings"
-              icon={<SettingsIcon />}
+              title="Client"
+              to="/"
+              icon={<PersonIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <div onClick={logoutHandler}>
               <Item
-                title="logout"
+                title="Logout"
                 to="/"
                 icon={<ExitToAppIcon />}
                 selected={selected}

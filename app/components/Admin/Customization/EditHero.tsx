@@ -87,7 +87,7 @@ const EditHero: FC<Props> = (props: Props) => {
         </div>
         <div className="1000px:w-[70%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[100px]">
           <textarea
-            className="dark:text-[#edfff4] resize-none text-[#000000ac] text-[24px] px-3 w-[66%] 1000px:text-[60px] 1500px:text-[70px] font-Josefin"
+            className="dark:text-[#edfff4] resize-none text-[#000000ac] text-[24px] px-3 w-[66%] 1000px:text-[40px] 1500px:text-[50px] font-Josefin"
             placeholder="Improve Your Online Learning Experience Better Instantly"
             value={title}
             onChange={(e) => setTitle(e.target.value)}

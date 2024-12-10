@@ -5,6 +5,7 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { SiCoursera } from 'react-icons/si';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
+import { IoBookOutline } from "react-icons/io5";
 import Link from 'next/link';
 type Props = {
   user: any;
@@ -53,7 +54,7 @@ const SidebarProfile = ({ user, active, avatar, setActive, logOutHandle }) => {
         }`}
         onClick={() => setActive(3)}
       >
-        <SiCoursera size={20} className="dark:text-white text-black" />
+        <IoBookOutline size={20} className="dark:text-white text-black" />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Enrolled Courses
         </h5>

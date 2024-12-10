@@ -34,7 +34,7 @@ const CourseContent = ({
     refetch,
   } = useGetCourseContentQuery(id, { refetchOnMountOrArgChange: true });
   const [updateProgress, { data: dataAfterQuiz }] = useUpdateProgressMutation();
-  const [submitCode, { data: dataAfterSubmit }] = useSubmitCodeMutation();
+  const [submitCode, { data: dataAfterSubmit, isLoading:loadingTestcase }] = useSubmitCodeMutation();
   const [getComplete, { data: responseCompleteData }] =
     useGetCompleteMutation();
   const data = contentData?.content;
@@ -99,6 +99,7 @@ const CourseContent = ({
                   refetch={refetch}
                   getComplete={getComplete}
                   responseCompleteData={responseCompleteData}
+                  loadingTestcase={loadingTestcase}
                 />
               </div>
               <div className="hidden 800px:block 800px:col-span-3">

@@ -1,4 +1,5 @@
 import { styles } from '@/app/styles/style';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -10,7 +11,6 @@ const ReviewPage = ({
   totalReviews,
   onSubmitReview,
 }) => {
-  
   const params = useParams();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -40,6 +40,7 @@ const ReviewPage = ({
       reviews.reduce((total, review) => total + review.rating, 0) /
       reviews.length;
   }
+  console.log(reviews);
   return (
     <div className="p-6 dark:text-white">
       <div className="flex flex-col md:flex-row items-center justify-between shadow-md p-6 rounded-md dark:bg-slate-800">
@@ -132,24 +133,39 @@ const ReviewPage = ({
       <div className="mt-6 shadow-md p-6 rounded-md dark:bg-slate-800">
         <h3 className="text-lg font-semibold mb-4">Reviews</h3>
         {currentReviews?.map((review, index) => (
-          <div key={index} className="border-b border-gray-200 pb-4 mb-4">
-            <div className="flex items-center">
-              <div className="flex items-center mr-4">
-                {[...Array(5)].map((_, i) => (
-                  <AiFillStar
-                    key={i}
-                    className={
-                      i < review.rating ? 'text-yellow-500' : 'text-gray-300'
-                    }
-                  />
-                ))}
+          <div
+            key={index}
+            className="border-b border-gray-200 pb-4 mb-4 flex items-start"
+          >
+            {/* Reviewer's Circular Image */}
+            <Image
+              src={review?.user?.avatar?.url}
+              width={50}
+              height={50}
+              alt="Reviewer"
+              className="w-12 h-12 rounded-full mr-4"
+            />
+
+            {/* Review Content */}
+            <div>
+              <div className="flex items-center">
+                <div className="flex items-center mr-4">
+                  {[...Array(5)].map((_, i) => (
+                    <AiFillStar
+                      key={i}
+                      className={
+                        i < review.rating ? 'text-yellow-500' : 'text-gray-300'
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="text-gray-700 dark:text-white">
+                  {review.comment}
+                </div>
               </div>
-              <div className="text-gray-700 dark:text-white">
-                {review.comment}
+              <div className="text-gray-500 text-sm mt-2 dark:text-white">
+                Posted on {new Date().toLocaleDateString()}
               </div>
-            </div>
-            <div className="text-gray-500 text-sm mt-2 dark:text-white">
-              Posted on {new Date().toLocaleDateString()}
             </div>
           </div>
         ))}

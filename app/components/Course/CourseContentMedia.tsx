@@ -40,6 +40,7 @@ type Props = {
   setQuiz: any;
   dataAfterSubmit: any;
   submitCode: any;
+  loadingTestcase?: any;
 };
 
 const CourseContentMedia = ({
@@ -58,6 +59,7 @@ const CourseContentMedia = ({
   submitCode,
   dataAfterSubmit,
   setQuiz,
+  loadingTestcase,
 }: Props) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState('');
@@ -195,6 +197,8 @@ const CourseContentMedia = ({
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit]);
+  console.log(data?.[data?.length - 1]?._id, data?.[activeVideo]?._id);
+  console.log(responseCompleteData?.content);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -264,7 +268,7 @@ const CourseContentMedia = ({
                   );
                   setIsNextVideo(false);
                   updateProgress({
-                    contentId: data?.[activeVideo + 1]._id,
+                    contentId: data?.[activeVideo + 1]?._id,
                     courseId: id,
                     quizStatus: null,
                     quizId: null,
@@ -274,11 +278,11 @@ const CourseContentMedia = ({
             }
           }}
         >
-          {(data?.[data?.length - 1]?._id === data?.[activeVideo]?._id &&
-            data?.[data?.length - 1]?._id) === responseCompleteData?.content
-            ? 'Next to 🎁'
-            : data[activeVideo]?.quizSection?.length > 0
+          {data[activeVideo]?.quizSection?.length > 0
             ? 'Next Quiz'
+            : data?.[data?.length - 1]?._id === data?.[activeVideo]?._id
+            ? // &&data?.[data?.length - 1]?._id === responseCompleteData?.content
+              'Next to 🎁'
             : 'Next Lesson'}
           <AiOutlineArrowRight className="ml-2" />
         </div>
@@ -343,7 +347,7 @@ const CourseContentMedia = ({
               cols={40}
               rows={5}
               placeholder="Write your question"
-              className="outline-none bg-transparent ml-3 border text-black dark:text-white border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
+              className="outline-none bg-transparent ml-3 border text-black dark:text-white dark:border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
             ></textarea>
           </div>
           <div className="w-full flex justify-end">
@@ -404,7 +408,7 @@ const CourseContentMedia = ({
             ></div>
 
             {/* Bottom Section */}
-            <div className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto md:h-[50%]">
+            <div  style={{ height: `${100-topSectionHeight}%` }}className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                 Testcase
               </h2>
@@ -430,27 +434,38 @@ const CourseContentMedia = ({
                           key={testCaseIndex}
                           className={`p-3 rounded mb-2 shadow-sm ${bgColor}`}
                         >
-                          <p className="font-semibold flex items-center text-black dark:text-white">
-                            <span>Test Case {testCaseIndex + 1}</span>
-                            {testCase.isHide && (
-                              <span className="ml-2">
-                                <FaLock />
+                          {loadingTestcase ? (
+                            <div className="flex items-center justify-center">
+                              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
+                              <span className="ml-2 text-black dark:text-white">
+                                Running...
                               </span>
-                            )}
-                          </p>
-                          <p className="text-black dark:text-white">
-                            <strong>Đầu vào:</strong>{' '}
-                            {testCase.isHide ? '' : testCase.testCase}
-                          </p>
-                          <p className="text-black dark:text-white">
-                            <strong>Kết quả mong đợi:</strong>{' '}
-                            {testCase.isHide ? '' : testCase.expectedResult}
-                          </p>
-                          {result && !testCase.isHide && (
-                            <p className="text-black dark:text-white">
-                              <strong>Kết quả thực tế:</strong>{' '}
-                              {result.actualResult}
-                            </p>
+                            </div>
+                          ) : (
+                            <>
+                              <p className="font-semibold flex items-center text-black dark:text-white">
+                                <span>Test Case {testCaseIndex + 1}</span>
+                                {testCase.isHide && (
+                                  <span className="ml-2">
+                                    <FaLock />
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-black dark:text-white">
+                                <strong>Đầu vào:</strong>{' '}
+                                {testCase.isHide ? '' : testCase.testCase}
+                              </p>
+                              <p className="text-black dark:text-white">
+                                <strong>Kết quả mong đợi:</strong>{' '}
+                                {testCase.isHide ? '' : testCase.expectedResult}
+                              </p>
+                              {result && !testCase.isHide && (
+                                <p className="text-black dark:text-white">
+                                  <strong>Kết quả thực tế:</strong>{' '}
+                                  {result.actualResult}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
                       );
