@@ -3,12 +3,11 @@ import { FC, useEffect, useState } from 'react';
 import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Box, IconButton, Typography } from '@mui/material';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { FaRegUser } from "react-icons/fa";
+import { usePathname } from 'next/navigation';
 import {
   HomeOutlinedIcon,
   ArrowForwardIosIcon,
   ArrowBackIosIcon,
-  PeopleOutlinedIcon,
   ReceiptOutlinedIcon,
   BarChartOutlinedIcon,
   MapOutlinedIcon,
@@ -19,9 +18,8 @@ import {
   QuizIcon,
   WysiwygIcon,
   ManageHistoryIcon,
-  SettingsIcon,
   ExitToAppIcon,
-  PersonIcon
+  PersonIcon,
 } from './Icon';
 import avatarDefault from '../../../../public/assets/avatar.jpg';
 import { useSelector } from 'react-redux';
@@ -57,15 +55,21 @@ const AdminSideBar = () => {
   const [selected, setSelected] = useState('Dashboard');
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  useEffect(() => setMounted(true), []);
+  const pathName = usePathname();
+  useEffect(() => {
+    setMounted(true);
+    const listPath = pathName?.split('/');
+    const currentPath =
+      listPath[listPath.length - 1].charAt(0).toUpperCase() +
+      listPath[listPath.length - 1].slice(1);
+    setSelected(listPath ? currentPath : '');
+  }, [pathName]);
 
   if (!mounted) return null;
 
   const logoutHandler = () => {
     setlogout(true);
   };
-
   return (
     <Box
       sx={{

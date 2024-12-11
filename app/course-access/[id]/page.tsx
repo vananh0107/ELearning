@@ -37,7 +37,7 @@ const Page = () => {
           <CourseContent
             id={id}
             called ={called }
-            user={data.user}
+            user={data?.user}
             progressData={progressData}
             progressLoading={progressLoading}
             progressRefetch={progressRefetch}

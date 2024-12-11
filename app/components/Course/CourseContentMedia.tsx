@@ -196,9 +196,8 @@ const CourseContentMedia = ({
   }, []);
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
-  }, [dataAfterSubmit]);
-  console.log(data?.[data?.length - 1]?._id, data?.[activeVideo]?._id);
-  console.log(responseCompleteData?.content);
+  }, [dataAfterSubmit, activeVideo]);
+  console.log(data?.[activeVideo], responseCompleteData);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -244,45 +243,48 @@ const CourseContentMedia = ({
               responseCompleteData.isComplete
             ) {
               router.push(`/course-access/${id}/congratulation`);
-            }
-
-            if (lastLesson?.order > activeVideo + 1) {
-              setActiveVideo(
-                data && data?.length - 1 === activeVideo
-                  ? activeVideo
-                  : activeVideo + 1
-              );
             } else {
-              if (
-                ((isNextVideo || lastLesson.isLessonCompleted) &&
-                  lastLesson?.order > activeVideo) ||
-                responseCompleteData?.isActiveQuizSection
-              ) {
-                if (data[activeVideo].quizSection.length > 0) {
-                  setQuiz(data[activeVideo].quizSection);
-                } else {
-                  setActiveVideo(
-                    data && data?.length - 1 === activeVideo
-                      ? activeVideo
-                      : activeVideo + 1
-                  );
-                  setIsNextVideo(false);
-                  updateProgress({
-                    contentId: data?.[activeVideo + 1]?._id,
-                    courseId: id,
-                    quizStatus: null,
-                    quizId: null,
-                  });
+              if (lastLesson?.order > activeVideo + 1) {
+                setActiveVideo(
+                  data && data?.length - 1 === activeVideo
+                    ? activeVideo
+                    : activeVideo + 1
+                );
+              } else {
+                if (
+                  ((isNextVideo || lastLesson.isLessonCompleted) &&
+                    lastLesson?.order > activeVideo) ||
+                  responseCompleteData?.isActiveQuizSection
+                ) {
+                  if (data[activeVideo].quizSection.length > 0) {
+                    setQuiz(data[activeVideo].quizSection);
+                  } else {
+                    setActiveVideo(
+                      data && data?.length - 1 === activeVideo
+                        ? activeVideo
+                        : activeVideo + 1
+                    );
+                    setIsNextVideo(false);
+                    updateProgress({
+                      contentId: data?.[activeVideo + 1]?._id,
+                      courseId: id,
+                      quizStatus: null,
+                      quizId: null,
+                    });
+                  }
                 }
               }
             }
           }}
         >
-          {data[activeVideo]?.quizSection?.length > 0
+          {data?.[data?.length - 1]?._id === data?.[activeVideo]?._id &&
+          data?.[data?.length - 1]?._id === responseCompleteData?.content &&
+          responseCompleteData?.isComplete
+            ? 'Next to 🎁'
+            : data?.[activeVideo]?.quizSection?.length > 0 &&
+              (data?.[activeVideo]?._id === responseCompleteData?.content&&
+              !responseCompleteData?.isComplete|| !responseCompleteData)
             ? 'Next Quiz'
-            : data?.[data?.length - 1]?._id === data?.[activeVideo]?._id
-            ? // &&data?.[data?.length - 1]?._id === responseCompleteData?.content
-              'Next to 🎁'
             : 'Next Lesson'}
           <AiOutlineArrowRight className="ml-2" />
         </div>
@@ -382,7 +384,7 @@ const CourseContentMedia = ({
         </>
       )}
       {activeBar === 3 && (
-        <div className="flex flex-col md:flex-row h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="flex flex-col md:flex-row h-screen  bg-gray-100 dark:bg-gray-900">
           {/* Left Panel */}
           <div
             style={{ width: `${leftPanelWidth}%` }}
@@ -408,7 +410,10 @@ const CourseContentMedia = ({
             ></div>
 
             {/* Bottom Section */}
-            <div  style={{ height: `${100-topSectionHeight}%` }}className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto">
+            <div
+              style={{ height: `${100 - topSectionHeight}%` }}
+              className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto"
+            >
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                 Testcase
               </h2>
@@ -416,10 +421,10 @@ const CourseContentMedia = ({
                 <div className="mt-4">
                   {data[activeVideo]?.questionCode?.testCases?.map(
                     (testCase, testCaseIndex) => {
+
                       const result = dataAfterSubmit?.results.find(
                         (res) => res.testCase === testCase.testCase
                       );
-
                       const bgColor =
                         result?.passed === true
                           ? 'bg-green-400 dark:bg-green-600'

@@ -9,7 +9,7 @@ type Props = {};
 
 const page = (props: Props) => {
   return (
-    <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black pb-[100px]">
+    <div className="dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black pb-[100px] h-[100vh]">
       <AdminProtected>
       <Heading
         title="Elearning - Admin"
