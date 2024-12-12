@@ -40,7 +40,6 @@ const ReviewPage = ({
       reviews.reduce((total, review) => total + review.rating, 0) /
       reviews.length;
   }
-  console.log(reviews);
   return (
     <div className="p-6 dark:text-white">
       <div className="flex flex-col md:flex-row items-center justify-between shadow-md p-6 rounded-md dark:bg-slate-800">

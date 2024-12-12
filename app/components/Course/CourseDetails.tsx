@@ -13,6 +13,8 @@ import Image from 'next/image';
 import avatarDefault from '../../../public/assets/avatar.jpg';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import { useCreatePaymentIntentMutation } from '@/redux/features/orders/ordersApi';
+import toast from 'react-hot-toast';
+import { redirect } from 'next/navigation'
 type Props = {
   data: any;
   clientSecret: string;
@@ -29,7 +31,7 @@ const CourseDetails = ({
   id,
 }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const [createPaymentIntent, { data: responeData }] =
+  const [createPaymentIntent, { data: responeData, isError }] =
     useCreatePaymentIntentMutation();
   const [user, setUser] = useState<any>();
   const [open, setOpen] = useState(false);
@@ -46,13 +48,18 @@ const CourseDetails = ({
     user && user?.courses?.find((item: any) => item.courseId === data._id);
   const handleOrder = async (e: any) => {
     const response = await createPaymentIntent({
-      amountInfo: 1000000,
+      amountInfo: data?.price,
       description: 'test',
       courseId: data._id,
     });
-    console.log(response);
-    if (responeData?.data?.shortLink) {
-      router.push(responeData.data.shortLink);
+    if (isError) {
+      toast.error(response.error.data.message);
+    }
+    if(data?.price===0){
+      window.location.reload()
+    }
+    if (response?.data?.data.shortLink) {
+      router.push(response?.data?.data.shortLink);
     }
   };
   return (

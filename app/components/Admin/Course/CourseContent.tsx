@@ -308,7 +308,9 @@ const CourseContent: FC<Props> = ({
           setCourseContentData(updatedData);
           localStorage.setItem('quizData', JSON.stringify(response.data));
         })
-        .catch((error) => {});
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     }
   };
   const handleUpdateTestCase = (
@@ -379,7 +381,6 @@ const CourseContent: FC<Props> = ({
     updatedData[index].questionCode[key] = value;
     setCourseContentData(updatedData);
   };
-  console.log(courseContentData);
   return (
     <div className="w-[80%] m-auto mt-24 p-3">
       <form onSubmit={handleSubmit}>

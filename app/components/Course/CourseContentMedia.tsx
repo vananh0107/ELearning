@@ -21,6 +21,7 @@ import { VscVerifiedFilled } from 'react-icons/vsc';
 import socketIO from 'socket.io-client';
 import { useRouter } from 'next/navigation';
 import { FaLock } from 'react-icons/fa';
+import CourseCompiler from '@/app/components/Course/CourseCompiler';
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || '';
 const socketId = socketIO(ENDPOINT, { transports: ['websocket'] });
 
@@ -64,7 +65,10 @@ const CourseContentMedia = ({
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [errorCode, setErrorCode] = useState('');
+  const [language, setLanguage] = useState('');
   const [questionId, setQuestionId] = useState('');
+  const [responseTestcase, setResponeTestcase] = useState('');
   const [code, setCode] = useState('');
   const [currentData, setCurrentData] = useState(data?.[activeVideo]?.quiz);
   const router = useRouter();
@@ -81,16 +85,16 @@ const CourseContentMedia = ({
       isLoading: answerCreationLoading,
     },
   ] = useAddAnswerInQuestionMutation();
-  const handleQuestion = () => {
+  const handleQuestion = async () => {
     if (question.trim().length === 0) {
       toast.error("Question can't be empty");
-      toast.success('Question submitted successfully');
     } else {
-      addNewQuestion({
+      await addNewQuestion({
         question,
         courseId: id,
         contentId: data?.[activeVideo]._id,
       });
+      toast.success('Question submitted successfully');
     }
   };
   useEffect(() => {
@@ -142,13 +146,20 @@ const CourseContentMedia = ({
   };
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
-  const handleSubmit = () => {
-    submitCode({
-      code,
-      courseId: id,
-      contentId: data?.[activeVideo]._id,
-      language: 'python',
-    });
+  const handleSubmit = async () => {
+    if (language) {
+      const response = await submitCode({
+        code,
+        courseId: id,
+        contentId: data?.[activeVideo]._id,
+        language: 'python',
+      });
+      if (response.error) {
+        setErrorCode(response.error.data.message);
+      }
+    } else {
+      toast.error('Please select a language');
+    }
   };
   const [leftPanelWidth, setLeftPanelWidth] = useState(40);
   const [topSectionHeight, setTopSectionHeight] = useState(50);
@@ -186,7 +197,7 @@ const CourseContentMedia = ({
     document.body.style.cursor = 'default';
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
     return () => {
@@ -194,10 +205,14 @@ const CourseContentMedia = ({
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
+  const handleLanguageChange = (event) => {
+    const language = event.target.value;
+    setLanguage(language.charAt(0).toUpperCase() + language.slice(1));
+  };
   useEffect(() => {
+    setResponeTestcase(dataAfterSubmit);
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit, activeVideo]);
-  console.log(data?.[activeVideo], responseCompleteData);
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -282,8 +297,9 @@ const CourseContentMedia = ({
           responseCompleteData?.isComplete
             ? 'Next to 🎁'
             : data?.[activeVideo]?.quizSection?.length > 0 &&
-              (data?.[activeVideo]?._id === responseCompleteData?.content&&
-              !responseCompleteData?.isComplete|| !responseCompleteData)
+              ((data?.[activeVideo]?._id === responseCompleteData?.content &&
+                !responseCompleteData?.isComplete) ||
+                !responseCompleteData)
             ? 'Next Quiz'
             : 'Next Lesson'}
           <AiOutlineArrowRight className="ml-2" />
@@ -384,7 +400,7 @@ const CourseContentMedia = ({
         </>
       )}
       {activeBar === 3 && (
-        <div className="flex flex-col md:flex-row h-screen  bg-gray-100 dark:bg-gray-900">
+        <div className="flex flex-col md:flex-row  bg-gray-100 dark:bg-gray-900">
           {/* Left Panel */}
           <div
             style={{ width: `${leftPanelWidth}%` }}
@@ -406,7 +422,7 @@ const CourseContentMedia = ({
             {/* Resize Bar */}
             <div
               onMouseDown={handleMouseDownVertical}
-              className="cursor-row-resize h-[3px] bg-gray-500 dark:bg-gray-700 hidden md:block"
+              className="cursor-row-resize h-[3px] bg-gray-400 dark:bg-gray-700 hidden md:block"
             ></div>
 
             {/* Bottom Section */}
@@ -414,69 +430,25 @@ const CourseContentMedia = ({
               style={{ height: `${100 - topSectionHeight}%` }}
               className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto"
             >
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                Testcase
-              </h2>
-              {data[activeVideo]?.questionCode?.testCases.length > 0 && (
-                <div className="mt-4">
-                  {data[activeVideo]?.questionCode?.testCases?.map(
-                    (testCase, testCaseIndex) => {
-
-                      const result = dataAfterSubmit?.results.find(
-                        (res) => res.testCase === testCase.testCase
-                      );
-                      const bgColor =
-                        result?.passed === true
-                          ? 'bg-green-400 dark:bg-green-600'
-                          : result?.passed === false
-                          ? 'bg-red-100 dark:bg-red-800'
-                          : testCase.isHide
-                          ? 'bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-                          : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-300';
-
-                      return (
-                        <div
-                          key={testCaseIndex}
-                          className={`p-3 rounded mb-2 shadow-sm ${bgColor}`}
-                        >
-                          {loadingTestcase ? (
-                            <div className="flex items-center justify-center">
-                              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
-                              <span className="ml-2 text-black dark:text-white">
-                                Running...
-                              </span>
-                            </div>
-                          ) : (
-                            <>
-                              <p className="font-semibold flex items-center text-black dark:text-white">
-                                <span>Test Case {testCaseIndex + 1}</span>
-                                {testCase.isHide && (
-                                  <span className="ml-2">
-                                    <FaLock />
-                                  </span>
-                                )}
-                              </p>
-                              <p className="text-black dark:text-white">
-                                <strong>Đầu vào:</strong>{' '}
-                                {testCase.isHide ? '' : testCase.testCase}
-                              </p>
-                              <p className="text-black dark:text-white">
-                                <strong>Kết quả mong đợi:</strong>{' '}
-                                {testCase.isHide ? '' : testCase.expectedResult}
-                              </p>
-                              {result && !testCase.isHide && (
-                                <p className="text-black dark:text-white">
-                                  <strong>Kết quả thực tế:</strong>{' '}
-                                  {result.actualResult}
-                                </p>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      );
-                    }
-                  )}
+              {errorCode ? (
+                <div className="mt-4 bg-red-600  p-4 rounded-lg shadow-md text-white">
+                  <p className="font-bold text-lg">⚠️ Error:</p>
+                  <p className="mt-1">
+                    {errorCode.split('\n').map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </p>
                 </div>
+              ) : (
+                <CourseCompiler
+                  data={data}
+                  loadingTestcase={loadingTestcase}
+                  activeVideo={activeVideo}
+                  responseTestcase={responseTestcase}
+                />
               )}
             </div>
           </div>
@@ -484,25 +456,41 @@ const CourseContentMedia = ({
           {/* Resize Bar */}
           <div
             onMouseDown={handleMouseDownHorizontal}
-            className="cursor-col-resize w-[3px] bg-gray-500 dark:bg-gray-700 hidden md:block"
+            className="cursor-col-resize w-[3px] bg-gray-400 dark:bg-gray-700 hidden md:block"
           ></div>
 
           {/* Code Editor */}
-          <div className="p-3 w-full md:w-[70%]">
-            <CodeMirror
-              value={code}
-              height="80vh"
-              extensions={[javascript()]}
-              onChange={(value) => setCode(value)}
-              theme={isDarkMode ? darcula : quietlight}
-              className="border-gray-300 rounded-lg dark:text-white text-black"
-            />
-            <button
-              onClick={handleSubmit}
-              className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
-            >
-              Submit Code
-            </button>
+          <div className="w-full md:w-[70%] mb-4">
+            <div className="border-2 dark:border-0">
+              <CodeMirror
+                value={code}
+                height="80vh"
+                extensions={[javascript()]}
+                onChange={(value) => setCode(value)}
+                theme={isDarkMode ? darcula : quietlight}
+                className="border-gray-300 rounded-lg dark:text-white text-black"
+              />
+            </div>
+            <div className="flex justify-between items-center px-3">
+              <select
+                id="language-select"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 cursor-pointer outline-none"
+                onChange={handleLanguageChange}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Choose Language
+                </option>
+                <option value="Python">Python</option>
+                <option value="C++">C++</option>
+              </select>
+              <button
+                onClick={handleSubmit}
+                className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+              >
+                Submit Code
+              </button>
+            </div>
           </div>
         </div>
       )}
