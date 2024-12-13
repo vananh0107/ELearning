@@ -13,7 +13,7 @@ const Page = (props: Props) => {
   return (
     <div className='dark:bg-opacity-50 dark:bg-gradient-to-b  dark:from-gray-900 dark:to-black'>
       <Heading
-        title="Policy page - Elearning"
+        title="Policy - Elearning"
         description="Elearning is a learning management system for helping programmers."
         keywords="programming, mern"
       />

@@ -68,7 +68,7 @@ const CourseContentMedia = ({
   const [errorCode, setErrorCode] = useState('');
   const [language, setLanguage] = useState('');
   const [questionId, setQuestionId] = useState('');
-  const [responseTestcase, setResponeTestcase] = useState('');
+  const [dataCompiler, setDataCompiler] = useState([]);
   const [code, setCode] = useState('');
   const [currentData, setCurrentData] = useState(data?.[activeVideo]?.quiz);
   const router = useRouter();
@@ -156,6 +156,9 @@ const CourseContentMedia = ({
       });
       if (response.error) {
         setErrorCode(response.error.data.message);
+      } else {
+        setErrorCode('');
+        setDataCompiler(response.data.results);
       }
     } else {
       toast.error('Please select a language');
@@ -210,7 +213,6 @@ const CourseContentMedia = ({
     setLanguage(language.charAt(0).toUpperCase() + language.slice(1));
   };
   useEffect(() => {
-    setResponeTestcase(dataAfterSubmit);
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit, activeVideo]);
   return (
@@ -430,7 +432,23 @@ const CourseContentMedia = ({
               style={{ height: `${100 - topSectionHeight}%` }}
               className="overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 h-auto"
             >
-              {errorCode ? (
+              {loadingTestcase ? (
+                data[activeVideo]?.questionCode?.testCases?.map(
+                  (testCase, testCaseIndex) => {
+                    return (
+                      <div
+                        className="flex items-center justify-center mt-8"
+                        key={testCaseIndex}
+                      >
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
+                        <span className="ml-2 text-black dark:text-white">
+                          Running...
+                        </span>
+                      </div>
+                    );
+                  }
+                )
+              ) : errorCode ? (
                 <div className="mt-4 bg-red-600  p-4 rounded-lg shadow-md text-white">
                   <p className="font-bold text-lg">⚠️ Error:</p>
                   <p className="mt-1">
@@ -443,12 +461,63 @@ const CourseContentMedia = ({
                   </p>
                 </div>
               ) : (
-                <CourseCompiler
-                  data={data}
-                  loadingTestcase={loadingTestcase}
-                  activeVideo={activeVideo}
-                  responseTestcase={responseTestcase}
-                />
+                <>
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                    Testcase
+                  </h2>
+                  {data[activeVideo]?.questionCode?.testCases.length > 0 && (
+                    <div className="mt-4">
+                      {data[activeVideo]?.questionCode?.testCases?.map(
+                        (testCase, testCaseIndex) => {
+                          const result = dataCompiler?.find(
+                            (res) => res.testCase === testCase.testCase
+                          );
+                          const bgColor =
+                            result?.passed === true
+                              ? 'bg-green-400 dark:bg-green-600'
+                              : result?.passed === false
+                              ? 'bg-red-100 dark:bg-red-800'
+                              : testCase.isHide
+                              ? 'bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                              : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-300';
+                          return (
+                            <div
+                              key={testCaseIndex}
+                              className={`p-3 rounded mb-2 shadow-sm ${bgColor}`}
+                            >
+                              <>
+                                <p className="font-semibold flex items-center text-black dark:text-white">
+                                  <span>Test Case {testCaseIndex + 1}</span>
+                                  {testCase.isHide && (
+                                    <span className="ml-2">
+                                      <FaLock />
+                                    </span>
+                                  )}
+                                </p>
+                                <p className="text-black dark:text-white">
+                                  <strong>Đầu vào:</strong>{' '}
+                                  {testCase.isHide ? '' : testCase.testCase}
+                                </p>
+                                <p className="text-black dark:text-white">
+                                  <strong>Kết quả mong đợi:</strong>{' '}
+                                  {testCase.isHide
+                                    ? ''
+                                    : testCase.expectedResult}
+                                </p>
+                                {result && !testCase.isHide && (
+                                  <p className="text-black dark:text-white">
+                                    <strong>Kết quả thực tế:</strong>{' '}
+                                    {result.actualResult}
+                                  </p>
+                                )}
+                              </>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

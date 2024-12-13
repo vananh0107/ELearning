@@ -14,7 +14,7 @@ const CourseCompiler = ({
   loadingTestcase,
   responseTestcase,
 }: Props) => {
-  console.log(loadingTestcase)
+  console.log(responseTestcase)
   return (
     <>
       <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
