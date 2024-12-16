@@ -44,7 +44,7 @@ const Page = () => {
       </h1>
       <p className="text-2xl mt-4 text-center">
         You have completed the{' '}
-        <span className="font-bold">{data?.course?.name}</span>course in total{' '}
+        <span className="font-bold">{data?.course?.name}</span>{' '}course in total{' '}
         <span className="font-bold">{Number(totalHour / 60).toFixed(2)}</span>{' '}
         hour study!
       </p>

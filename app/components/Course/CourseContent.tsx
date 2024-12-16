@@ -50,12 +50,13 @@ const CourseContent = ({
       progressRefetch();
     }
   }, [dataAfterQuiz, dataAfterSubmit]);
+  console.log(contentData)
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
+        <div className="dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black min-h-screen">
           <Header
             activeItem={1}
             open={open}

@@ -7,14 +7,13 @@ import React, { useEffect, useState } from 'react';
 import { IoCheckmarkDoneOutline, IoCloseOutline } from 'react-icons/io5';
 import { format } from 'timeago.js';
 import CourseContentList from '../Course/CourseContentList';
-import { useRouter } from 'next/navigation';
 import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
 import Image from 'next/image';
 import avatarDefault from '../../../public/assets/avatar.jpg';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import { useCreatePaymentIntentMutation } from '@/redux/features/orders/ordersApi';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { redirect } from 'next/navigation'
 type Props = {
   data: any;
   clientSecret: string;
@@ -22,6 +21,7 @@ type Props = {
   setRoute: any;
   setOpen: any;
   id?: string;
+  userData: any;
 };
 
 const CourseDetails = ({
@@ -29,8 +29,8 @@ const CourseDetails = ({
   setRoute,
   setOpen: openAuthModal,
   id,
+  userData,
 }: Props) => {
-  const { data: userData } = useLoadUserQuery(undefined, {});
   const [createPaymentIntent, { data: responeData, isError }] =
     useCreatePaymentIntentMutation();
   const [user, setUser] = useState<any>();
@@ -55,8 +55,8 @@ const CourseDetails = ({
     if (isError) {
       toast.error(response.error.data.message);
     }
-    if(data?.price===0){
-      window.location.reload()
+    if (data?.price === 0) {
+      window.location.reload();
     }
     if (response?.data?.data.shortLink) {
       router.push(response?.data?.data.shortLink);
@@ -148,9 +148,12 @@ const CourseDetails = ({
                   <Ratings rating={data?.ratings.toFixed(1)} />
                   <div className="mb-2 800px:mb-[unset]" />
                   <h5 className="text-[25px] font-Poppins text-black dark:text-white">
-                    {Number.isInteger(data?.ratings)
-                      ? data?.ratings.toFixed(1)
-                      : data?.ratings.toFixed(2)}{' '}
+                    {
+                      // Number.isInteger(data?.ratings)
+                      //   ? data?.ratings.toFixed(1)
+                      //   : data?.ratings.toFixed(2)
+                      data?.ratings.toFixed(1)
+                    }{' '}
                     Course Rating • {data?.reviews?.length} Reviews
                   </h5>
                 </div>
@@ -233,13 +236,13 @@ const CourseDetails = ({
                 )}
                 <div className="flex items-center justify-between">
                   <Link
-                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer`}
+                    className={`${styles.button} text-white dark:text-black !px-2 !py-2 !w-[140px] my-3 font-Poppins cursor-pointer !text-[14px]`}
                     href={`/courses`}
                   >
                     Back to courses
                   </Link>
                   <Link
-                    className={`${styles.button} !w-[220px] my-3 font-Poppins cursor-pointer`}
+                    className={`${styles.button} text-white dark:text-black !px-2 !py-2 !w-[160px] !text-[14px] my-3 font-Poppins cursor-pointer`}
                     href={`/course/${id}/review`}
                   >
                     Enter Detail Review

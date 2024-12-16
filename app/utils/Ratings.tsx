@@ -7,6 +7,7 @@ type Props = {
 };
 
 const Ratings: FC<Props> = ({ rating }) => {
+  console.log(Math.trunc(rating))
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i < rating) {
@@ -18,22 +19,23 @@ const Ratings: FC<Props> = ({ rating }) => {
           className="mr-2 cursor-pointer"
         />
       );
-    } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
-      stars.push(
-        <BsStarHalf
-          key={i}
-          size={17}
-          color="#f6ba00"
-          className="mr-2 cursor-pointer"
-        />
-      );
     }
-    else if (i === rating) {
+    else if (i === Math.trunc(rating)) {
       stars.push(
         <AiFillStar
           key={i}
           size={20}
           color="#f6b100"
+          className="mr-2 cursor-pointer"
+        />
+      );
+    }
+    else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+      stars.push(
+        <BsStarHalf
+          key={i}
+          size={17}
+          color="#f6ba00"
           className="mr-2 cursor-pointer"
         />
       );

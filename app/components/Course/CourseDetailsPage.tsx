@@ -8,9 +8,10 @@ import Footer from '../Footer';
 import CourseDetails from './CourseDetails';
 type Props = {
   id: string;
+  userData:any;
 };
 
-const CourseDetailsPage = ({ id }: Props) => {
+const CourseDetailsPage = ({ id ,userData}: Props) => {
   const [route, setRoute] = useState('Login');
   const [open, setOpen] = useState(false);
   const { data, isLoading } = useGetCourseDetailsQuery(id);
@@ -38,6 +39,7 @@ const CourseDetailsPage = ({ id }: Props) => {
               setRoute={setRoute}
               setOpen={setOpen}
               id={id}
+              userData={userData}
             />
           {/* )} */}
           <Footer />

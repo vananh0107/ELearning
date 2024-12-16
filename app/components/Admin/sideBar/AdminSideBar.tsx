@@ -292,15 +292,6 @@ const AdminSideBar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <div onClick={logoutHandler}>
-              <Item
-                title="Logout"
-                to="/"
-                icon={<ExitToAppIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-            </div>
           </Box>
         </Menu>
       </ProSidebar>
