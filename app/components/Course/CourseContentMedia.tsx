@@ -177,7 +177,7 @@ const CourseContentMedia = ({
   }, []);
   const handleLanguageChange = (event) => {
     const language = event.target.value;
-    setLanguage(language.charAt(0).toLowerCase() + language.slice(1));
+    setLanguage(language);
   };
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
@@ -516,8 +516,8 @@ const CourseContentMedia = ({
                 <option value="" disabled>
                   Choose Language
                 </option>
-                <option value="Python">Python</option>
-                <option value="C++">C++</option>
+                <option value="python">Python</option>
+                <option value="cpp">C++</option>
               </select>
               <button
                 onClick={handleSubmit}
@@ -542,7 +542,6 @@ const CommentReply = ({
   refetch,
   user,
 }: any) => {
-  console.log(data[activeVideo].questions);
   return (
     <>
       <div className="w-full my-3">
@@ -623,7 +622,14 @@ const CommentItem = ({
               <VscVerifiedFilled className="ml-1 text-blue-500" />
             )}
           </div>
-          <p className="text-gray-700 dark:text-gray-300">{item?.question}</p>
+          <p className="text-gray-700 dark:text-gray-300">
+            {item?.question.split('\n').map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
+          </p>
           <small className="text-gray-500 dark:text-gray-400">
             {item?.createdAt
               ? format(new Date(item?.createdAt), 'dd/MM/yyyy')
@@ -671,7 +677,12 @@ const CommentItem = ({
                   )}
                 </div>
                 <p className="text-gray-600 dark:text-gray-300">
-                  {reply?.answer}
+                  {reply?.answer.split('\n').map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      <br />
+                    </React.Fragment>
+                  ))}
                 </p>
                 <small className="text-gray-500 dark:text-gray-400">
                   {format(new Date(reply?.createdAt))}

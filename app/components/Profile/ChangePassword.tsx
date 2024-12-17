@@ -3,19 +3,24 @@ import { styles } from '@/app/styles/style';
 import { useUpdatePasswordMutation } from '@/redux/features/user/userApi';
 import toast from 'react-hot-toast';
 import ShowHideEye from '@/app/components/Common/ShowHideEye';
+import { useLogOutQuery } from '@/redux/features/auth/authApi';
+import { signOut } from 'next-auth/react';
 type Props = {};
 
 const ChangePassword: FC<Props> = (props: Props) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [logout, setLogout] = useState(false);
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [updatePassword, { isSuccess, error }] = useUpdatePasswordMutation();
-
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
   const passwordChangeHandler = async (e: any) => {
     e.preventDefault();
     if (confirmPassword !== newPassword) {
@@ -27,7 +32,11 @@ const ChangePassword: FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Password changed successfully');
+      toast.success('Password changed successfully, please login again');
+      setTimeout(async () => {
+        setLogout(true);
+        await signOut();
+      }, 1500);
     }
     if (error) {
       if ('data' in error) {

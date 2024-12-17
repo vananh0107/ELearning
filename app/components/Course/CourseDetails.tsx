@@ -286,14 +286,16 @@ const CourseDetails = ({
                   </Link>
                 ) : (
                   <div
-                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer`}
+                    className={`${styles.button} !w-[200px] my-3 font-Poppins cursor-pointer text-white dark:text-black`}
                     onClick={handleOrder}
                   >
                     Buy Now {data.price}₫
                   </div>
                 )}
               </div>
-              <br />
+              <h3 className="text-[20px] font-Poppins font-[600] dark:text-white mt-2">
+                Resources included in the course:
+              </h3>
               <p className="pb-1 text-black dark:text-white">
                 • Source code included
               </p>

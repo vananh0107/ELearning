@@ -72,6 +72,12 @@ const CoursePreview: FC<Props> = ({
             Apply
           </div>
         </div>
+        <h1 className="text-[25px] font-Poppins font-[600] dark:text-white mt-2">
+          Course name: {courseData?.name}
+        </h1>
+        <h1 className="text-[25px] font-Poppins font-[600] dark:text-white mt-4">
+          Resources included in the course:
+        </h1>
         <p className="p-1 dark:text-white">* Source code include</p>
         <p className="p-1 dark:text-white">* Full lifetime access</p>
         <p className="p-1 dark:text-white">* Certificate of completion</p>
@@ -79,19 +85,16 @@ const CoursePreview: FC<Props> = ({
       </div>
       <div className="w-full">
         <div className="w-full 800px:pr-5">
-          <h1 className="text-[25px] font-Poppins font-[600] dark:text-white">
-            {courseData?.name}
-          </h1>
-          <div className="flex items-center justify-between pt-3">
+          {/* <div className="flex items-center justify-between pt-3">
             <div className="flex items-center">
               <Ratings rating={0} />
-              <h5 className="dark:text-white">0 Preview</h5>
+              <h5 className="dark:text-white">{courseData?.reviews?.length} Preview</h5>
             </div>
             <h5 className="dark:text-white">0 Student</h5>
-          </div>
+          </div> */}
           <br />
           <h1 className="text-[25px] font-Poppins font-[600] dark:text-white">
-            What you will learn from this course
+            What you will learn from this course:
           </h1>
         </div>
         {courseData?.benefits?.map((item: any, index: number) => (
@@ -105,7 +108,7 @@ const CoursePreview: FC<Props> = ({
         <br />
         <br />
         <h1 className="text-[25px] font-Poppins font-[600] dark:text-white">
-          What are the prerequisites for starting this course
+          What are the prerequisites for starting this course:
         </h1>
         {courseData?.prerequisites?.map((item: any, index: number) => (
           <div className="w-full flex 800px:items-center py-2" key={index}>
