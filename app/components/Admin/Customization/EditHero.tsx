@@ -87,7 +87,7 @@ const EditHero: FC<Props> = (props: Props) => {
         </div>
         <div className="1000px:w-[70%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[100px]">
           <textarea
-            className="dark:text-[#edfff4] resize-none text-[#000000ac] text-[24px] px-3 w-[66%] 1000px:text-[40px] 1500px:text-[50px] font-Josefin"
+            className="dark:text-[#edfff4] resize-none text-[#000000ac] text-[24px] px-3 w-[66%] 1000px:text-[40px] 1500px:text-[50px] font-Josefin ml-[90px] bg-[rgba(40,34,34,0.33)]"
             placeholder="Improve Your Online Learning Experience Better Instantly"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -98,7 +98,8 @@ const EditHero: FC<Props> = (props: Props) => {
             value={subTitle}
             onChange={(e) => setSubTitle(e.target.value)}
             placeholder="We have 40+ Online courses & 500K+ Online registered student. Find your desired Courses from them"
-            className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent ml-4"
+            className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent ml-4 bg-[rgba(40,34,34,0.33)]"
+            rows={4}
           />
           <br />
           <br />

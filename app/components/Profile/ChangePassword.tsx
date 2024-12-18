@@ -72,7 +72,7 @@ const ChangePassword: FC<Props> = (props: Props) => {
               onChange={(e) => setOldPassword(e.target.value)}
             />
             <ShowHideEye
-              className="absolute bottom-[10px] right-[60px]"
+              className="absolute bottom-[10px] right-[42px]"
               show={showOldPassword}
               setShow={setShowOldPassword}
             />
@@ -90,7 +90,7 @@ const ChangePassword: FC<Props> = (props: Props) => {
               onChange={(e) => setNewPassword(e.target.value)}
             />
             <ShowHideEye
-              className="absolute bottom-[10px] right-[60px]"
+              className="absolute bottom-[10px] right-[42px]"
               show={showNewPassword}
               setShow={setShowNewPassword}
             />
@@ -107,7 +107,7 @@ const ChangePassword: FC<Props> = (props: Props) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <ShowHideEye
-              className="absolute top-[52px] right-[60px]"
+              className="absolute top-[52px] right-[42px]"
               show={showConfirmPassword}
               setShow={setShowConfirmPassword}
             />
