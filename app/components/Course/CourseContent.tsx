@@ -50,7 +50,6 @@ const CourseContent = ({
       progressRefetch();
     }
   }, [dataAfterQuiz, dataAfterSubmit]);
-  console.log(contentData)
   return (
     <>
       {isLoading ? (

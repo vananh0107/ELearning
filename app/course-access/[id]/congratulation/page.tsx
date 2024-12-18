@@ -44,13 +44,15 @@ const Page = () => {
       </h1>
       <p className="text-2xl mt-4 text-center">
         You have completed the{' '}
-        <span className="font-bold">{data?.course?.name}</span>{' '}course in total{' '}
+        <span className="font-bold">{data?.course?.name}</span> course in total{' '}
         <span className="font-bold">{Number(totalHour / 60).toFixed(2)}</span>{' '}
         hour study!
       </p>
       <div className="mt-8">
         <button
-          onClick={() => router.back()}
+          onClick={() => {
+            router.push(`/course-access/${id}`);
+          }}
           className=" mr-[80px] px-5 py-[10px] bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:bg-blue-100 transition"
         >
           Back to course

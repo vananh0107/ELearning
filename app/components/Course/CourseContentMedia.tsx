@@ -240,7 +240,13 @@ const CourseContentMedia = ({
                     lastLesson?.order > activeVideo) ||
                   responseCompleteData?.isActiveQuizSection
                 ) {
-                  if (data[activeVideo].quizSection.length > 0) {
+                  if (
+                    data[activeVideo].quizSection.length > 0 &&
+                    ((data?.[activeVideo]?._id ===
+                      responseCompleteData?.content &&
+                      !responseCompleteData?.isComplete) ||
+                      !responseCompleteData)
+                  ) {
                     setQuiz(data[activeVideo].quizSection);
                   } else {
                     setActiveVideo(

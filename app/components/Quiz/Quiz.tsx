@@ -67,7 +67,7 @@ const Quiz = ({
     });
   }, [showResult]);
   const resetQuiz = () => {
-    setTimeLeft(data?.[activeVideo].timeQuizSection);
+    setTimeLeft(data?.[activeVideo].timeQuizSection*60);
     setCurrentQuestion(0);
     setScore(0);
     setUserAnswers([]);
@@ -75,9 +75,14 @@ const Quiz = ({
   };
 
   const formatTime = (seconds) => {
+    // seconds=seconds*60
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
+    console.log(hours,minutes,remainingSeconds)
+    console.log(`${hours > 0 ? `${hours}:` : ''}${
+      minutes < 10 ? `0${minutes}` : minutes
+    }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`)
     return `${hours > 0 ? `${hours}:` : ''}${
       minutes < 10 ? `0${minutes}` : minutes
     }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;

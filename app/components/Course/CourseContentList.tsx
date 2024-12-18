@@ -26,7 +26,7 @@ const CourseContentList: FC<Props> = (props) => {
   let totalCount: number = 0;
   useEffect(() => {
     if (props.lastLesson?.contentId) {
-      let activeVideoIndex = props.data.findIndex(
+      let activeVideoIndex = props.data?.findIndex(
         (item: any) => item._id === props.lastLesson.contentId
       );
       if (activeVideoIndex !== -1) {
