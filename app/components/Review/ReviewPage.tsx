@@ -98,7 +98,7 @@ const ReviewPage = ({
       </div>
 
       <div className="mt-6 shadow-md p-6 rounded-md dark:bg-slate-800">
-        <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
+        <h3 className="text-black text-lg font-semibold mb-4">Write a Review</h3>
         <div className="flex items-center mb-4">
           {[...Array(5)].map((_, index) => (
             <span
@@ -130,7 +130,7 @@ const ReviewPage = ({
       </div>
 
       <div className="mt-6 shadow-md p-6 rounded-md dark:bg-slate-800">
-        <h3 className="text-lg font-semibold mb-4">Reviews</h3>
+        <h3 className="text-black text-lg font-semibold mb-4">Reviews</h3>
         {currentReviews?.map((review, index) => (
           <div
             key={index}

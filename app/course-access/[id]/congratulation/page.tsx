@@ -38,7 +38,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-      <Confetti width={width} height={height} />
+      <Confetti width={width-20} height={height-20} />
       <h1 className="text-4xl font-bold text-center animate-bounce">
         🎉 Congratulation! 🎉
       </h1>

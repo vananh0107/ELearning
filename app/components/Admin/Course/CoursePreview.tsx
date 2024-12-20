@@ -75,7 +75,7 @@ const CoursePreview: FC<Props> = ({
         <h1 className="text-[25px] font-Poppins font-[600] dark:text-white mt-2">
           Course name: {courseData?.name}
         </h1>
-        <h1 className="text-[25px] font-Poppins font-[600] dark:text-white mt-4">
+        <h1 className=" text-black text-[25px] font-Poppins font-[600] dark:text-white mt-4">
           Resources included in the course:
         </h1>
         <p className="p-1 dark:text-white">* Source code include</p>

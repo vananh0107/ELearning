@@ -293,7 +293,7 @@ const CourseDetails = ({
                   </div>
                 )}
               </div>
-              <h3 className="text-[20px] font-Poppins font-[600] dark:text-white mt-2">
+              <h3 className="text-black text-[20px] font-Poppins font-[600] dark:text-white mt-2">
                 Resources included in the course:
               </h3>
               <p className="pb-1 text-black dark:text-white">

@@ -83,7 +83,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
         <form onSubmit={handleSubmit}>
           <div className="800px:[50%] m-auto block pb-4">
             <div className="w-[100%]">
-              <label className="block pb-2 dark:text-white">Full Name</label>
+              <label className="text-black block pb-2 dark:text-white">Full Name</label>
               <input
                 type="text"
                 className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -93,7 +93,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
               />
             </div>
             <div className="w-[100%] pt-2">
-              <label className="block pb-2 dark:text-white">
+              <label className="text-black block pb-2 dark:text-white">
                 Email Address
               </label>
               <input

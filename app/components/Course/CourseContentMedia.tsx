@@ -309,7 +309,7 @@ const CourseContentMedia = ({
         <div>
           {data?.[activeVideo]?.links.map((item: any, index: number) => (
             <div className="mb-5" key={index}>
-              <h2 className="800px:text-[20px] 800px:inline-block dark:text-white">
+              <h2 className="text-black 800px:text-[20px] 800px:inline-block dark:text-white">
                 {item.title && item.title + ' :'}
               </h2>
               <a
