@@ -843,13 +843,12 @@ const CourseContent: FC<Props> = ({
                       </div>
                     )}
                     <br />
-                    <br />
                   </>
                 )}
                 {courseContentData[index + 1]?.videoSection !=
                   item.videoSection && (
                   <>
-                    <div className="flex w-full justify-between mb-4  dark:text-white">
+                    <div className="flex w-full justify-between my-4 dark:text-white">
                       <input
                         type="file"
                         accept=".docx"
