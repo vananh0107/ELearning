@@ -76,7 +76,7 @@ const CourseContentMedia = ({
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
   const {} = useGetCourseDetailsQuery(id, { refetchOnMountOrArgChange: true });
-  console.log(code)
+  console.log(code);
   const handleQuestion = async () => {
     if (question.trim().length === 0) {
       toast.error("Question can't be empty");
@@ -228,7 +228,7 @@ const CourseContentMedia = ({
             ) {
               router.push(`/course-access/${id}/congratulation`);
             } else {
-              setCode('')
+              setCode('');
               if (lastLesson?.order > activeVideo + 1) {
                 setActiveVideo(
                   data && data?.length - 1 === activeVideo
@@ -468,18 +468,28 @@ const CourseContentMedia = ({
                                   )}
                                 </p>
                                 <p className="text-black dark:text-white">
-                                  <strong>Đầu vào:</strong>{' '}
-                                  {testCase.isHide ? '' : testCase.testCase}
+                                  <strong>Input:</strong>{' '}
+                                  <br />
+                                  {testCase.isHide
+                                    ? ''
+                                    : testCase.testCase
+                                        .split('\n')
+                                        .map((line, index) => (
+                                          <React.Fragment key={index}>
+                                            {line}
+                                            <br />
+                                          </React.Fragment>
+                                        ))}
                                 </p>
                                 <p className="text-black dark:text-white">
-                                  <strong>Kết quả mong đợi:</strong>{' '}
+                                  <strong>Expected output:</strong>{' '}
                                   {testCase.isHide
                                     ? ''
                                     : testCase.expectedResult}
                                 </p>
                                 {result && !testCase.isHide && (
                                   <p className="text-black dark:text-white">
-                                    <strong>Kết quả thực tế:</strong>{' '}
+                                    <strong>Actual result:</strong>{' '}
                                     {result.actualResult}
                                   </p>
                                 )}

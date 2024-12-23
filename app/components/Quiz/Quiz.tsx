@@ -53,7 +53,7 @@ const Quiz = ({
       setScore(score + 1);
     }
 
-    if (nextQuestion < questions.length) {
+    if (nextQuestion < questions?.length) {
       setCurrentQuestion(nextQuestion);
     } else {
       setShowResult(true);
@@ -63,7 +63,7 @@ const Quiz = ({
     updateProgress({
       contentId: data?.[activeVideo]._id,
       courseId: id,
-      quizSectionStatus: score === questions.length,
+      quizSectionStatus: score === questions?.length,
     });
   }, [showResult]);
   const resetQuiz = () => {
@@ -79,10 +79,6 @@ const Quiz = ({
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    console.log(hours,minutes,remainingSeconds)
-    console.log(`${hours > 0 ? `${hours}:` : ''}${
-      minutes < 10 ? `0${minutes}` : minutes
-    }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`)
     return `${hours > 0 ? `${hours}:` : ''}${
       minutes < 10 ? `0${minutes}` : minutes
     }:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
@@ -134,15 +130,15 @@ const Quiz = ({
                 <span className="text-blue-600 font-bold dark:text-blue-400">
                   {score}
                 </span>{' '}
-                / {questions.length}
+                / {questions?.length}
               </p>
               <button
                 onClick={
-                  score === questions.length ? handleNextLesson : resetQuiz
+                  score === questions?.length ? handleNextLesson : resetQuiz
                 }
                 className="px-6 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:text-gray-200 hover:dark:bg-blue-600 transition duration-300"
               >
-                {score === questions.length
+                {score === questions?.length
                   ? data?.length - 1 === activeVideo
                     ? 'Next to 🎁'
                     : 'Next Lesson'
@@ -151,7 +147,7 @@ const Quiz = ({
             </div>
 
             <div className="mt-6">
-              {questions.map((question, index) => {
+              {questions?.map((question, index) => {
                 const userAnswer = userAnswers.find(
                   (ans) => ans.questionIndex === index
                 );
@@ -193,7 +189,7 @@ const Quiz = ({
         ) : (
           <div>
             <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
-              Question {currentQuestion + 1} of {questions.length}
+              Question {currentQuestion + 1} of {questions?.length}
             </h1>
             <p className="text-lg mb-4 text-gray-800 dark:text-gray-200">
               {questions[currentQuestion].question}
