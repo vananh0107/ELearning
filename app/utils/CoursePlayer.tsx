@@ -164,7 +164,7 @@ const CoursePlayer: FC<Props> = ({
         }}
       >
         {currentQuiz !== null && (
-          <div className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto w-full my-[10%]">
+          <div className="quiz-container bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto w-full my-[5%]">
             <h2 className="text-xl font-bold mb-4 text-black">
               {quizQuestions?.find((q) => q.time === currentQuiz)?.question}
             </h2>

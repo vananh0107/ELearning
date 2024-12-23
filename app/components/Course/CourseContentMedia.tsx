@@ -76,7 +76,7 @@ const CourseContentMedia = ({
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
   const {} = useGetCourseDetailsQuery(id, { refetchOnMountOrArgChange: true });
-
+  console.log(code)
   const handleQuestion = async () => {
     if (question.trim().length === 0) {
       toast.error("Question can't be empty");
@@ -228,6 +228,7 @@ const CourseContentMedia = ({
             ) {
               router.push(`/course-access/${id}/congratulation`);
             } else {
+              setCode('')
               if (lastLesson?.order > activeVideo + 1) {
                 setActiveVideo(
                   data && data?.length - 1 === activeVideo
