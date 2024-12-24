@@ -47,6 +47,7 @@ const CourseContent = ({
   const [quiz, setQuiz] = useState([]);
   useEffect(() => {
     if (called) {
+      console.log('object')
       progressRefetch();
     }
   }, [dataAfterQuiz, dataAfterSubmit]);

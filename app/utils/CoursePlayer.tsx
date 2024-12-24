@@ -139,7 +139,7 @@ const CoursePlayer: FC<Props> = ({
         {videoData.otp && videoData.playbackInfo && (
           <iframe
             ref={(ref) => setIframeRef(ref)}
-            src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=2t4J8zUn839edFbp`}
+            src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=dBr7qBbqnmUWZonW`}
             style={{
               border: 0,
               width: '100%',

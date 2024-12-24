@@ -88,9 +88,9 @@ const Quiz = ({
       router.push(`/course-access/${id}/congratulation`);
     } else {
       setActiveVideo(
-        data && data?.length - 1 === activeVideo ? activeVideo : activeVideo + 1
+        data?.length - 1 === activeVideo ? activeVideo : activeVideo + 1
       );
-      setIsNextVideo(false);
+      // setIsNextVideo(false);
       updateProgress({
         contentId: data?.[activeVideo + 1]._id,
         courseId: id,

@@ -182,6 +182,7 @@ const CourseContentMedia = ({
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit, activeVideo]);
+  console.log(responseCompleteData)
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -217,7 +218,7 @@ const CourseContentMedia = ({
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
             activeVideo + 1 >= lastLesson?.order &&
             !isNextVideo &&
-            !responseCompleteData?.isActiveQuizSection &&
+            !responseCompleteData?.isActiveQuizSection ||!responseCompleteData?.isComplete &&
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
