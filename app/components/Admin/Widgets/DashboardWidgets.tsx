@@ -50,6 +50,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
       return;
     } else {
       const userslastTwoMonths = data?.users.last12Months.slice(-2);
+      console.log(userslastTwoMonths)
       const orderslastTwoMonths = orderData?.orders.last12Months.slice(-2);
       if (
         orderslastTwoMonths?.length === 2 &&
