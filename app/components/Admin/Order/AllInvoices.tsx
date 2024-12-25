@@ -61,7 +61,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
         userName: item.userName,
         courseName: item.courseName,
         // title: item.title,
-        price: item.coursePrice?item.coursePrice:'Free',
+        price: item.coursePrice?item.coursePrice:0,
         created_at: format(item.createdAt),
       });
     });

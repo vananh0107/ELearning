@@ -18,6 +18,7 @@ type Props = {
   progressLoading: any;
   progressRefetch: any;
   called ?:any;
+  isUninitialized?:any
 };
 
 const CourseContent = ({
@@ -26,7 +27,8 @@ const CourseContent = ({
   progressData,
   progressLoading,
   progressRefetch,
-  called 
+  called ,
+  isUninitialized
 }: Props) => {
   const {
     data: contentData,
@@ -46,8 +48,8 @@ const CourseContent = ({
   const [route, setRoute] = useState('Login');
   const [quiz, setQuiz] = useState([]);
   useEffect(() => {
-    if (called) {
-      console.log('object')
+    if (dataAfterQuiz||dataAfterSubmit) {
+    //   console.log('object')
       progressRefetch();
     }
   }, [dataAfterQuiz, dataAfterSubmit]);
@@ -101,6 +103,7 @@ const CourseContent = ({
                   getComplete={getComplete}
                   responseCompleteData={responseCompleteData}
                   loadingTestcase={loadingTestcase}
+                  progressRefetch={progressRefetch}
                 />
               </div>
               <div className="hidden 800px:block 800px:col-span-3">
