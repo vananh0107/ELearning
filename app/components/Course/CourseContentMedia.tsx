@@ -76,7 +76,6 @@ const CourseContentMedia = ({
     { isSuccess, error, isLoading: questionCreationLoading },
   ] = useAddNewQuestionMutation();
   const {} = useGetCourseDetailsQuery(id, { refetchOnMountOrArgChange: true });
-  console.log(code);
   const handleQuestion = async () => {
     if (question.trim().length === 0) {
       toast.error("Question can't be empty");
@@ -182,7 +181,7 @@ const CourseContentMedia = ({
   useEffect(() => {
     getComplete({ courseId: id, contentId: data?.[activeVideo]?._id });
   }, [dataAfterSubmit, activeVideo]);
-  console.log(responseCompleteData)
+  console.log(responseCompleteData?.isActiveQuizSection)
   return (
     <div className="w-[96%] 800px:w-[88%] py-4 m-auto">
       <CoursePlayer
@@ -216,9 +215,11 @@ const CourseContentMedia = ({
           className={`${
             styles.button
           } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
-            activeVideo + 1 >= lastLesson?.order &&
-            !isNextVideo &&
-            !responseCompleteData?.isActiveQuizSection ||!responseCompleteData?.isComplete &&
+            ((activeVideo + 1 >= lastLesson?.order &&
+              !isNextVideo &&
+              !responseCompleteData?.isActiveQuizSection) ||
+              (!responseCompleteData?.isComplete &&
+                !responseCompleteData?.isActiveQuizSection)) &&
             '!cursor-no-drop opacity-[.8]'
           }`}
           onClick={() => {
@@ -469,8 +470,7 @@ const CourseContentMedia = ({
                                   )}
                                 </p>
                                 <p className="text-black dark:text-white">
-                                  <strong>Input:</strong>{' '}
-                                  <br />
+                                  <strong>Input:</strong> <br />
                                   {testCase.isHide
                                     ? ''
                                     : testCase.testCase

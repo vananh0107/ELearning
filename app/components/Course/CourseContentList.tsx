@@ -24,24 +24,27 @@ const CourseContentList: FC<Props> = (props) => {
 
   const [lockedVideos, setLockedVideos] = useState<Set<number>>(new Set());
   let totalCount: number = 0;
+  console.log(props.responseCompleteData)
   useEffect(() => {
-    if (props.lastLesson?.contentId) {
+    if (props.responseCompleteData?.content) {
       let activeVideoIndex = props.data?.findIndex(
-        (item: any) => item._id === props.lastLesson.contentId
+        (item: any) => item._id === props.responseCompleteData?.content
       );
+      console.log(activeVideoIndex)
       if (activeVideoIndex !== -1) {
-        // props.setActiveVideo(activeVideoIndex);
         const lockedSet = new Set<number>();
         if (props.isNextVideo) {
           activeVideoIndex += 1;
         }
-        for (let i = activeVideoIndex + 1; i < props.data.length; i++) {
+        console.log(activeVideoIndex)
+        for (let i = activeVideoIndex; i < props.data.length; i++) {
           lockedSet.add(i);
         }
         setLockedVideos(lockedSet);
       }
+      // props.setActiveVideo(activeVideoIndex);
     }
-  }, [props.lastLesson, props.data, props.isNextVideo]);
+  }, [props.lastLesson, props.data, props.isNextVideo, props.responseCompleteData]);
 
   const toggleSection = (section: string) => {
     const newVisibleSections = new Set(visibleSections);
